@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true,
+    "types": ["node", "jest", "jest-extended"]
+  },
+  "exclude": ["node_modules"],
+  "include": ["src/**/*.ts", "typeorm.config.ts", "src/modules/auth/strategies/googleOauth.strategy.text", "src/modules/auth/auth.service.ts", "test/**/*.ts", "tests/**/*.ts"]
+}
