@@ -1,0 +1,350 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator zod {
+    provider                         = "zod-prisma-types"
+    output                           = "../src/models" // default is ./generated/zod
+    useMultipleFiles                 = true // default is false
+    writeBarrelFiles                 = true // default is true
+    createInputTypes                 = true // default is false
+    createModelTypes                 = true // default is false
+    addInputTypeValidation           = true // default is false
+    addIncludeType                   = true // default is false
+    addSelectType                    = true // default is false
+    validateWhereUniqueInput         = true // default is false
+    createOptionalDefaultValuesTypes = true // default is false
+    createRelationValuesTypes        = true // default is false
+    createPartialTypes               = true // default is false
+    useDefaultValidators             = true // default is false
+    coerceDate                       = true // default is false
+    writeNullishInModelTypes         = true // default is false
+    prismaClientPath                 = "./path/to/prisma/client" // default is client output path 
+}
+
+enum RoleEnum {
+    USER
+    ADMIN
+}
+
+enum TransactionTypeEnum {
+    INCOME
+    EXPENSE
+}
+
+enum BudgetAlertStatusEnum {
+    NORMAL // < 70%
+    WARNING // 70% - 90%
+    EXCEEDED // > 90%
+}
+
+enum ImageProcessingStatusEnum {
+    PENDING
+    PROCESSING
+    COMPLETED
+    FAILED
+}
+
+enum UserStatusEnum {
+    ACTIVE
+    LOCKED
+}
+
+enum NotificationTypeEnum {
+    BUDGET_WARNING
+    BUDGET_EXCEEDED
+    GOAL_REACHED
+    AI_INSIGHT
+    SYSTEM
+}
+
+model User {
+    id             String         @id @default(cuid())
+    email          String         @unique
+    name           String
+    avatar         String?
+    avatarPublicId String?        @map("avatar_public_id")
+    role           RoleEnum       @default(USER)
+    status         UserStatusEnum @default(ACTIVE)
+    verify         Boolean        @default(false) // email verified?
+
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    deletedAt DateTime? // soft delete
+
+    // Relations
+    account       Account? // credentials (password login)
+    socialAccount SocialAccount? // Google OAuth
+    expenses      Expense[]
+    incomes       Income[]
+    budgets       Budget[]
+    savingGoals   SavingGoal[]
+    notifications Notification[]
+    refreshTokens RefreshToken[]
+    otps          Otp?
+    aiInsights    AiInsight[]
+
+    @@index([email])
+    @@map("users")
+}
+
+model Account {
+    id       String @id @default(cuid())
+    userId   String @unique
+    user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    password String // bcrypt hashed
+    salt     String // random salt riêng từng user
+
+    @@map("accounts")
+}
+
+model SocialAccount {
+    id                 String @id @default(cuid())
+    userId             String @unique
+    user               User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    googleId           String @unique @map("google_id")
+    googleAccessToken  String @map("google_access_token")
+    googleRefreshToken String @map("google_refresh_token")
+
+    @@map("social_accounts")
+}
+
+model RefreshToken {
+    id           String   @id @default(cuid())
+    refreshToken String   @unique @map("refresh_token")
+    userId       String
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    expiresAt    DateTime @map("expires_at")
+    createdAt    DateTime @default(now()) @map("created_at")
+
+    @@index([userId])
+    @@map("refresh_tokens")
+}
+
+model Otp {
+    id        String   @id @default(cuid())
+    userId    String   @unique
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    otp       String   @db.Char(6)
+    expiresAt DateTime @map("expires_at")
+
+    @@map("otps")
+}
+
+model Category {
+    id        String              @id @default(cuid())
+    name      String
+    userId    String?
+    type      TransactionTypeEnum
+    icon      String // e.g. "food", "transport", "salary"
+    color     String // e.g. "#FF6B6B"
+    isDefault Boolean             @default(false) @map("is_default")
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    // Relations
+    expenses      Expense[]
+    incomes       Income[]
+    budgets       Budget[]
+    imageAnalyses ImageAnalysis[]
+
+    @@unique([name, type, userId])
+    @@index([userId])
+    @@index([type])
+    @@map("categories")
+}
+
+model Expense {
+    id            String   @id @default(cuid())
+    userId        String
+    categoryId    String
+    amount        Decimal  @db.Decimal(12, 2)
+    title         String
+    note          String?
+    imageUrl      String?  @map("image_url")
+    imagePublicId String?  @map("image_public_id")
+    date          DateTime
+
+    createdAt DateTime  @default(now()) @map("created_at")
+    updatedAt DateTime  @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+
+    // Relations
+    user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+    category      Category       @relation(fields: [categoryId], references: [id])
+    ocrResult     OcrResult?
+    imageAnalysis ImageAnalysis?
+
+    @@index([userId, date])
+    @@index([userId, categoryId])
+    @@index([userId, date, categoryId])
+    @@map("expenses")
+}
+
+model Income {
+    id         String   @id @default(cuid())
+    userId     String
+    categoryId String
+    amount     Decimal  @db.Decimal(12, 2)
+    title      String
+    note       String?
+    date       DateTime
+
+    createdAt DateTime  @default(now()) @map("created_at")
+    updatedAt DateTime  @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+
+    user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    category Category @relation(fields: [categoryId], references: [id])
+
+    @@index([userId, date])
+    @@index([userId, categoryId])
+    @@map("incomes")
+}
+
+// Kết quả OCR từ hóa đơn chụp tay
+model OcrResult {
+    id              String                    @id @default(cuid())
+    expenseId       String                    @unique
+    merchantName    String?
+    totalAmount     Decimal?                  @db.Decimal(12, 2)
+    transactionDate DateTime?
+    extractedText   String                    @db.Text // raw OCR dump
+    confidenceScore Float? // 0.0 - 1.0
+    isVerified      Boolean                   @default(false) // user đã xác nhận chưa
+    status          ImageProcessingStatusEnum @default(PENDING)
+
+    rawResponse  Json?   @map("raw_response")
+    retryCount   Int     @default(0) @map("retry_count")
+    errorMessage String? @map("error_message")
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+    @@map("ocr_results")
+}
+
+/// Kết quả AI Vision phân loại hình ảnh
+model ImageAnalysis {
+    id                  String                    @id @default(cuid())
+    expenseId           String                    @unique
+    suggestedCategoryId String?                   @map("suggested_category_id")
+    suggestedCategory   Category?                 @relation(fields: [suggestedCategoryId], references: [id], onDelete: SetNull)
+    tags                String[] // e.g. ["food", "pho", "vietnamese"]
+    confidenceScore     Float?
+    rawResponse         Json? // raw Gemini API response
+    status              ImageProcessingStatusEnum @default(PENDING)
+    retryCount          Int                       @default(0) @map("retry_count")
+    errorMessage        String?                   @map("error_message")
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+    @@map("image_analyses")
+}
+
+model AiInsight {
+    id     String @id @default(cuid())
+    userId String
+    month  Int // 1 - 12
+    year   Int
+
+    content     String   @db.Text // Markdown text từ Gemini
+    model       String   @default("gemini-2.0-flash") // Track model version
+    generatedAt DateTime @default(now()) @map("generated_at")
+    expiresAt   DateTime @map("expires_at") // Cache TTL: generatedAt + 24h
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, month, year]) // 1 insight per user per month
+    @@index([userId, month, year])
+    @@map("ai_insights")
+}
+
+model Budget {
+    id          String                @id @default(cuid())
+    userId      String
+    categoryId  String
+    limitAmount Decimal               @db.Decimal(12, 2)
+    month       Int // 1 - 12
+    year        Int
+    spentAmount Decimal               @default(0) @map("spent_amount") @db.Decimal(12, 2)
+    alertStatus BudgetAlertStatusEnum @default(NORMAL)
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    category Category @relation(fields: [categoryId], references: [id])
+
+    @@unique([userId, categoryId, month, year])
+    @@index([userId, month, year])
+    @@map("budgets")
+}
+
+model SavingGoal {
+    id           String    @id @default(cuid())
+    userId       String
+    title        String // e.g. "Mua Macbook"
+    targetAmount Decimal   @db.Decimal(12, 2)
+    savedAmount  Decimal   @default(0) @db.Decimal(12, 2)
+    deadline     DateTime?
+    isCompleted  Boolean   @default(false)
+    note         String?
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    user     User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+    deposits SavingDeposit[]
+
+    @@index([userId])
+    @@map("saving_goals")
+}
+
+model SavingDeposit {
+    id           String   @id @default(cuid())
+    savingGoalId String   @map("saving_goal_id")
+    amount       Decimal  @db.Decimal(12, 2)
+    note         String? // e.g. "Lương tháng 6", "Tiền thưởng"
+    depositedAt  DateTime @default(now()) @map("deposited_at")
+
+    savingGoal SavingGoal @relation(fields: [savingGoalId], references: [id], onDelete: Cascade)
+
+    @@index([savingGoalId])
+    @@map("saving_deposits")
+}
+
+model Notification {
+    id        String               @id @default(cuid())
+    userId    String
+    title     String
+    message   String               @db.Text
+    type      NotificationTypeEnum
+    isRead    Boolean              @default(false) @map("is_read")
+    metadata  Json? // e.g. { budgetId, categoryName, percentage }
+    readAt    DateTime?            @map("read_at")
+    createdAt DateTime             @default(now()) @map("created_at")
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId, isRead])
+    @@index([userId, createdAt])
+    @@map("notifications")
+}
