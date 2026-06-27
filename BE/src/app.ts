@@ -37,6 +37,7 @@ app.use(morgan('combined'));
 app.use('/health-check', Modules.healthCheckRouter);
 app.use('/auth', Modules.authRouter);
 app.use('/users', Modules.usersRouter);
+app.use('/categories', Modules.categoriesRouter);
 
 app.use(errorHandlerMiddleware);
 
