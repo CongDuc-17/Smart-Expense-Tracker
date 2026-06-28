@@ -11,7 +11,7 @@ export const Registries = [
 	usersRegistry,
 	categoriesRegistry,
 	expensesRegistry,
-	// incomesRegistry,
+	incomesRegistry,
 ];
 
 export const Modules = {
@@ -20,5 +20,5 @@ export const Modules = {
 	usersRouter,
 	categoriesRouter,
 	expensesRouter,
-	// incomesRouter,
+	incomesRouter,
 };
