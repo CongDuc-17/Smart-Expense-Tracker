@@ -109,36 +109,36 @@ axiosClient.interceptors.response.use(
 );
 
 export const apiClient = {
-  get(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse> {
-    return axiosClient.get(url, config).then((res) => res.data);
-    // .then(res => res.data) giúp bên ngoài nhận data luôn, đỡ phải .data lần nữa
+  get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    return axiosClient.get<T>(url, config).then((res) => res.data);
   },
 
-  post(
+  post<T = any>(
     url: string,
     data?: unknown,
     config?: AxiosRequestConfig,
-  ): Promise<AxiosResponse> {
-    return axiosClient.post(url, data, config).then((res) => res.data);
+  ): Promise<T> {
+    return axiosClient.post<T>(url, data, config).then((res) => res.data);
   },
 
-  put(
+  put<T = any>(
     url: string,
     data?: unknown,
     config?: AxiosRequestConfig,
-  ): Promise<AxiosResponse> {
-    return axiosClient.put(url, data, config).then((res) => res.data);
+  ): Promise<T> {
+    return axiosClient.put<T>(url, data, config).then((res) => res.data);
   },
 
-  patch(
+  patch<T = any>(
     url: string,
     data?: unknown,
     config?: AxiosRequestConfig,
-  ): Promise<AxiosResponse> {
-    return axiosClient.patch(url, data, config).then((res) => res.data);
+  ): Promise<T> {
+    return axiosClient.patch<T>(url, data, config).then((res) => res.data);
   },
 
-  delete(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse> {
-    return axiosClient.delete(url, config).then((res) => res.data);
+  delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    return axiosClient.delete<T>(url, config).then((res) => res.data);
   },
 };
+

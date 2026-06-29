@@ -28,9 +28,11 @@ import {
   CircleUserRoundIcon,
   BellIcon,
   LogOutIcon,
+  SunIcon,
 } from "lucide-react";
 import { apiClient } from "@/lib/apiClient";
 import { toast } from "sonner";
+import { ModeToggle } from "./mode-toggle";
 
 // ---------------------------------------------------------------
 // Helpers
@@ -136,6 +138,7 @@ export function NavUser({
                 <BellIcon className="mr-2 h-4 w-4 text-[#9B9A97]" />
                 Thông báo
               </DropdownMenuItem>
+
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator className="bg-[#E8E7E5]" />

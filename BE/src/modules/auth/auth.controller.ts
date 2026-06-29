@@ -22,6 +22,7 @@ import {
 	NotFoundException,
 	OptionalException,
 } from '@/common';
+import { appEnv } from '@/configs';
 
 export class AuthController {
 	constructor(private readonly authService = new AuthService()) { }
@@ -45,12 +46,12 @@ export class AuthController {
 	}
 
 	// Redirect to Google OAuth
-	async googleAuth(): Promise<void> {
+	async googleAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
 		passport.authenticate('google', {
 			scope: ['profile', 'email'],
 			accessType: 'offline',
 			prompt: 'consent',
-		});
+		})(req, res, next);
 	}
 
 	// Handle Google OAuth callback
@@ -83,7 +84,19 @@ export class AuthController {
 				if (result instanceof Exception) {
 					return new HttpResponseDto().exception(result);
 				}
-				return new HttpResponseDto().success<LoginResponseDto>(result);
+				// return new HttpResponseDto().success<LoginResponseDto>(result);
+				const cookies = result.cookies ?? {};
+				const isProduction = appEnv.NODE_ENV === 'production';
+				Object.entries(cookies).forEach(([name, value]) => {
+					res.cookie(name, String(value), {
+						httpOnly: true,
+						secure: isProduction,
+						sameSite: isProduction ? 'none' : 'lax',
+						path: '/',
+					});
+				});
+
+				return res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
 			},
 		)(req, res, next);
 	};

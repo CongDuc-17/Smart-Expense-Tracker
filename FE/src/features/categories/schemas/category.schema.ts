@@ -11,7 +11,7 @@ import { z } from "zod";
 // ---------------------------------------------------------------
 
 export const TransactionTypeSchema = z.enum(["INCOME", "EXPENSE"], {
-  errorMap: () => ({ message: "Vui lòng chọn loại giao dịch" }),
+  message: "Vui lòng chọn loại giao dịch",
 });
 
 // ---------------------------------------------------------------
