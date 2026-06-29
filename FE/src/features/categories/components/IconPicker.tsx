@@ -7,7 +7,8 @@
 // REUSABLE: Sẽ dùng lại ở Phase 5 (Budget icon).
 // ============================================================
 
-import { useRef, KeyboardEvent } from "react";
+import { useRef } from "react";
+import type { KeyboardEvent } from "react";
 import { motion } from "framer-motion";
 import { CATEGORY_ICONS, getIconComponent } from "@/features/categories/constants/category-icons";
 import { cn } from "@/lib/utils";

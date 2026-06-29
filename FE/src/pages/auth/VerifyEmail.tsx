@@ -101,8 +101,9 @@ export function VerifyEmail() {
                 type="button"
                 className="w-full"
                 onClick={() => handleVerify()}
+                disabled={loading}
               >
-                Xác minh
+                {loading ? "Đang xác minh..." : "Xác minh"}
               </Button>
             </Field>
           </CardFooter>
