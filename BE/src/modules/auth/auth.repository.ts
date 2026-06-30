@@ -11,9 +11,11 @@ export class AuthRepository {
 	constructor(private readonly prismaService = new PrismaService()) { }
 
 	async findAccount({
+		userId,
 		email,
 		accountStatus,
 	}: {
+		userId?: string;
 		email: string;
 		accountStatus?: UserStatusEnum;
 	}): Promise<AccountWithPartialRelations | null> {
@@ -23,6 +25,7 @@ export class AuthRepository {
 			},
 			where: {
 				user: {
+					id: userId,
 					email: email,
 					status: accountStatus,
 				},

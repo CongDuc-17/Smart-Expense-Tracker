@@ -30,7 +30,7 @@ generator zod {
     useDefaultValidators             = true // default is false
     coerceDate                       = true // default is false
     writeNullishInModelTypes         = true // default is false
-    prismaClientPath                 = "./path/to/prisma/client" // default is client output path 
+    prismaClientPath                 = "@prisma/client" // default is client output path 
 }
 
 enum RoleEnum {
@@ -217,7 +217,7 @@ model Income {
 // Kết quả OCR từ hóa đơn chụp tay
 model OcrResult {
     id              String                    @id @default(cuid())
-    expenseId       String                    @unique
+    expenseId       String?                   @unique
     merchantName    String?
     totalAmount     Decimal?                  @db.Decimal(12, 2)
     transactionDate DateTime?
@@ -233,7 +233,7 @@ model OcrResult {
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
 
-    expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+    expense Expense? @relation(fields: [expenseId], references: [id], onDelete: Cascade)
 
     @@map("ocr_results")
 }
