@@ -16,7 +16,7 @@ export class GetUsersRequestDto {
 const getUsersRequestQuery = z
 	.object({
 		name: z.string().optional(),
-		status: z.enum(UserStatusEnum).optional(),
+		status: z.nativeEnum(UserStatusEnum).optional(),
 	})
 	.extend(PaginationSchema)
 	.strict();

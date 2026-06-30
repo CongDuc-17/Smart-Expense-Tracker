@@ -11,4 +11,7 @@ export const appEnv = cleanEnv(process.env, {
 	HOST: host({ devDefault: testOnly('localhost') }),
 	PORT: port({ devDefault: testOnly(3000) }),
 	CORS_ORIGIN: str({ devDefault: testOnly('http://localhost:3000') }),
+	CLOUDINARY_CLOUD_NAME: str(),
+	CLOUDINARY_API_KEY: str(),
+	CLOUDINARY_API_SECRET: str(),
 });

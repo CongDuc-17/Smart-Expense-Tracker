@@ -33,6 +33,7 @@ export class CreateExpenseDto {
 	note?: string;
 	date: string;
 	imageUrl?: string;
+	imagePublicId?: string;
 }
 
 export const createExpenseBodySchema = z.object({
@@ -47,6 +48,7 @@ export const createExpenseBodySchema = z.object({
 	note: z.string().max(1000, 'Ghi chú không được vượt quá 1000 ký tự').optional(),
 	date: z.string().datetime({ message: 'Định dạng ngày không hợp lệ (ISO 8601)' }),
 	imageUrl: z.string().url('imageUrl không hợp lệ').optional(),
+	imagePublicId: z.string().optional(),
 });
 
 export const createExpenseValidationSchema: ZodValidationSchema = {
@@ -72,6 +74,7 @@ export class UpdateExpenseDto {
 	note?: string;
 	date?: string;
 	imageUrl?: string;
+	imagePublicId?: string;
 }
 
 export const updateExpenseBodyObjectSchema = z.object({
@@ -81,6 +84,7 @@ export const updateExpenseBodyObjectSchema = z.object({
 	note: z.string().max(1000).optional(),
 	date: z.string().datetime({ message: 'Định dạng ngày không hợp lệ (ISO 8601)' }).optional(),
 	imageUrl: z.string().url().optional(),
+	imagePublicId: z.string().optional(),
 });
 
 
