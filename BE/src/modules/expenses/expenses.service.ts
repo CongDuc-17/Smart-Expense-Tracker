@@ -8,7 +8,7 @@ import {
 	NotFoundException,
 	OptionalException,
 } from '@/common';
-import { AppEvents, eventBus, ExpenseMutatedEventPayload } from '@/common/events';
+// import { AppEvents, eventBus, ExpenseMutatedEventPayload } from '@/common/events';
 import { CategoriesRepository } from '@/modules/categories/categories.repository';
 
 import {
@@ -137,20 +137,20 @@ export class ExpensesService {
 			},
 		});
 
-		const payload: ExpenseMutatedEventPayload = {
-			userId,
-			categoryId: data.categoryId,
-			month: newExpense.date.getMonth() + 1,
-			year: newExpense.date.getFullYear(),
-		};
-		eventBus.emit(AppEvents.EXPENSE_MUTATED, payload);
+		// const payload: ExpenseMutatedEventPayload = {
+		// 	userId,
+		// 	categoryId: data.categoryId,
+		// 	month: newExpense.date.getMonth() + 1,
+		// 	year: newExpense.date.getFullYear(),
+		// };
+		// eventBus.emit(AppEvents.EXPENSE_MUTATED, payload);
 
-		if (newExpense.imageUrl) {
-			eventBus.emit(AppEvents.EXPENSE_IMAGE_UPLOADED, {
-				expenseId: newExpense.id,
-				imageUrl: newExpense.imageUrl,
-			});
-		}
+		// if (newExpense.imageUrl) {
+		// 	eventBus.emit(AppEvents.EXPENSE_IMAGE_UPLOADED, {
+		// 		expenseId: newExpense.id,
+		// 		imageUrl: newExpense.imageUrl,
+		// 	});
+		// }
 
 		return {
 			success: true,
@@ -198,20 +198,20 @@ export class ExpensesService {
 			},
 		});
 
-		const payload: ExpenseMutatedEventPayload = {
-			userId,
-			categoryId: updatedExpense.categoryId,
-			month: updatedExpense.date.getMonth() + 1,
-			year: updatedExpense.date.getFullYear(),
-		};
-		eventBus.emit(AppEvents.EXPENSE_MUTATED, payload);
+		// const payload: ExpenseMutatedEventPayload = {
+		// 	userId,
+		// 	categoryId: updatedExpense.categoryId,
+		// 	month: updatedExpense.date.getMonth() + 1,
+		// 	year: updatedExpense.date.getFullYear(),
+		// };
+		// eventBus.emit(AppEvents.EXPENSE_MUTATED, payload);
 
-		if (data.imageUrl && data.imageUrl !== expense.imageUrl) {
-			eventBus.emit(AppEvents.EXPENSE_IMAGE_UPLOADED, {
-				expenseId: updatedExpense.id,
-				imageUrl: data.imageUrl,
-			});
-		}
+		// if (data.imageUrl && data.imageUrl !== expense.imageUrl) {
+		// 	eventBus.emit(AppEvents.EXPENSE_IMAGE_UPLOADED, {
+		// 		expenseId: updatedExpense.id,
+		// 		imageUrl: data.imageUrl,
+		// 	});
+		// }
 
 		return {
 			success: true,
@@ -235,13 +235,13 @@ export class ExpensesService {
 
 		await this.expensesRepository.softDelete({ id });
 
-		const payload: ExpenseMutatedEventPayload = {
-			userId,
-			categoryId: expense.categoryId,
-			month: expense.date.getMonth() + 1,
-			year: expense.date.getFullYear(),
-		};
-		eventBus.emit(AppEvents.EXPENSE_MUTATED, payload);
+		// const payload: ExpenseMutatedEventPayload = {
+		// 	userId,
+		// 	categoryId: expense.categoryId,
+		// 	month: expense.date.getMonth() + 1,
+		// 	year: expense.date.getFullYear(),
+		// };
+		// eventBus.emit(AppEvents.EXPENSE_MUTATED, payload);
 
 		return {
 			success: true,
