@@ -156,6 +156,8 @@ export class SavingGoalsService {
 
 		const result = await this.savingGoalsRepository.deposit({
 			id,
+			userId,
+			goalTitle: goal.title,
 			amount: data.amount,
 			note: data.note,
 		});

@@ -38,27 +38,84 @@ export class SavingGoalsRepository {
 	}
 
 	async delete({ id }: { id: string }) {
-		return this.prismaService.savingGoal.delete({
-			where: { id },
+		return this.prismaService.$transaction(async (tx) => {
+			const deposits = await tx.savingDeposit.findMany({
+				where: { savingGoalId: id },
+				select: { expenseId: true },
+			});
+			const expenseIds = deposits.map((d) => d.expenseId).filter(Boolean) as string[];
+
+			const deletedGoal = await tx.savingGoal.delete({
+				where: { id },
+			});
+
+			if (expenseIds.length > 0) {
+				await tx.expense.updateMany({
+					where: { id: { in: expenseIds } },
+					data: { deletedAt: new Date() },
+				});
+			}
+
+			return deletedGoal;
 		});
 	}
 
 	async deposit({
 		id,
+		userId,
+		goalTitle,
 		amount,
 		note,
 	}: {
 		id: string;
+		userId: string;
+		goalTitle: string;
 		amount: number;
 		note?: string | null;
 	}) {
 		// Use transaction to ensure atomicity
 		const result = await this.prismaService.$transaction(async (tx) => {
+			// 1. Find or create the hardcoded 'Mục tiêu tiết kiệm' category
+			let savingCategory = await tx.category.findFirst({
+				where: {
+					userId,
+					type: 'EXPENSE',
+					isDefault: true,
+					name: 'Mục tiêu tiết kiệm',
+				},
+			});
+
+			if (!savingCategory) {
+				savingCategory = await tx.category.create({
+					data: {
+						userId,
+						name: 'Mục tiêu tiết kiệm',
+						type: 'EXPENSE',
+						icon: 'piggy-bank',
+						color: '#10b981', // emerald-500
+						isDefault: true,
+					},
+				});
+			}
+
+			// 2. Create the Expense record
+			const expense = await tx.expense.create({
+				data: {
+					userId,
+					categoryId: savingCategory.id,
+					amount,
+					title: `Nạp tiền: ${goalTitle}`,
+					note: note || 'Chuyển tiền vào mục tiêu tiết kiệm',
+					date: new Date(),
+				},
+			});
+
 			const deposit = await tx.savingDeposit.create({
 				data: {
 					savingGoalId: id,
 					amount,
 					note,
+					expenseId: expense.id,
 				},
 			});
 
