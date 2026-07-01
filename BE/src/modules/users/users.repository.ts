@@ -21,7 +21,7 @@ export class UsersRepository {
 		return Promise.all([
 			this.prismaService.user.findMany({
 				where: {
-					name: name,
+					name: name ? { contains: name, mode: 'insensitive' } : undefined,
 					status: status,
 				},
 				skip: skip,
@@ -29,7 +29,7 @@ export class UsersRepository {
 			}),
 			this.prismaService.user.count({
 				where: {
-					name: name,
+					name: name ? { contains: name, mode: 'insensitive' } : undefined,
 					status: status,
 				},
 			}),

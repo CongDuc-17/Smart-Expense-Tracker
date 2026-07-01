@@ -8,6 +8,7 @@ import {
 	NotFoundException,
 	OptionalException,
 } from '@/common';
+// import { AppEvents, eventBus, ExpenseMutatedEventPayload } from '@/common/events';
 import { CategoriesRepository } from '@/modules/categories/categories.repository';
 
 import {
@@ -132,10 +133,24 @@ export class ExpensesService {
 				note: data.note,
 				date: new Date(data.date),
 				imageUrl: data.imageUrl,
+				imagePublicId: data.imagePublicId,
 			},
 		});
 
-		// TODO Phase 5: Trigger budget recalculation event after expense creation
+		// const payload: ExpenseMutatedEventPayload = {
+		// 	userId,
+		// 	categoryId: data.categoryId,
+		// 	month: newExpense.date.getMonth() + 1,
+		// 	year: newExpense.date.getFullYear(),
+		// };
+		// eventBus.emit(AppEvents.EXPENSE_MUTATED, payload);
+
+		// if (newExpense.imageUrl) {
+		// 	eventBus.emit(AppEvents.EXPENSE_IMAGE_UPLOADED, {
+		// 		expenseId: newExpense.id,
+		// 		imageUrl: newExpense.imageUrl,
+		// 	});
+		// }
 
 		return {
 			success: true,
@@ -163,6 +178,13 @@ export class ExpensesService {
 			await this.validateCategory(data.categoryId, userId, TransactionTypeEnum.EXPENSE);
 		}
 
+		// Xóa ảnh cũ nếu có ảnh mới
+		if (data.imagePublicId && expense.imagePublicId && data.imagePublicId !== expense.imagePublicId) {
+			const { UploadService } = require('@/modules/upload/upload.service');
+			const uploadService = new UploadService();
+			uploadService.deleteImage(expense.imagePublicId);
+		}
+
 		const updatedExpense = await this.expensesRepository.update({
 			id,
 			data: {
@@ -172,10 +194,24 @@ export class ExpensesService {
 				...(data.note !== undefined && { note: data.note }),
 				...(data.date !== undefined && { date: new Date(data.date) }),
 				...(data.imageUrl !== undefined && { imageUrl: data.imageUrl }),
+				...(data.imagePublicId !== undefined && { imagePublicId: data.imagePublicId }),
 			},
 		});
 
-		// TODO Phase 5: Trigger budget recalculation event after expense update
+		// const payload: ExpenseMutatedEventPayload = {
+		// 	userId,
+		// 	categoryId: updatedExpense.categoryId,
+		// 	month: updatedExpense.date.getMonth() + 1,
+		// 	year: updatedExpense.date.getFullYear(),
+		// };
+		// eventBus.emit(AppEvents.EXPENSE_MUTATED, payload);
+
+		// if (data.imageUrl && data.imageUrl !== expense.imageUrl) {
+		// 	eventBus.emit(AppEvents.EXPENSE_IMAGE_UPLOADED, {
+		// 		expenseId: updatedExpense.id,
+		// 		imageUrl: data.imageUrl,
+		// 	});
+		// }
 
 		return {
 			success: true,
@@ -199,7 +235,13 @@ export class ExpensesService {
 
 		await this.expensesRepository.softDelete({ id });
 
-		// TODO Phase 5: Trigger budget recalculation event after expense deletion
+		// const payload: ExpenseMutatedEventPayload = {
+		// 	userId,
+		// 	categoryId: expense.categoryId,
+		// 	month: expense.date.getMonth() + 1,
+		// 	year: expense.date.getFullYear(),
+		// };
+		// eventBus.emit(AppEvents.EXPENSE_MUTATED, payload);
 
 		return {
 			success: true,

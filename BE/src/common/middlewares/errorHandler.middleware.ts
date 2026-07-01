@@ -12,5 +12,11 @@ export const errorHandlerMiddleware = (
 	if (err instanceof Exception) {
 		return new HttpResponseDto().exception(err);
 	}
-	return next();
+	
+	// Handle unexpected errors (not TSed Exceptions)
+	console.error('Unhandled Exception:', err);
+	res.status(500).json({
+		success: false,
+		message: err instanceof Error ? err.message : 'Internal Server Error',
+	});
 };
