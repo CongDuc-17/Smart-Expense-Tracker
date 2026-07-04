@@ -5,10 +5,12 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@prisma/client": ["node_modules/.prisma/client"]
     },
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "ignoreDeprecations": "6.0",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "outDir": "./dist",
@@ -20,5 +22,11 @@
     "types": ["node", "jest", "jest-extended"]
   },
   "exclude": ["node_modules"],
-  "include": ["src/**/*.ts", "prisma/**/*.ts", "typeorm.config.ts", "src/modules/auth/strategies/googleOauth.strategy.text", "src/modules/auth/auth.service.ts", "test/**/*.ts", "tests/**/*.ts"]
+  "include": [
+    "src/**/*.ts", 
+    "prisma/**/*.ts", 
+    "typeorm.config.ts", 
+    "src/modules/auth/strategies/googleOauth.strategy.ts", 
+    "src/modules/auth/auth.service.ts"
+  ]
 }

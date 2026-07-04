@@ -1,6 +1,4 @@
-import { UserStatusEnum } from '@prisma/client';
-
-import { User } from '@/models';
+import { User, UserStatusEnum } from '@prisma/client';
 
 export class UserInformationDto {
 	id: string;

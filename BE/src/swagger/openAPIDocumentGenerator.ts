@@ -1,5 +1,5 @@
 import { OpenApiGeneratorV3, OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-
+import { budgetsRegistry } from '@/modules/budgets/budgets.router';
 import { Registries } from '../modules';
 
 import {
@@ -12,7 +12,7 @@ import {
 type GeneratedOpenAPIDocument = ReturnType<OpenApiGeneratorV3['generateDocument']>;
 
 export function generateOpenAPIDocument(): GeneratedOpenAPIDocument {
-	const registry = new OpenAPIRegistry([...Registries]);
+	const registry = new OpenAPIRegistry([...Registries, budgetsRegistry]);
 
 	registry.registerComponent('securitySchemes', 'bearerAuth', {
 		type: 'http',

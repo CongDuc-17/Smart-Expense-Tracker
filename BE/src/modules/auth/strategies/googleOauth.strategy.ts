@@ -1,4 +1,4 @@
-import { UserStatusEnum } from '@prisma/client';
+import { Prisma, UserStatusEnum } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import passport from 'passport';
 import { Strategy, Profile, VerifyCallback } from 'passport-google-oauth20';
@@ -9,7 +9,6 @@ import { AuthRepository } from '../auth.repository';
 
 import { InternalServerException, OptionalException } from '@/common';
 import { GoogleOauthConfig } from '@/configs';
-import { socialAccountsWithPartialRelations } from '@/models';
 
 export class GoogleOauthStrategy {
 	constructor(
@@ -18,18 +17,28 @@ export class GoogleOauthStrategy {
 	) {
 		this.authRepository = authRepository;
 
-		passport.use(
-			'google',
-			new Strategy(
-				{
-					clientID: GoogleOauthConfig.clientId,
-					clientSecret: GoogleOauthConfig.clientSecret,
-					callbackURL: GoogleOauthConfig.redirectUri,
-					scope: ['email', 'profile'],
-				},
-				this.validate.bind(this),
-			),
-		);
+		if (
+			GoogleOauthConfig.clientId &&
+			GoogleOauthConfig.clientSecret &&
+			GoogleOauthConfig.redirectUri
+		) {
+			passport.use(
+				'google',
+				new Strategy(
+					{
+						clientID: GoogleOauthConfig.clientId,
+						clientSecret: GoogleOauthConfig.clientSecret,
+						callbackURL: GoogleOauthConfig.redirectUri,
+						scope: ['email', 'profile'],
+					},
+					this.validate.bind(this),
+				),
+			);
+		} else {
+			console.warn(
+				'Google OAuth is disabled because the required credentials are not configured.',
+			);
+		}
 	}
 
 	async validate(
@@ -51,7 +60,7 @@ export class GoogleOauthStrategy {
 				email: user.email,
 			});
 
-			let socialAccount: socialAccountsWithPartialRelations | null;
+			let socialAccount: Prisma.SocialAccountGetPayload<{ include: { user: true } }> | null;
 
 			if (!existingUser) {
 				socialAccount = await this.authRepository.createSocialAccount({

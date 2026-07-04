@@ -18,6 +18,7 @@ const config: Config = {
   modulePaths: ['<rootDir>'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^@tsed/exceptions$': '<rootDir>/tests/__mocks__/@tsed_exceptions_mock.ts',
   },
   
   // Test patterns
@@ -55,6 +56,11 @@ const config: Config = {
       },
     }],
   },
+
+  // Ensure certain ESM packages in node_modules are transformed by Jest
+  transformIgnorePatterns: [
+    'node_modules/(?!(?:@tsed/exceptions)/)'
+  ],
   
   // Clear mocks
   clearMocks: true,

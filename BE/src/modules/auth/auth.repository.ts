@@ -1,11 +1,9 @@
-import { RefreshToken, UserStatusEnum } from '@prisma/client';
+import { Prisma as PrismaClient, RefreshToken, UserStatusEnum } from '@prisma/client';
 
 import { Prisma, PrismaService } from '../database';
 
-import {
-	AccountWithPartialRelations,
-	SocialAccountWithPartialRelations,
-} from '@/models';
+type AccountWithUser = PrismaClient.AccountGetPayload<{ include: { user: true } }>;
+type SocialAccountWithUser = PrismaClient.SocialAccountGetPayload<{ include: { user: true } }>;
 
 export class AuthRepository {
 	constructor(private readonly prismaService = new PrismaService()) { }
@@ -18,7 +16,7 @@ export class AuthRepository {
 		userId?: string;
 		email: string;
 		accountStatus?: UserStatusEnum;
-	}): Promise<AccountWithPartialRelations | null> {
+	}): Promise<AccountWithUser | null> {
 		return this.prismaService.account.findFirst({
 			include: {
 				user: true,
@@ -41,7 +39,7 @@ export class AuthRepository {
 		email: string;
 		userId?: string;
 		status?: UserStatusEnum;
-	}): Promise<SocialAccountWithPartialRelations | null> {
+	}): Promise<SocialAccountWithUser | null> {
 		return this.prismaService.socialAccount.findFirst({
 			include: {
 				user: true,
@@ -60,7 +58,7 @@ export class AuthRepository {
 		accounts,
 	}: {
 		accounts: Prisma.AccountCreateInput;
-	}): Promise<AccountWithPartialRelations> {
+	}): Promise<AccountWithUser> {
 		return this.prismaService.account.create({
 			include: {
 				user: true,
@@ -73,8 +71,11 @@ export class AuthRepository {
 		socialAccount,
 	}: {
 		socialAccount: Prisma.SocialAccountCreateInput;
-	}): Promise<SocialAccountWithPartialRelations> {
+	}): Promise<SocialAccountWithUser> {
 		return this.prismaService.socialAccount.create({
+			include: {
+				user: true,
+			},
 			data: socialAccount,
 		});
 	}
@@ -94,7 +95,7 @@ export class AuthRepository {
 		userId: string;
 		password: string;
 		salt: string;
-	}): Promise<AccountWithPartialRelations> {
+	}): Promise<AccountWithUser> {
 		return this.prismaService.account.update({
 			include: {
 				user: true,

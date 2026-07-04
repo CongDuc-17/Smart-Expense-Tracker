@@ -48,20 +48,20 @@ axiosClient.interceptors.response.use(
       _retry?: boolean;
     };
 
-    // Skip refresh token nếu đang ở auth pages
+   
     const authPages = ["/login", "/register", "/verify", "/forgot-password"];
     const isAuthPage = authPages.some((page) =>
       window.location.pathname.includes(page),
     );
 
-    // Kiểm tra nếu lỗi 401 và chưa được retry (và không phải auth page)
+    
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
       !isAuthPage
     ) {
       if (isRefreshing) {
-        // Nếu đang trong quá trình refresh, đẩy request này vào hàng đợi
+        
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
@@ -76,7 +76,7 @@ axiosClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Gọi API lấy token mới - dùng axios gốc để tránh interceptor này lặp vô tận
+        
         const res = await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/auth/refresh-token`,
           {},
@@ -91,12 +91,12 @@ axiosClient.interceptors.response.use(
 
         processQueue(null, accessToken);
 
-        // Thực hiện lại request ban đầu với token mới
+        
         originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
         return axiosClient(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);
-        // Nếu refresh cũng lỗi (hết hạn cả refreshToken), cho đăng xuất
+        
         window.location.href = "/login";
         return Promise.reject(refreshError);
       } finally {

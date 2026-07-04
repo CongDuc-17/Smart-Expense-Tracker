@@ -19,78 +19,38 @@ import { Request } from 'express';
 import { AuthController } from '@/modules/auth/auth.controller';
 import { HttpResponseDto } from '@/common';
 import { ConflictException } from '@/common';
+import { requestContextStorage } from '@/common/utils/requestContext.util';
 
 describe('AuthController - Unit Tests', () => {
     let authController: AuthController;
     let mockAuthService: any;
     let mockRequest: Partial<Request>;
+    let fakeResponse: any;
 
     beforeEach(() => {
-        // mockAuthService = {
-        //     register: async () => ({
-        //         success: true,
-        //         data: {
-        //             id: 'account-123',
-        //             userId: 'user-123',
-        //             email: 'test@example.com',
-        //             name: 'Test User',
-        //             avatar: 'https://avatar.url',
-        //             verify: false,
-        //             status: UserStatusEnum.ACTIVE,
-        //         },
-        //     }),
-        //     login: async () => ({
-        //         success: true,
-        //         data: {
-        //             accessToken: 'access-token-abc',
-        //             refreshToken: 'refresh-token-xyz',
-        //         },
-        //         cookies: {
-        //             accessToken: 'access-token-abc',
-        //             refreshToken: 'refresh-token-xyz',
-        //         },
-        //     }),
-        //     sendOtp: async () => ({
-        //         success: true,
-        //         data: null,
-        //     }),
-        //     verify: async () => ({
-        //         success: true,
-        //         data: {
-        //             id: 'account-123',
-        //             userId: 'user-123',
-        //             email: 'test@example.com',
-        //             name: 'Test User',
-        //             verify: true,
-        //             status: UserStatusEnum.ACTIVE,
-        //         },
-        //     }),
-        //     forgotPassword: async () => ({
-        //         success: true,
-        //         data: {
-        //             id: 'account-123',
-        //             userId: 'user-123',
-        //             email: 'test@example.com',
-        //         },
-        //     }),
-        //     refreshToken: async () => ({
-        //         success: true,
-        //         data: {
-        //             accessToken: 'new-access-token',
-        //             refreshToken: 'new-refresh-token',
-        //         },
-        //         cookies: {
-        //             accessToken: 'new-access-token',
-        //             refreshToken: 'new-refresh-token',
-        //         },
-        //     }),
-        // };
+        mockAuthService = {
+            register: async () => ({ success: true, data: {} }),
+            login: async () => ({ success: true, data: {}, cookies: {} }),
+            sendOtp: async () => ({ success: true, data: null }),
+            verify: async () => ({ success: true, data: {} }),
+            forgotPassword: async () => ({ success: true, data: {} }),
+            refreshToken: async () => ({ success: true, data: {}, cookies: {} }),
+        };
+
         authController = new AuthController();
+        // Inject our mock service into controller instance
+        (authController as any).authService = mockAuthService;
 
         // Setup mock request object
         mockRequest = {
             body: {},
             user: undefined,
+        };
+
+        // Provide a fake Response object to be used by request context
+        fakeResponse = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn().mockReturnValue({}),
         };
     });
 
@@ -106,10 +66,14 @@ describe('AuthController - Unit Tests', () => {
             mockRequest.body = registerData;
             mockRequest.params = registerData
 
-            const response = await authController.register(mockRequest as Request);
+            const response = await requestContextStorage.run(
+                { req: mockRequest as Request, res: fakeResponse },
+                async () => await authController.register(mockRequest as Request),
+            );
 
-            expect(response).toBeInstanceOf(HttpResponseDto);
-            expect(response).toBeDefined();
+            // Should have used response created (HTTP 201)
+            expect(fakeResponse.status).toHaveBeenCalledWith(201);
+            expect(fakeResponse.json).toHaveBeenCalled();
         });
 
         it('✅ should pass correct data to authService.register', async () => {
@@ -141,7 +105,10 @@ describe('AuthController - Unit Tests', () => {
             };
 
             // Act
-            await authController.register(mockRequest as Request);
+            await requestContextStorage.run(
+                { req: mockRequest as Request, res: fakeResponse },
+                async () => await authController.register(mockRequest as Request),
+            );
 
             // Assert
             expect(serviceCalledWithCorrectData).toBe(true);
@@ -155,16 +122,20 @@ describe('AuthController - Unit Tests', () => {
                 name: 'User',
             };
 
-            // Mock service to return error
+            // Mock service to return an Exception instance (service may return Exception objects)
             mockAuthService.register = async () => {
                 return new ConflictException('email');
             };
 
             // Act
-            const response = await authController.register(mockRequest as Request);
+            const response = await requestContextStorage.run(
+                { req: mockRequest as Request, res: fakeResponse },
+                async () => await authController.register(mockRequest as Request),
+            );
 
-            // Assert - Should return error response
-            expect(response).toBeInstanceOf(HttpResponseDto);
+            // Assert - Should return error response (Conflict)
+            expect(fakeResponse.status).toHaveBeenCalledWith(409);
+            expect(fakeResponse.json).toHaveBeenCalled();
         });
     });
 

@@ -1,17 +1,17 @@
 import dotenv from 'dotenv';
-import { cleanEnv, host, port, str, testOnly } from 'envalid';
+import { cleanEnv, host, port, str } from 'envalid';
 
 dotenv.config();
 
 export const appEnv = cleanEnv(process.env, {
 	NODE_ENV: str({
-		devDefault: testOnly('test'),
+		default: 'development',
 		choices: ['development', 'production', 'test'],
 	}),
-	HOST: host({ devDefault: testOnly('localhost') }),
-	PORT: port({ devDefault: testOnly(3000) }),
-	CORS_ORIGIN: str({ devDefault: testOnly('http://localhost:3000') }),
-	CLOUDINARY_CLOUD_NAME: str(),
-	CLOUDINARY_API_KEY: str(),
-	CLOUDINARY_API_SECRET: str(),
+	HOST: host({ default: 'localhost' }),
+	PORT: port({ default: 3000 }),
+	CORS_ORIGIN: str({ default: 'http://localhost:3000' }),
+	CLOUDINARY_CLOUD_NAME: str({ default: '' }),
+	CLOUDINARY_API_KEY: str({ default: '' }),
+	CLOUDINARY_API_SECRET: str({ default: '' }),
 });

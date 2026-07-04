@@ -1,5 +1,5 @@
-import { SocialAccountWithPartialRelations } from '@/models';
+import { Prisma } from '@prisma/client';
 
 export class CheckLoginWithGoogleOauthRequestDto {
-	socialAccountInformation: SocialAccountWithPartialRelations;
+	socialAccountInformation: Prisma.SocialAccountGetPayload<{ include: { user: true } }>;
 }

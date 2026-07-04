@@ -1,7 +1,5 @@
-import { UserStatusEnum } from '@prisma/client';
+import { Prisma, UserStatusEnum } from '@prisma/client';
 import z from 'zod';
-
-import { accountsWithPartialRelations } from '@/models';
 
 export class AccountResponseDto {
 	id: string;
@@ -12,7 +10,7 @@ export class AccountResponseDto {
 	verify: boolean;
 	status: UserStatusEnum;
 
-	constructor(account: accountsWithPartialRelations) {
+	constructor(account: Prisma.AccountGetPayload<{ include: { user: true } }>) {
 		this.id = account.id;
 		this.userId = account.userId;
 		this.email = account.user?.email || '';
@@ -29,5 +27,5 @@ export const accountResponseDtoSchema = z.object({
 	name: z.string(),
 	avatar: z.url(),
 	verify: z.boolean(),
-	status: z.enum(UserStatusEnum),
+	status: z.nativeEnum(UserStatusEnum),
 });
