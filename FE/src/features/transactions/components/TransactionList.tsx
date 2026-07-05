@@ -117,15 +117,18 @@ export function TransactionList({
             <h3 className="text-xs font-semibold text-[#9B9A97] uppercase tracking-wider leading-4">
               {group.label}
             </h3>
-            <div className="flex items-center gap-3 text-xs text-[#9B9A97]">
+            <div className="flex items-center gap-2 text-xs text-[#9B9A97]">
               {group.dayIncome > 0 && (
                 <span className="text-[#1DD1A1] font-medium">
-                  +{formatVND(group.dayIncome)}
+                  Thu: +{formatVND(group.dayIncome)}
                 </span>
+              )}
+              {group.dayIncome > 0 && group.dayExpense > 0 && (
+                <span className="text-[#E8E7E5]">|</span>
               )}
               {group.dayExpense > 0 && (
                 <span className="text-[#FF6B6B] font-medium">
-                  -{formatVND(group.dayExpense)}
+                  Chi: -{formatVND(group.dayExpense)}
                 </span>
               )}
             </div>

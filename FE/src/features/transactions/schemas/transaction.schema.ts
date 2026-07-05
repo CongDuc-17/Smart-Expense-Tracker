@@ -27,6 +27,8 @@ export const createTransactionSchema = z.object({
     .max(255, "Tiêu đề quá dài (tối đa 255 ký tự)"),
   date: z.string().min(1, "Vui lòng chọn ngày"),
   note: z.string().max(1000, "Ghi chú quá dài").optional(),
+  imageUrl: z.string().optional(),
+  imagePublicId: z.string().optional(),
 });
 
 export type CreateTransactionFormValues = z.infer<typeof createTransactionSchema>;
@@ -48,6 +50,8 @@ export const editTransactionSchema = z.object({
     .max(255, "Tiêu đề quá dài (tối đa 255 ký tự)"),
   date: z.string().min(1, "Vui lòng chọn ngày"),
   note: z.string().max(1000, "Ghi chú quá dài").optional(),
+  imageUrl: z.string().optional(),
+  imagePublicId: z.string().optional(),
 });
 
 export type EditTransactionFormValues = z.infer<typeof editTransactionSchema>;

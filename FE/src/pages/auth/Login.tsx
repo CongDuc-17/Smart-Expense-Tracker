@@ -62,7 +62,7 @@ export function Login() {
                 { withCredentials: true },
             );
             toast.success("Đăng nhập thành công!");
-            navigate("/categories", { replace: true });
+            navigate("/dashboard", { replace: true });
         } catch (error) {
             const message = getErrorMessage(error, "Đăng nhập thất bại");
             setError(message);

@@ -20,6 +20,7 @@ import { TransactionSkeleton } from "@/features/transactions/components/Transact
 import { TransactionEmptyState } from "@/features/transactions/components/TransactionEmptyState";
 import { TransactionSheet } from "@/features/transactions/components/TransactionSheet";
 import { DeleteTransactionDialog } from "@/features/transactions/components/DeleteTransactionDialog";
+import { AiResumeBanner } from "@/features/ai/components/AiResumeBanner";
 import { formatVND } from "@/features/transactions/components/AmountDisplay";
 import { useTransactions } from "@/features/transactions/hooks/useTransactions";
 import { useShallow } from "zustand/react/shallow";
@@ -33,7 +34,7 @@ import type { Transaction, TransactionSummary } from "@/features/transactions/ty
 // Summary Bar Component
 // ---------------------------------------------------------------
 
-function SummaryBar({ summary }: { summary: TransactionSummary }) {
+function SummaryBar({ summary, totalCount }: { summary: TransactionSummary, totalCount: number }) {
   const items = [
     {
       label: "Thu nhập",
@@ -55,15 +56,17 @@ function SummaryBar({ summary }: { summary: TransactionSummary }) {
       icon: Minus,
       color: summary.balance >= 0 ? "#37352F" : "#FF6B6B",
       bg: "#37352F10",
+      status: summary.balance >= 0 ? "Tích luỹ tốt" : "Thâm hụt",
+      statusColor: summary.balance >= 0 ? "text-emerald-600" : "text-red-500",
     },
   ];
 
   return (
     <div className="grid grid-cols-3 gap-3 mb-6">
-      {items.map(({ label, value, icon: Icon, color, bg }) => (
+      {items.map(({ label, value, icon: Icon, color, bg, status, statusColor }) => (
         <div
           key={label}
-          className="flex flex-col gap-2 p-4 rounded-lg border border-[#E8E7E5] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
+          className="flex flex-col gap-2 p-4 rounded-lg border border-[#E8E7E5] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] relative overflow-hidden"
         >
           <div className="flex items-center gap-2">
             <div
@@ -74,9 +77,16 @@ function SummaryBar({ summary }: { summary: TransactionSummary }) {
             </div>
             <span className="text-xs text-[#9B9A97] font-medium">{label}</span>
           </div>
-          <p className="text-base font-semibold leading-5" style={{ color }}>
-            {value >= 0 ? "" : "-"}{formatVND(Math.abs(value))}
-          </p>
+          <div className="flex items-end justify-between mt-1">
+            <p className="text-base font-semibold leading-5" style={{ color }}>
+              {value >= 0 ? "" : "-"}{formatVND(Math.abs(value))}
+            </p>
+            {status && (
+              <span className={`text-[11px] font-medium ${statusColor}`}>
+                {status}
+              </span>
+            )}
+          </div>
         </div>
       ))}
     </div>
@@ -109,6 +119,10 @@ export function TransactionsPage() {
     openCreateSheet,
     openEditSheet,
     openDeleteDialog,
+    searchQuery,
+    sortMode,
+    selectedMonth,
+    selectedYear
   } = useTransactionStore();
 
   const filters = useTransactionStore(useShallow(selectTransactionFilters));
@@ -117,11 +131,13 @@ export function TransactionsPage() {
   const { transactions, isLoading, isError, refetch } = useTransactions({
     activeTab,
     filters,
+    searchQuery,
+    sortMode
   });
 
   // ─── Summary (client-side calculation) ───────────────────────
   const summary: TransactionSummary = useMemo(() => {
-    const totalIncome  = transactions.filter((t) => t.type === "INCOME").reduce((s, t) => s + t.amount, 0);
+    const totalIncome = transactions.filter((t) => t.type === "INCOME").reduce((s, t) => s + t.amount, 0);
     const totalExpense = transactions.filter((t) => t.type === "EXPENSE").reduce((s, t) => s + t.amount, 0);
     return { totalIncome, totalExpense, balance: totalIncome - totalExpense };
   }, [transactions]);
@@ -137,7 +153,7 @@ export function TransactionsPage() {
   // ─── Render ──────────────────────────────────────────────────
   return (
     <div className="flex flex-col min-h-full bg-[#FFFEFC]">
-      <div className="flex-1 w-full max-w-4xl mx-auto px-6 py-8">
+      <div className="flex-1 w-full max-w-5xl mx-auto px-6 py-8">
 
         {/* Page Header */}
         <div className="flex items-start justify-between mb-6">
@@ -145,8 +161,12 @@ export function TransactionsPage() {
             <h1 className="text-2xl font-semibold text-[#37352F] leading-8 tracking-tight">
               Giao dịch
             </h1>
-            <p className="text-sm text-[#9B9A97] mt-1 leading-5">
-              Theo dõi thu chi hàng ngày của bạn
+            <p className="text-sm text-[#9B9A97] mt-1 flex items-center gap-2 leading-5">
+              Theo dõi thu chi
+              <span className="w-1 h-1 rounded-full bg-[#E8E7E5]" />
+              <span>
+                {isLoading ? "Đang tải..." : `${transactions.length} giao dịch tháng ${selectedMonth}/${selectedYear}`}
+              </span>
             </p>
           </div>
           <Button
@@ -159,9 +179,11 @@ export function TransactionsPage() {
           </Button>
         </div>
 
+        <AiResumeBanner />
+
         {/* Summary */}
         {!isLoading && !isError && (
-          <SummaryBar summary={summary} />
+          <SummaryBar summary={summary} totalCount={transactions.length} />
         )}
 
         {/* Filters */}

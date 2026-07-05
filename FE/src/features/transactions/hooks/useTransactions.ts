@@ -36,12 +36,16 @@ export const transactionKeys = {
 interface UseTransactionsOptions {
   activeTab: TransactionTabFilter;
   filters: TransactionFilters;
+  searchQuery?: string;
+  sortMode?: string;
   enabled?: boolean;
 }
 
 export function useTransactions({
   activeTab,
   filters,
+  searchQuery = "",
+  sortMode = "NEWEST",
   enabled = true,
 }: UseTransactionsOptions) {
   const TYPES = activeTab === "ALL"
@@ -69,11 +73,32 @@ export function useTransactions({
   const error     = results.find((r) => r.error)?.error;
 
   // Merge tất cả transactions từ tất cả queries
-  const transactions: Transaction[] = results
-    .flatMap((r) => r.data?.data ?? [])
-    .sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  let transactions: Transaction[] = results
+    .flatMap((r) => r.data?.data ?? []);
+
+  // Client-side Filter (Search)
+  if (searchQuery.trim()) {
+    const lowerQuery = searchQuery.toLowerCase();
+    transactions = transactions.filter(
+      (t) =>
+        t.title.toLowerCase().includes(lowerQuery) ||
+        t.category.name.toLowerCase().includes(lowerQuery) ||
+        (t.note && t.note.toLowerCase().includes(lowerQuery))
     );
+  }
+
+  // Client-side Sort
+  transactions.sort((a, b) => {
+    switch (sortMode) {
+      case "OLDEST":
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+      case "HIGHEST_AMOUNT":
+        return b.amount - a.amount;
+      case "NEWEST":
+      default:
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+    }
+  });
 
   // Pagination metadata (chỉ meaningful khi query 1 type)
   const pagination = results[0]?.data?.pagination;

@@ -46,18 +46,27 @@ const NAV_SECONDARY = [
   { title: "Trợ giúp", url: "/help",   icon: <CircleHelpIcon className="w-4 h-4" /> },
 ];
 
-// Hardcoded tạm — Phase sau sẽ lấy từ auth store
-const MOCK_USER = {
-  name: "Người dùng",
-  email: "user@example.com",
-  avatar: "",
-};
+
 
 // ---------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------
 
+import { useUserStore } from "@/features/users/stores/user.store";
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const user = useUserStore((state) => state.currentUser);
+  
+  // Safe default if data is not loaded yet
+  const safeUser = user ? {
+    name: user.name,
+    email: user.email,
+    avatar: user.avatar || "",
+  } : {
+    name: "Đang tải...",
+    email: "",
+    avatar: "",
+  };
   return (
     <Sidebar
       collapsible="icon"
@@ -101,7 +110,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       {/* ── Footer: User menu ───────────────────────────── */}
       <SidebarFooter className="px-3 pb-4 border-t border-[#E8E7E5] pt-3">
-        <NavUser user={MOCK_USER} />
+        <NavUser user={safeUser} />
       </SidebarFooter>
     </Sidebar>
   );

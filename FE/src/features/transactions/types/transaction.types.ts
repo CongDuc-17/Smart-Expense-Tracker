@@ -36,6 +36,7 @@ export interface Transaction {
   date: string;       // ISO 8601 string
   note?: string | null;
   imageUrl?: string | null;
+  imagePublicId?: string | null;
   categoryId: string;
   category: CategorySnapshot;
   userId: string;
@@ -77,6 +78,7 @@ export interface CreateTransactionDto {
   note?: string;
   date: string;       // ISO 8601
   imageUrl?: string;
+  imagePublicId?: string;
 }
 
 export interface UpdateTransactionDto {
@@ -86,6 +88,7 @@ export interface UpdateTransactionDto {
   note?: string;
   date?: string;
   imageUrl?: string;
+  imagePublicId?: string;
 }
 
 // ---------------------------------------------------------------
@@ -93,6 +96,7 @@ export interface UpdateTransactionDto {
 // ---------------------------------------------------------------
 
 export type TransactionTabFilter = "ALL" | "INCOME" | "EXPENSE";
+export type TransactionSortMode = "NEWEST" | "OLDEST" | "HIGHEST_AMOUNT";
 
 export interface TransactionFilters {
   month?: number;       // 1-12
@@ -106,6 +110,16 @@ export interface TransactionFilters {
 // UI State Types (Zustand)
 // ---------------------------------------------------------------
 
+export interface CreatePrefillData {
+  categoryId?: string;
+  amount?: number;
+  title?: string;
+  date?: string;
+  imageUrl?: string;
+  imagePublicId?: string;
+  note?: string;
+}
+
 export interface TransactionUIState {
   // Tab / type filter
   activeTab: TransactionTabFilter;
@@ -117,9 +131,14 @@ export interface TransactionUIState {
   // Category filter
   selectedCategoryId: string | null;
 
+  // Search & Sort
+  searchQuery: string;
+  sortMode: TransactionSortMode;
+
   // Create sheet
   isCreateSheetOpen: boolean;
   creatingType: TransactionType;   // Type mặc định khi mở create sheet
+  createPrefillData: CreatePrefillData | null; // Data to prefill
 
   // Edit sheet
   isEditSheetOpen: boolean;
@@ -143,8 +162,13 @@ export interface TransactionUIActions {
   // Category filter
   setSelectedCategoryId: (id: string | null) => void;
 
+  // Search & Sort
+  setSearchQuery: (query: string) => void;
+  setSortMode: (mode: TransactionSortMode) => void;
+
   // Create sheet
   openCreateSheet: (type?: TransactionType) => void;
+  openCreateSheetWithPrefill: (data: CreatePrefillData, type?: TransactionType) => void;
   closeCreateSheet: () => void;
 
   // Edit sheet
