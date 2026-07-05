@@ -220,6 +220,7 @@ model OcrResult {
   id              String                    @id @default(cuid())
   expenseId       String?                   @unique
   merchantName    String?
+  categoryId      String?
   totalAmount     Decimal?                  @db.Decimal(12, 2)
   transactionDate DateTime?
   extractedText   String                    @db.Text // raw OCR dump
