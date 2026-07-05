@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircle2, Circle, Loader2 } from "lucide-react";
 
 const STEPS = [
@@ -27,18 +27,17 @@ export function AiInsightLoadingSteps() {
         <h3 className="text-lg font-semibold text-[#37352F] text-center mb-6">
           AI đang phân tích
         </h3>
-        
+
         <div className="space-y-4">
           {STEPS.map((step, index) => {
             const isCompleted = index < currentStep;
             const isActive = index === currentStep;
 
             return (
-              <div 
-                key={index} 
-                className={`flex items-center gap-3 text-sm transition-all duration-300 ${
-                  isCompleted ? "text-emerald-600" : isActive ? "text-[#37352F] font-medium" : "text-[#9B9A97]"
-                }`}
+              <div
+                key={index}
+                className={`flex items-center gap-3 text-sm transition-all duration-300 ${isCompleted ? "text-emerald-600" : isActive ? "text-[#37352F] font-medium" : "text-[#9B9A97]"
+                  }`}
               >
                 {isCompleted ? (
                   <CheckCircle2 className="w-5 h-5 text-emerald-500" />

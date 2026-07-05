@@ -8,7 +8,7 @@
 
 import { memo } from "react";
 import { motion } from "framer-motion";
-import { Pencil, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { IconDisplay } from "@/features/categories/components/IconPicker";
 import { AmountDisplay } from "@/features/transactions/components/AmountDisplay";
 import type { Transaction } from "@/features/transactions/types/transaction.types";

@@ -34,7 +34,7 @@ import type { Transaction, TransactionSummary } from "@/features/transactions/ty
 // Summary Bar Component
 // ---------------------------------------------------------------
 
-function SummaryBar({ summary, totalCount }: { summary: TransactionSummary, totalCount: number }) {
+function SummaryBar({ summary }: { summary: TransactionSummary }) {
   const items = [
     {
       label: "Thu nhập",
@@ -183,7 +183,7 @@ export function TransactionsPage() {
 
         {/* Summary */}
         {!isLoading && !isError && (
-          <SummaryBar summary={summary} totalCount={transactions.length} />
+          <SummaryBar summary={summary} />
         )}
 
         {/* Filters */}

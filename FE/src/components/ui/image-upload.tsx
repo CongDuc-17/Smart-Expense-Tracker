@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { UploadCloud, X, Loader2, Image as ImageIcon } from "lucide-react";
+import { X, Loader2, Image as ImageIcon } from "lucide-react";
 import { uploadService } from "@/features/upload/services/upload.service";
 import { Button } from "@/components/ui/button";
 

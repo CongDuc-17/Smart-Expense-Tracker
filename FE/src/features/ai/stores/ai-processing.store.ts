@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { OcrResult } from "../types/ai.types";
+
 
 export type AiProcessingStep =
   | "idle"
@@ -66,17 +66,17 @@ const initialState = {
   },
 };
 
-export const useAiProcessingStore = create<AiProcessingState>((set, get) => ({
+export const useAiProcessingStore = create<AiProcessingState>((set) => ({
   ...initialState,
 
   openDrawer: (mode = "ocr") => set({ isOpen: true, mode }),
 
   closeDrawer: () => set({ isOpen: false }),
 
-  setStep: (step) => set((state) => ({
+  setStep: (step) => set({
     step,
     statusBadge: step === "review" ? "Ready" : (step === "idle" || step === "error" ? "Draft" : "Processing")
-  })),
+  }),
 
   setImage: (file, url, publicId) => set({
     imageFile: file,

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
-import { Sparkles, Calendar, RotateCw, AlertCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { Sparkles, RotateCw, AlertCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAiInsights, useGenerateInsights } from "@/features/ai/hooks/useAi";
 import { Button } from "@/components/ui/button";
 

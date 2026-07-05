@@ -594,10 +594,9 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
 // ================================================================
 
 export function TransactionSheet() {
-  const { isCreateSheetOpen, closeCreateSheet, isEditSheetOpen, openCreateSheetWithPrefill } = useTransactionStore();
+  const { isCreateSheetOpen, closeCreateSheet, isEditSheetOpen } = useTransactionStore();
 
   const [methodDialogOpen, setMethodDialogOpen] = useState(false);
-  const [aiPreviewOpen, setAiPreviewOpen] = useState(false);
   const [manualSheetOpen, setManualSheetOpen] = useState(false);
 
   useEffect(() => {
@@ -611,7 +610,6 @@ export function TransactionSheet() {
       }
     } else {
       setMethodDialogOpen(false);
-      setAiPreviewOpen(false);
       setManualSheetOpen(false);
     }
   }, [isCreateSheetOpen]);

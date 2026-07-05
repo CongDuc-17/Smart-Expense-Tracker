@@ -1,7 +1,7 @@
 import React from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { vi } from "date-fns/locale";
-import { Bell, CheckCircle2, TrendingUp, AlertTriangle, Sparkles, AlertCircle, BellRing } from "lucide-react";
+import { Bell, CheckCircle2, AlertTriangle, Sparkles, AlertCircle, BellRing } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { NotificationItem, NotificationType } from "../types/notification.types";
 

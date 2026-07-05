@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { savingGoalService } from "@/features/saving-goals/services/saving-goal.service";
 import { savingGoalKeys } from "./useSavingGoals";
-import type { CreateSavingGoalPayload, SavingGoal } from "@/features/saving-goals/types/saving-goal.types";
+import type { CreateSavingGoalPayload } from "@/features/saving-goals/types/saving-goal.types";
 import { toast } from "sonner";
 
 export function useCreateSavingGoal() {
@@ -12,7 +12,7 @@ export function useCreateSavingGoal() {
     onMutate: async () => {
       // Opt-in UI optimistic updates if needed
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Tạo mục tiêu thành công!");
       queryClient.invalidateQueries({ queryKey: savingGoalKeys.lists() });
     },
