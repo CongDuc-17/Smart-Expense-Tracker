@@ -29,9 +29,12 @@ const initialState: TransactionUIState = {
   selectedMonth: now.getMonth() + 1,   // getMonth() trả về 0-indexed
   selectedYear: now.getFullYear(),
   selectedCategoryId: null,
+  searchQuery: "",
+  sortMode: "NEWEST",
 
   isCreateSheetOpen: false,
   creatingType: "EXPENSE",
+  createPrefillData: null,
 
   isEditSheetOpen: false,
   editingTransaction: null,
@@ -83,11 +86,18 @@ export const useTransactionStore = create<TransactionUIState & TransactionUIActi
     // ─── Category filter ─────────────────────────────────────
     setSelectedCategoryId: (id: string | null) => set({ selectedCategoryId: id }),
 
+    // ─── Search & Sort ───────────────────────────────────────
+    setSearchQuery: (query: string) => set({ searchQuery: query }),
+    setSortMode: (mode: any) => set({ sortMode: mode }),
+
     // ─── Create sheet ─────────────────────────────────────────
     openCreateSheet: (type: TransactionType = "EXPENSE") =>
-      set({ isCreateSheetOpen: true, creatingType: type }),
+      set({ isCreateSheetOpen: true, creatingType: type, createPrefillData: null }),
 
-    closeCreateSheet: () => set({ isCreateSheetOpen: false }),
+    openCreateSheetWithPrefill: (data, type: TransactionType = "EXPENSE") =>
+      set({ isCreateSheetOpen: true, creatingType: type, createPrefillData: data }),
+
+    closeCreateSheet: () => set({ isCreateSheetOpen: false, createPrefillData: null }),
 
     // ─── Edit sheet ──────────────────────────────────────────
     openEditSheet: (transaction: Transaction) =>
@@ -110,6 +120,8 @@ export const useTransactionStore = create<TransactionUIState & TransactionUIActi
         selectedMonth: new Date().getMonth() + 1,
         selectedYear: new Date().getFullYear(),
         selectedCategoryId: null,
+        searchQuery: "",
+        sortMode: "NEWEST",
       }),
   })
 );

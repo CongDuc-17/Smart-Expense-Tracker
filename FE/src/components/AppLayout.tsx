@@ -13,6 +13,7 @@
 import { Outlet } from "react-router-dom";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
+import { AiReceiptDrawer } from "@/features/ai/components/AiReceiptDrawer";
 import {
   SidebarInset,
   SidebarProvider,
@@ -41,10 +42,11 @@ export function AppLayout() {
           <SiteHeader />
 
           {/* Page content — mỗi route render vào đây */}
-          <main className="flex flex-1 flex-col">
+          <main className="flex flex-1 flex-col p-4 pt-0 min-h-0 bg-[#FFFEFC]">
             <Outlet />
           </main>
         </SidebarInset>
+        <AiReceiptDrawer />
       </SidebarProvider>
     </TooltipProvider>
   );

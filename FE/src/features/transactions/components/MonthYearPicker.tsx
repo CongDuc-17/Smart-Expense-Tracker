@@ -29,6 +29,8 @@ export function MonthYearPicker() {
     selectedYear,
     goToPrevMonth,
     goToNextMonth,
+    setSelectedMonth,
+    setSelectedYear,
   } = useTransactionStore();
 
   const now = new Date();
@@ -36,8 +38,29 @@ export function MonthYearPicker() {
     selectedMonth === now.getMonth() + 1 &&
     selectedYear === now.getFullYear();
 
+  const handleGoToToday = () => {
+    setSelectedMonth(now.getMonth() + 1);
+    setSelectedYear(now.getFullYear());
+  };
+
   return (
     <div className="flex items-center gap-1">
+      {/* Today */}
+      <button
+        type="button"
+        onClick={handleGoToToday}
+        disabled={isCurrentMonth}
+        className="
+          px-2.5 h-7 rounded-md text-xs font-medium mr-1
+          text-[#9B9A97] hover:text-[#37352F]
+          hover:bg-[rgba(55,53,47,0.08)]
+          transition-colors duration-150
+          disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent
+        "
+      >
+        Hôm nay
+      </button>
+
       {/* Prev */}
       <button
         type="button"

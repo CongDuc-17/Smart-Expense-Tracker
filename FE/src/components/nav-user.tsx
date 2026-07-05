@@ -130,13 +130,12 @@ export function NavUser({
             <DropdownMenuSeparator className="bg-[#E8E7E5]" />
 
             <DropdownMenuGroup>
-              <DropdownMenuItem className="text-sm text-[#37352F] cursor-pointer hover:bg-[rgba(55,53,47,0.06)] focus:bg-[rgba(55,53,47,0.06)]">
+              <DropdownMenuItem
+                className="text-sm text-[#37352F] cursor-pointer hover:bg-[rgba(55,53,47,0.06)] focus:bg-[rgba(55,53,47,0.06)]"
+                onClick={() => navigate("/settings")}
+              >
                 <CircleUserRoundIcon className="mr-2 h-4 w-4 text-[#9B9A97]" />
                 Tài khoản
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-sm text-[#37352F] cursor-pointer hover:bg-[rgba(55,53,47,0.06)] focus:bg-[rgba(55,53,47,0.06)]">
-                <BellIcon className="mr-2 h-4 w-4 text-[#9B9A97]" />
-                Thông báo
               </DropdownMenuItem>
 
             </DropdownMenuGroup>

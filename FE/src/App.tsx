@@ -4,6 +4,12 @@ import { Register } from "./pages/auth/Register";
 import { Dashboard } from "./pages/Dashboard";
 import { CategoriesPage } from "./pages/categories/CategoriesPage";
 import { TransactionsPage } from "./pages/transactions/TransactionsPage";
+import BudgetsPage from "./pages/budgets/BudgetsPage";
+import { SavingGoalsPage } from "./pages/saving-goals/SavingGoalsPage";
+import { AiInsightsPage } from "./pages/ai-insights/AiInsightsPage";
+import SettingsPage from "./pages/settings/SettingsPage";
+import NotFoundPage from "./pages/not-found/NotFoundPage";
+
 import { AppLayout } from "./components/AppLayout";
 import { VerifyEmail } from "./pages/auth/VerifyEmail";
 import { ForgotPassword } from "./pages/auth/ForgotPassword";
@@ -24,16 +30,15 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/categories" element={<CategoriesPage />} />
           <Route path="/transactions" element={<TransactionsPage />} />
-          {/* Phase 3+ routes sẽ thêm vào đây */}
-          {/* <Route path="/transactions" element={<TransactionsPage />} /> */}
-          {/* <Route path="/budgets"      element={<BudgetsPage />} /> */}
-          {/* <Route path="/savings"      element={<SavingsPage />} /> */}
-          {/* <Route path="/insights"     element={<InsightsPage />} /> */}
+          <Route path="/budgets" element={<BudgetsPage />} />
+          <Route path="/savings" element={<SavingGoalsPage />} />
+          <Route path="/insights" element={<AiInsightsPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
 
         {/* ── Fallback ────────────────────────────────────── */}
         <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </ThemeProvider>
   );

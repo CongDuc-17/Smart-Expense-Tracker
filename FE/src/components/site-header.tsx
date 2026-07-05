@@ -6,6 +6,7 @@
 import { useLocation } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { NotificationBell } from "@/features/notifications/components/NotificationBell";
 
 // Map route → tên trang
 const PAGE_TITLES: Record<string, string> = {
@@ -45,9 +46,13 @@ export function SiteHeader() {
       />
 
       {/* Page title */}
-      <h1 className="text-sm font-medium text-[#37352F]">
+      <h1 className="text-sm font-medium text-[#37352F] flex-1">
         {pageTitle}
       </h1>
+
+      <div className="flex items-center gap-2 ml-auto">
+        <NotificationBell />
+      </div>
     </header>
   );
 }

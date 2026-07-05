@@ -6,7 +6,7 @@
 // Edit mode:   type disabled, các field còn lại editable
 // ============================================================
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -18,13 +18,16 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Label } from "@/components/ui/label";
 import { CategorySelect } from "@/features/transactions/components/CategorySelect";
 import { AmountDisplay } from "@/features/transactions/components/AmountDisplay";
+import { ImageUpload } from "@/components/ui/image-upload";
+import { TransactionMethodDialog } from "@/features/transactions/components/TransactionMethodDialog";
 import { useTransactionStore } from "@/features/transactions/stores/transaction.store";
 import { useCreateTransaction } from "@/features/transactions/hooks/useCreateTransaction";
 import { useUpdateTransaction } from "@/features/transactions/hooks/useUpdateTransaction";
+import { useImageAnalysis } from "@/features/ai/hooks/useAi";
 import {
   createTransactionSchema,
   editTransactionSchema,
@@ -128,8 +131,14 @@ function AmountInput({
 // CREATE SHEET
 // ================================================================
 
-function CreateTransactionSheet({ isOpen }: { isOpen: boolean }) {
-  const { creatingType, closeCreateSheet } = useTransactionStore();
+function CreateTransactionSheet({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const { creatingType, createPrefillData } = useTransactionStore();
   const { mutate: createTransaction, isPending } = useCreateTransaction();
 
   const {
@@ -149,6 +158,8 @@ function CreateTransactionSheet({ isOpen }: { isOpen: boolean }) {
       title: "",
       date: todayInputValue(),
       note: "",
+      imageUrl: "",
+      imagePublicId: "",
     },
   });
 
@@ -156,19 +167,35 @@ function CreateTransactionSheet({ isOpen }: { isOpen: boolean }) {
   useEffect(() => {
     setValue("type", creatingType);
     setValue("categoryId", ""); // reset category khi đổi type
+    setValue("imageUrl", "");
+    setValue("imagePublicId", "");
   }, [creatingType, setValue]);
 
   // Reset khi đóng
   useEffect(() => {
-    if (!isOpen) reset({
-      type: "EXPENSE",
-      categoryId: "",
-      amount: 0,
-      title: "",
-      date: todayInputValue(),
-      note: "",
-    });
-  }, [isOpen, reset]);
+    if (!isOpen) {
+      reset({
+        type: "EXPENSE",
+        categoryId: "",
+        amount: 0,
+        title: "",
+        date: todayInputValue(),
+        note: "",
+        imageUrl: "",
+        imagePublicId: "",
+      });
+    } else if (createPrefillData) {
+      setValue("type", "EXPENSE");
+      setValue("categoryId", createPrefillData.categoryId || "");
+      setValue("imageUrl", createPrefillData.imageUrl || "");
+      setValue("imagePublicId", createPrefillData.imagePublicId || "");
+      
+      if (createPrefillData.amount !== undefined) setValue("amount", createPrefillData.amount);
+      if (createPrefillData.title) setValue("title", createPrefillData.title);
+      if (createPrefillData.date) setValue("date", createPrefillData.date);
+      if (createPrefillData.note) setValue("note", createPrefillData.note);
+    }
+  }, [isOpen, reset, createPrefillData, setValue]);
 
   const watchedValues = watch();
 
@@ -181,12 +208,14 @@ function CreateTransactionSheet({ isOpen }: { isOpen: boolean }) {
         title: data.title,
         date: toISOString(data.date),
         note: data.note || undefined,
+        imageUrl: data.imageUrl || undefined,
+        imagePublicId: data.imagePublicId || undefined,
       },
     });
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={(open) => { if (!open && !isPending) closeCreateSheet(); }}>
+    <Sheet open={isOpen} onOpenChange={(open) => { if (!open && !isPending) onClose(); }}>
       <SheetContent side="right" className="w-full sm:max-w-[480px] bg-white border-l border-[#E8E7E5] flex flex-col p-0">
         <SheetHeader className="px-6 py-5 border-b border-[#E8E7E5]">
           <SheetTitle className="text-base font-semibold text-[#37352F]">
@@ -196,7 +225,6 @@ function CreateTransactionSheet({ isOpen }: { isOpen: boolean }) {
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-1 overflow-hidden">
           <div className="flex-1 px-6 py-5 space-y-5 overflow-y-auto">
-
             {/* Type selector */}
             <FieldRow label="Loại giao dịch" error={errors.type?.message}>
               <Controller
@@ -302,10 +330,35 @@ function CreateTransactionSheet({ isOpen }: { isOpen: boolean }) {
                 "
               />
             </FieldRow>
+
+            {/* Image Upload - Chỉ hiện cho Chi tiêu */}
+            {watchedValues.type === "EXPENSE" && (
+              <FieldRow label="Ảnh hóa đơn (tuỳ chọn)" error={errors.imageUrl?.message}>
+                <Controller
+                  control={control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <ImageUpload
+                      value={field.value}
+                      onChange={(url, publicId) => {
+                        field.onChange(url);
+                        setValue("imagePublicId", publicId);
+                      }}
+                      onRemove={() => {
+                        field.onChange("");
+                        setValue("imagePublicId", "");
+                      }}
+                      disabled={isPending}
+                      context="expense"
+                    />
+                  )}
+                />
+              </FieldRow>
+            )}
           </div>
 
           <SheetFooter className="px-6 py-4 border-t border-[#E8E7E5] flex flex-row gap-2">
-            <Button type="button" variant="secondary" size="sm" disabled={isPending} onClick={closeCreateSheet}
+            <Button type="button" variant="secondary" size="sm" disabled={isPending} onClick={onClose}
               className="flex-1 bg-[#F7F6F3] text-[#37352F] border border-[#E8E7E5] hover:bg-[#EFEFED] text-sm font-medium transition-colors duration-150">
               Hủy
             </Button>
@@ -338,6 +391,7 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
     handleSubmit,
     watch,
     control,
+    setValue,
     reset,
     formState: { errors },
   } = useForm<EditTransactionFormValues>({
@@ -348,6 +402,8 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
       title: editingTransaction?.title ?? "",
       date: editingTransaction ? toDateInputValue(editingTransaction.date) : todayInputValue(),
       note: editingTransaction?.note ?? "",
+      imageUrl: editingTransaction?.imageUrl ?? "",
+      imagePublicId: editingTransaction?.imagePublicId ?? "",
     },
   });
 
@@ -359,6 +415,8 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
         title: editingTransaction.title,
         date: toDateInputValue(editingTransaction.date),
         note: editingTransaction.note ?? "",
+        imageUrl: editingTransaction.imageUrl ?? "",
+        imagePublicId: editingTransaction.imagePublicId ?? "",
       });
     }
   }, [editingTransaction, reset]);
@@ -367,6 +425,7 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
     if (!isOpen) reset();
   }, [isOpen, reset]);
 
+  const { data: analysis } = useImageAnalysis(editingTransaction?.id);
   const watchedValues = watch();
 
   if (!editingTransaction) return null;
@@ -381,6 +440,8 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
         title: data.title,
         date: toISOString(data.date),
         note: data.note || undefined,
+        imageUrl: data.imageUrl || undefined,
+        imagePublicId: data.imagePublicId || undefined,
       },
     });
   };
@@ -434,6 +495,25 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
 
             {/* Category */}
             <FieldRow label="Danh mục" error={errors.categoryId?.message}>
+              {analysis?.suggestedCategory && analysis.suggestedCategoryId !== watchedValues.categoryId && (
+                <div className="mb-2 p-2.5 rounded-md bg-gradient-to-r from-violet-50 to-fuchsia-50 border border-violet-100 flex items-center justify-between shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">{analysis.suggestedCategory.icon}</span>
+                    <span className="text-sm font-medium text-violet-700">
+                      AI gợi ý: {analysis.suggestedCategory.name}
+                    </span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2.5 text-xs bg-white hover:bg-violet-100 text-violet-700 hover:text-violet-800"
+                    onClick={() => setValue("categoryId", analysis.suggestedCategoryId!, { shouldValidate: true, shouldDirty: true })}
+                  >
+                    Áp dụng
+                  </Button>
+                </div>
+              )}
               <Controller
                 control={control}
                 name="categoryId"
@@ -460,6 +540,32 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
               <textarea id="note" disabled={isPending} rows={2} {...register("note")}
                 className="w-full px-3 py-2 text-sm bg-white border border-[#E8E7E5] rounded-md text-[#37352F] placeholder:text-[#9B9A97] resize-none focus:outline-none focus:ring-2 focus:ring-[#37352F] focus:border-[#37352F] transition-all duration-150 disabled:opacity-50" />
             </FieldRow>
+
+            {/* Image Upload - Chỉ hiện cho Chi tiêu */}
+            {editingTransaction.type === "EXPENSE" && (
+              <FieldRow label="Ảnh hóa đơn (tuỳ chọn)" error={errors.imageUrl?.message}>
+                <Controller
+                  control={control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <ImageUpload
+                      value={field.value}
+                      onChange={(url, publicId) => {
+                        field.onChange(url);
+                        // Using any here as a quick bypass for setValue generic typing issues in this complex form
+                        (setValue as any)("imagePublicId", publicId);
+                      }}
+                      onRemove={() => {
+                        field.onChange("");
+                        (setValue as any)("imagePublicId", "");
+                      }}
+                      disabled={isPending}
+                      context="expense"
+                    />
+                  )}
+                />
+              </FieldRow>
+            )}
           </div>
 
           <SheetFooter className="px-6 py-4 border-t border-[#E8E7E5] flex flex-row gap-2">
@@ -488,10 +594,65 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
 // ================================================================
 
 export function TransactionSheet() {
-  const { isCreateSheetOpen, isEditSheetOpen } = useTransactionStore();
+  const { isCreateSheetOpen, closeCreateSheet, isEditSheetOpen, openCreateSheetWithPrefill } = useTransactionStore();
+
+  const [methodDialogOpen, setMethodDialogOpen] = useState(false);
+  const [aiPreviewOpen, setAiPreviewOpen] = useState(false);
+  const [manualSheetOpen, setManualSheetOpen] = useState(false);
+
+  useEffect(() => {
+    if (isCreateSheetOpen) {
+      const { createPrefillData } = useTransactionStore.getState();
+      if (createPrefillData) {
+        setManualSheetOpen(true);
+        setMethodDialogOpen(false);
+      } else {
+        setMethodDialogOpen(true);
+      }
+    } else {
+      setMethodDialogOpen(false);
+      setAiPreviewOpen(false);
+      setManualSheetOpen(false);
+    }
+  }, [isCreateSheetOpen]);
+
+  const handleCloseAll = () => {
+    closeCreateSheet();
+  };
+
   return (
     <>
-      <CreateTransactionSheet isOpen={isCreateSheetOpen} />
+      <TransactionMethodDialog
+        open={methodDialogOpen}
+        onOpenChange={(open) => {
+          if (!open) handleCloseAll();
+        }}
+        onSelectManual={() => {
+          setMethodDialogOpen(false);
+          setManualSheetOpen(true);
+        }}
+        onSelectAiImage={() => {
+          import("@/features/ai/stores/ai-processing.store").then(({ useAiProcessingStore }) => {
+            closeCreateSheet();
+            useAiProcessingStore.getState().openDrawer("classification");
+          });
+        }}
+        onSelectOcr={() => {
+          // IMPORTANT: Import useAiProcessingStore directly inside the handler to avoid circular dependency
+          import("@/features/ai/stores/ai-processing.store").then(({ useAiProcessingStore }) => {
+            closeCreateSheet();
+            useAiProcessingStore.getState().openDrawer();
+          });
+        }}
+      />
+
+
+
+      <CreateTransactionSheet
+        isOpen={manualSheetOpen}
+        onClose={handleCloseAll}
+      />
+
       <EditTransactionSheet isOpen={isEditSheetOpen} />
     </>
   );
