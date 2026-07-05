@@ -58,7 +58,7 @@ export function CategoryBreakdownChart({ data, isLoading }: CategoryBreakdownCha
                 ))}
               </Pie>
               <Tooltip
-                formatter={(value: number) => formatVND(value)}
+                formatter={(value: any) => formatVND(value)}
                 contentStyle={{
                   borderRadius: "8px",
                   border: "1px solid #E8E7E5",

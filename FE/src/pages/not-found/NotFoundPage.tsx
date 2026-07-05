@@ -1,4 +1,4 @@
-import React from "react";
+
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FileQuestionIcon, ArrowLeftIcon, HomeIcon } from "lucide-react";

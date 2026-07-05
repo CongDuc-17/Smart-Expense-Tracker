@@ -1,7 +1,6 @@
 import React from "react";
-import { format, differenceInDays, differenceInMonths } from "date-fns";
-import { vi } from "date-fns/locale";
-import { Calendar, MoreHorizontal, CheckCircle2, TrendingUp, Edit, Trash2, PiggyBank, PartyPopper, Target } from "lucide-react";
+import { differenceInDays, differenceInMonths } from "date-fns";
+import { MoreHorizontal, CheckCircle2, TrendingUp, Edit, Trash2, PiggyBank, PartyPopper, Target } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";

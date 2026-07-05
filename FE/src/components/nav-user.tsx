@@ -26,13 +26,10 @@ import {
 import {
   EllipsisVerticalIcon,
   CircleUserRoundIcon,
-  BellIcon,
   LogOutIcon,
-  SunIcon,
 } from "lucide-react";
 import { apiClient } from "@/lib/apiClient";
 import { toast } from "sonner";
-import { ModeToggle } from "./mode-toggle";
 
 // ---------------------------------------------------------------
 // Helpers

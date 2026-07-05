@@ -59,7 +59,7 @@ export function MonthlyTrendChart({ data, isLoading }: MonthlyTrendChartProps) {
             />
             <Tooltip
               cursor={{ fill: "#F7F6F3" }}
-              formatter={(value: number, name: string) => [
+              formatter={(value: any, name: any) => [
                 formatVND(value),
                 name === "income" ? "Tổng Thu" : "Tổng Chi",
               ]}

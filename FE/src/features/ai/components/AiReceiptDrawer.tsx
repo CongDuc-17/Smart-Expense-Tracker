@@ -1,15 +1,15 @@
 import React, { useRef, useEffect } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileText, Image as ImageIcon, AlertCircle, ScanLine, Loader2Icon, SparklesIcon, CheckCircle2, HelpCircle } from "lucide-react";
+import { Image as ImageIcon, AlertCircle, ScanLine, SparklesIcon, CheckCircle2, HelpCircle } from "lucide-react";
 import { useAiProcessingStore } from "../stores/ai-processing.store";
 import { useScanReceipt, useOcrResult, usePreviewClassification } from "../hooks/useAi";
 import { uploadService } from "@/features/upload/services/upload.service";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
+// import { useQueryClient } from "@tanstack/react-query";
 import { useTransactionStore } from "@/features/transactions/stores/transaction.store";
 import { CategorySelect } from "@/features/transactions/components/CategorySelect";
 
@@ -19,8 +19,8 @@ export function AiReceiptDrawer() {
 
   const scanMutation = useScanReceipt();
   const { mutateAsync: analyzeImage } = usePreviewClassification();
-  const { data: ocrData, isFetching } = useOcrResult(store.ocrResultId);
-  const queryClient = useQueryClient();
+  const { data: ocrData } = useOcrResult(store.ocrResultId);
+  // const queryClient = useQueryClient();
 
   // Watch OCR polling
   useEffect(() => {
@@ -89,14 +89,14 @@ export function AiReceiptDrawer() {
   const handleSubmit = () => {
     if (store.step !== "review") return;
     const { openCreateSheetWithPrefill } = useTransactionStore.getState();
-    
+
     openCreateSheetWithPrefill({
       amount: store.editableForm.totalAmount,
       title: store.editableForm.merchantName || "Chi tiêu từ hóa đơn",
       date: store.editableForm.transactionDate,
       categoryId: store.editableForm.category || undefined,
-      note: store.mode === "classification" && store.classificationResult?.tags?.length 
-        ? store.classificationResult.tags.map((t: string) => `#${t}`).join(" ") 
+      note: store.mode === "classification" && store.classificationResult?.tags?.length
+        ? store.classificationResult.tags.map((t: string) => `#${t}`).join(" ")
         : undefined,
       imageUrl: store.imageUrl || undefined,
       imagePublicId: store.imagePublicId || undefined
@@ -207,7 +207,7 @@ export function AiReceiptDrawer() {
           {/* 5. Review Editable Form (Unified for both modes) */}
           {store.step === "review" && (
             <div className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              
+
               {/* Message */}
               <div className={cn("p-3 border rounded-lg flex items-start gap-3", store.mode === "classification" ? "bg-fuchsia-50 border-fuchsia-100" : "bg-indigo-50 border-indigo-100")}>
                 <SparklesIcon className={cn("w-5 h-5 mt-0.5 shrink-0", store.mode === "classification" ? "text-fuchsia-500" : "text-indigo-500")} />
@@ -223,24 +223,24 @@ export function AiReceiptDrawer() {
 
               {/* Classification Info: Badge & Tags */}
               {store.mode === "classification" && store.classificationResult && (
-                 <div className="flex flex-col gap-3 p-4 bg-[#F7F6F3] rounded-lg border border-[#E8E7E5]">
-                   <div className="flex items-center justify-between">
-                     <span className="text-sm font-medium text-[#37352F]">Danh mục gợi ý:</span>
-                     <span className="text-sm font-semibold text-fuchsia-600">{store.classificationResult.suggestedCategoryName}</span>
-                   </div>
-                   <div className="flex items-center justify-between">
-                     {renderConfidenceBadge(store.classificationResult.confidence)}
-                   </div>
-                   {store.classificationResult.tags && store.classificationResult.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 pt-3 border-t border-[#E8E7E5] mt-1">
-                        {store.classificationResult.tags.map((tag: string, idx: number) => (
-                          <span key={idx} className="text-[11px] px-2 py-0.5 bg-white border border-[#E8E7E5] rounded-full text-[#9B9A97]">
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-                   )}
-                 </div>
+                <div className="flex flex-col gap-3 p-4 bg-[#F7F6F3] rounded-lg border border-[#E8E7E5]">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-[#37352F]">Danh mục gợi ý:</span>
+                    <span className="text-sm font-semibold text-fuchsia-600">{store.classificationResult.suggestedCategoryName}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    {renderConfidenceBadge(store.classificationResult.confidence)}
+                  </div>
+                  {store.classificationResult.tags && store.classificationResult.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-3 border-t border-[#E8E7E5] mt-1">
+                      {store.classificationResult.tags.map((tag: string, idx: number) => (
+                        <span key={idx} className="text-[11px] px-2 py-0.5 bg-white border border-[#E8E7E5] rounded-full text-[#9B9A97]">
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               )}
 
               {/* Editable Form */}

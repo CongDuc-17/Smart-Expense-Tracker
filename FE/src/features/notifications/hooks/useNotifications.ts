@@ -87,7 +87,7 @@ export function useMarkAsRead() {
 
       return { previousQueries };
     },
-    onError: (err, id, context) => {
+    onError: (_err, _id, context) => {
       // Rollback on error
       if (context?.previousQueries) {
         context.previousQueries.forEach(([queryKey, data]) => {
@@ -125,7 +125,7 @@ export function useMarkAllAsRead() {
 
       return { previousQueries };
     },
-    onError: (err, variables, context) => {
+    onError: (_err, _variables, context) => {
       if (context?.previousQueries) {
         context.previousQueries.forEach(([queryKey, data]) => {
           queryClient.setQueryData(queryKey, data);

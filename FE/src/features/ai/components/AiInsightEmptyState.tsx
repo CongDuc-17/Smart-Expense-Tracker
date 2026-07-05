@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -17,10 +17,10 @@ export function AiInsightEmptyState({ onGenerate, isGenerating }: Props) {
         AI chưa phân tích tháng này
       </h3>
       <p className="text-sm text-[#9B9A97] max-w-md mx-auto mb-6">
-        Nhấn "Phân tích AI" để trợ lý AI tổng hợp dữ liệu, đánh giá tình hình tài chính 
+        Nhấn "Phân tích AI" để trợ lý AI tổng hợp dữ liệu, đánh giá tình hình tài chính
         và đưa ra lời khuyên thiết thực dựa trên số liệu thực tế.
       </p>
-      <Button 
+      <Button
         onClick={onGenerate}
         disabled={isGenerating}
         className="bg-[#37352F] text-white hover:bg-[#2f2d28] transition-all shadow-sm"
