@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
+import axios from "axios";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,6 +66,8 @@ export function Register() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const [isSlowResponse, setIsSlowResponse] = useState(false);
+    const slowTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -83,6 +86,11 @@ export function Register() {
 
         try {
             setIsLoading(true);
+            setIsSlowResponse(false);
+
+            // Show a cold-start hint if the server hasn't responded within 5 seconds
+            slowTimerRef.current = setTimeout(() => setIsSlowResponse(true), 5000);
+
             await apiClient.post(
                 "/auth/register",
                 { email, password, name },
@@ -92,11 +100,37 @@ export function Register() {
             toast.success("Đăng ký thành công! Vui lòng xác thực email.");
             navigate("/verify", { replace: true });
         } catch (error) {
-            const message = (error as any)?.response?.data?.message || "Đăng ký thất bại";
+            let message: string;
+
+            if (axios.isAxiosError(error)) {
+                const status = error.response?.status;
+                const serverMessage = error.response?.data?.message as string | undefined;
+
+                if (error.code === "ECONNABORTED" || error.message?.includes("timeout")) {
+                    // Axios timeout — server may still be processing (cold start)
+                    message =
+                        "Server đang khởi động, vui lòng đợi. Nếu bạn đã nhận được email xác thực thì tài khoản đã được tạo thành công — hãy thử đăng nhập.";
+                } else if (status === 409) {
+                    // Conflict — email already registered (possibly from a ghost write)
+                    message =
+                        serverMessage ??
+                        "Email này đã được đăng ký. Vui lòng đăng nhập hoặc dùng chức năng Quên mật khẩu.";
+                } else if (!error.response) {
+                    // Network error — no response at all
+                    message = "Không thể kết nối tới server. Vui lòng kiểm tra mạng và thử lại.";
+                } else {
+                    message = serverMessage ?? "Đăng ký thất bại. Vui lòng thử lại.";
+                }
+            } else {
+                message = "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.";
+            }
+
             toast.error(message);
             setError(message);
         } finally {
+            if (slowTimerRef.current) clearTimeout(slowTimerRef.current);
             setIsLoading(false);
+            setIsSlowResponse(false);
         }
     }
 
@@ -251,8 +285,8 @@ export function Register() {
                         >
                             {isLoading ? (
                                 <span className="flex items-center gap-2">
-                                    <span className="w-3.5 h-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                                    Đang đăng ký...
+                                    <span className="w-3.5 h-3.5 rounded-full border-2 border-current/30 border-t-current animate-spin" />
+                                    {isSlowResponse ? "Server đang khởi động..." : "Đang đăng ký..."}
                                 </span>
                             ) : (
                                 "Tạo tài khoản"

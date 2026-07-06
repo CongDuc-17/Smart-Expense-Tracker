@@ -1,0 +1,26 @@
+name: Keep Render Alive
+
+on:
+  schedule:
+    # Ping every 10 minutes (matches Render free-tier ~15 min sleep threshold).
+    # Format: minute hour day month weekday (UTC)
+    - cron: "*/10 * * * *"
+  workflow_dispatch: # Allow manual trigger for testing
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render health-check endpoint
+        run: |
+          echo "Pinging Render service at $(date -u)"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            --max-time 60 \
+            "${{ secrets.RENDER_SERVICE_URL }}/health-check")
+          echo "Response status: $STATUS"
+          if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 400 ]; then
+            echo "✅ Server is alive"
+          else
+            echo "⚠️  Unexpected status $STATUS — server may be starting up"
+            exit 0  # Don't fail the workflow on cold-start delay
+          fi

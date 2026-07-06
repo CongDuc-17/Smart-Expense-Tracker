@@ -46,7 +46,9 @@ export class AuthService {
 		});
 
 		if (user) {
-			throw new ConflictException('email');
+			throw new ConflictException(
+				'Email này đã được đăng ký.',
+			);
 		}
 
 		const salt = await genSalt(10);
@@ -67,7 +69,6 @@ export class AuthService {
 		const newAccount = await this.authRepository.createAccount({ accounts: account });
 
 		try {
-
 			await this.sendOtp({
 				email: registerDto.email,
 			});
