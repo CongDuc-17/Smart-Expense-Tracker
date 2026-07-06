@@ -77,7 +77,7 @@ export function Login() {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+        <div className="flex min-h-screen items-center justify-center bg-muted p-4">
             <Card className="w-full max-w-sm">
                 <CardHeader>
                     <CardTitle>Đăng nhập</CardTitle>
@@ -117,7 +117,7 @@ export function Login() {
                                     <Label htmlFor="password">Mật khẩu</Label>
                                     <Link
                                         to="/forgot-password"
-                                        className="ml-auto inline-block text-sm text-gray-500 underline-offset-4 hover:underline hover:text-gray-900"
+                                        className="ml-auto inline-block text-sm text-muted-foreground underline-offset-4 hover:underline hover:text-foreground"
                                     >
                                         Quên mật khẩu?
                                     </Link>
@@ -140,7 +140,7 @@ export function Login() {
                                         type="button"
                                         tabIndex={-1}
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900 transition-colors"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                                         aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                                     >
                                         {showPassword ? (
@@ -178,7 +178,7 @@ export function Login() {
 
                         {/* Divider & Google Login */}
                         <div className="relative mt-6">
-                            <FieldSeparator className="mb-4 text-xs text-gray-500">
+                            <FieldSeparator className="mb-4 text-xs text-muted-foreground">
                                 Hoặc tiếp tục với
                             </FieldSeparator>
 

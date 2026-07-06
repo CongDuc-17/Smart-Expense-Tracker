@@ -38,12 +38,12 @@ export function NotificationBell() {
         <Button
           variant="ghost"
           size="icon"
-          className="relative w-8 h-8 text-[#9B9A97] hover:text-[#37352F] hover:bg-[rgba(55,53,47,0.08)] rounded-md transition-colors duration-150"
+          className="relative w-8 h-8 text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors duration-150"
         >
           <Bell className="w-5 h-5" />
           {unreadCount > 0 && (
             <Badge 
-              className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] p-0 px-1 text-[10px] font-bold bg-red-500 text-white border-2 border-white"
+              className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] p-0 px-1 text-[10px] font-bold bg-destructive text-destructive-foreground border-2 border-background"
             >
               {unreadCount > 99 ? '99+' : unreadCount}
             </Badge>
@@ -53,19 +53,19 @@ export function NotificationBell() {
       
       <PopoverContent 
         align="end" 
-        className="w-[380px] p-0 bg-white border-[#E8E7E5] shadow-lg rounded-xl overflow-hidden flex flex-col"
+        className="w-[380px] p-0 bg-card border-border shadow-lg rounded-xl overflow-hidden flex flex-col"
       >
         {/* Header */}
-        <div className="flex flex-col p-4 border-b border-[#E8E7E5] shrink-0 bg-white">
+        <div className="flex flex-col p-4 border-b border-border shrink-0 bg-card">
           <div className="flex items-center gap-1.5 mb-1">
-            <h3 className="font-semibold text-[#37352F] text-base">Thông báo</h3>
-            <span className="text-[#9B9A97] text-sm">({totalCount})</span>
+            <h3 className="font-semibold text-foreground text-base">Thông báo</h3>
+            <span className="text-muted-foreground text-sm">({totalCount})</span>
           </div>
           
           <div className="flex items-center justify-between mt-1">
-            <span className="text-sm text-[#5A5A57]">
+            <span className="text-sm text-muted-foreground">
               {unreadCount > 0 ? (
-                <span className="font-medium text-[#37352F]">{unreadCount} chưa đọc</span>
+                <span className="font-medium text-foreground">{unreadCount} chưa đọc</span>
               ) : (
                 "Đã xem tất cả"
               )}
@@ -74,7 +74,7 @@ export function NotificationBell() {
             <button
               onClick={handleMarkAllAsRead}
               disabled={unreadCount === 0 || isMarkingAll}
-              className="text-xs text-[#9B9A97] hover:text-[#37352F] transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-medium"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-medium"
             >
               Đánh dấu tất cả đã đọc
             </button>

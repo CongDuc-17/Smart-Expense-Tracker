@@ -62,8 +62,8 @@ export const TransactionCard = memo(function TransactionCard({
       animate="rest"
       className="
         flex items-center gap-3 px-4 py-3 rounded-lg
-        border border-[#E8E7E5] bg-white
-        hover:bg-[#F7F6F3] hover:border-[#E8E7E5] hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)]
+        border border-border bg-card
+        hover:bg-muted hover:border-border hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)]
         transition-all duration-200
         cursor-pointer select-none
       "
@@ -78,21 +78,21 @@ export const TransactionCard = memo(function TransactionCard({
       />
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-[#37352F] truncate leading-5">
+        <p className="text-sm font-medium text-foreground truncate leading-5">
           {transaction.title}
         </p>
         <div className="flex items-center gap-2 mt-0.5">
-          <span className="text-xs text-[#9B9A97] leading-4 truncate">
+          <span className="text-xs text-muted-foreground leading-4 truncate">
             {category.name}
           </span>
-          <span className="text-[#D0CECA] text-xs">·</span>
-          <span className="text-[11px] text-[#9B9A97] leading-4">
+          <span className="text-muted-foreground text-xs">·</span>
+          <span className="text-[11px] text-muted-foreground leading-4">
             {formatShortDate(transaction.date)}
           </span>
           {transaction.note && (
             <>
-              <span className="text-[#D0CECA] text-xs">·</span>
-              <span className="text-xs text-[#9B9A97] leading-4 truncate max-w-[120px]">
+              <span className="text-muted-foreground text-xs">·</span>
+              <span className="text-xs text-muted-foreground leading-4 truncate max-w-[120px]">
                 {transaction.note}
               </span>
             </>
@@ -122,8 +122,8 @@ export const TransactionCard = memo(function TransactionCard({
               onClick={(e) => { e.stopPropagation(); onDelete(transaction); }}
               className="
                 w-7 h-7 rounded-md flex items-center justify-center
-                text-[#9B9A97] hover:text-red-500
-                hover:bg-red-50 hover:border hover:border-red-100
+                text-muted-foreground hover:text-red-500
+                hover:bg-destructive/10 hover:text-destructive hover:border hover:border-red-100
                 transition-all duration-150
               "
             >

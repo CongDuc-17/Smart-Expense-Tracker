@@ -21,7 +21,7 @@ export function AnalyticsFilters() {
         value={selectedMonth.toString()}
         onValueChange={(val) => setSelectedMonth(Number(val))}
       >
-        <SelectTrigger className="w-[140px] bg-white border-[#E8E7E5] focus:ring-1 focus:ring-[#37352F]">
+        <SelectTrigger className="w-[140px] bg-card border-border focus:ring-1 focus:ring-ring">
           <SelectValue placeholder="Chọn tháng" />
         </SelectTrigger>
         <SelectContent>
@@ -37,7 +37,7 @@ export function AnalyticsFilters() {
         value={selectedYear.toString()}
         onValueChange={(val) => setSelectedYear(Number(val))}
       >
-        <SelectTrigger className="w-[120px] bg-white border-[#E8E7E5] focus:ring-1 focus:ring-[#37352F]">
+        <SelectTrigger className="w-[120px] bg-card border-border focus:ring-1 focus:ring-ring">
           <SelectValue placeholder="Chọn năm" />
         </SelectTrigger>
         <SelectContent>

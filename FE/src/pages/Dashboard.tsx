@@ -25,16 +25,16 @@ export function Dashboard() {
   const { data: topExpensesData, isLoading: isTopExpensesLoading } = useAnalyticsTopExpenses(selectedMonth, selectedYear, 5);
 
   return (
-    <div className="flex flex-col min-h-full bg-[#FFFEFC]">
+    <div className="flex flex-col min-h-full bg-background">
       <div className="flex-1 w-full max-w-5xl mx-auto px-6 py-8 flex flex-col gap-6">
         
         {/* Header & Filters */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-semibold text-[#37352F] leading-8 tracking-tight">
+            <h1 className="text-2xl font-semibold text-foreground leading-8 tracking-tight">
               Tổng quan
             </h1>
-            <p className="text-sm text-[#9B9A97] mt-1 leading-5">
+            <p className="text-sm text-muted-foreground mt-1 leading-5">
               Phân tích và theo dõi tình hình tài chính của bạn
             </p>
           </div>

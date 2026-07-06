@@ -26,8 +26,8 @@ export function ExportReportButton() {
           size="sm"
           disabled={isPending}
           className="
-            h-8 px-3 gap-2 bg-white text-[#37352F] border-[#E8E7E5] 
-            hover:bg-[#F7F6F3] shadow-sm font-medium text-xs
+            h-8 px-3 gap-2 bg-card text-foreground border-border 
+            hover:bg-muted shadow-sm font-medium text-xs
           "
         >
           {isPending ? (
@@ -39,10 +39,10 @@ export function ExportReportButton() {
         </Button>
       </DropdownMenuTrigger>
       
-      <DropdownMenuContent align="end" className="w-40 bg-white border-[#E8E7E5] shadow-md rounded-md p-1">
+      <DropdownMenuContent align="end" className="w-40 bg-card border-border shadow-md rounded-md p-1">
         <DropdownMenuItem 
           onClick={() => handleExport("pdf")}
-          className="gap-2 text-sm text-[#37352F] cursor-pointer hover:bg-[#F7F6F3] focus:bg-[#F7F6F3] rounded-[4px] px-2 py-1.5"
+          className="gap-2 text-sm text-foreground cursor-pointer hover:bg-muted focus:bg-muted rounded-[4px] px-2 py-1.5"
         >
           <FileText className="w-4 h-4 text-red-500" />
           <span>Định dạng PDF</span>
@@ -50,7 +50,7 @@ export function ExportReportButton() {
         
         <DropdownMenuItem 
           onClick={() => handleExport("excel")}
-          className="gap-2 text-sm text-[#37352F] cursor-pointer hover:bg-[#F7F6F3] focus:bg-[#F7F6F3] rounded-[4px] px-2 py-1.5"
+          className="gap-2 text-sm text-foreground cursor-pointer hover:bg-muted focus:bg-muted rounded-[4px] px-2 py-1.5"
         >
           <SheetIcon className="w-4 h-4 text-green-600" />
           <span>Định dạng Excel</span>

@@ -46,7 +46,7 @@ function FieldRow({
 }) {
   return (
     <div className="space-y-1.5">
-      <Label htmlFor={htmlFor} className="text-sm font-medium text-[#37352F]">
+      <Label htmlFor={htmlFor} className="text-sm font-medium text-foreground">
         {label}
       </Label>
       {children}
@@ -112,10 +112,10 @@ export function CreateBudgetSheet() {
     >
       <SheetContent
         side="right"
-        className="w-full sm:max-w-[480px] bg-white border-l border-[#E8E7E5] flex flex-col p-0"
+        className="w-full sm:max-w-[480px] bg-card border-l border-border flex flex-col p-0"
       >
-        <SheetHeader className="px-6 py-5 border-b border-[#E8E7E5]">
-          <SheetTitle className="text-base font-semibold text-[#37352F]">
+        <SheetHeader className="px-6 py-5 border-b border-border">
+          <SheetTitle className="text-base font-semibold text-foreground">
             Tạo ngân sách tháng {month}/{year}
           </SheetTitle>
         </SheetHeader>
@@ -157,10 +157,10 @@ export function CreateBudgetSheet() {
                       field.onChange(isNaN(raw) ? 0 : raw);
                     }}
                     className="
-                      h-9 text-sm bg-white border-[#E8E7E5] text-[#37352F]
-                      placeholder:text-[#9B9A97]
-                      focus-visible:ring-2 focus-visible:ring-[#37352F]
-                      focus-visible:border-[#37352F]
+                      h-9 text-sm bg-card border-border text-foreground
+                      placeholder:text-muted-foreground
+                      focus-visible:ring-2 focus-visible:ring-ring
+                      focus-visible:border-ring
                       transition-all duration-150
                       [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
                     "
@@ -184,14 +184,14 @@ export function CreateBudgetSheet() {
             </FieldRow>
           </div>
 
-          <SheetFooter className="px-6 py-4 border-t border-[#E8E7E5] flex flex-row gap-2">
+          <SheetFooter className="px-6 py-4 border-t border-border flex flex-row gap-2">
             <Button
               type="button"
               variant="secondary"
               size="sm"
               disabled={isPending}
               onClick={closeCreateSheet}
-              className="flex-1 bg-[#F7F6F3] text-[#37352F] border border-[#E8E7E5] hover:bg-[#EFEFED] text-sm font-medium transition-colors duration-150"
+              className="flex-1 bg-muted text-foreground border border-border hover:bg-secondary text-sm font-medium transition-colors duration-150"
             >
               Hủy
             </Button>
@@ -199,7 +199,7 @@ export function CreateBudgetSheet() {
               type="submit"
               size="sm"
               disabled={isPending}
-              className="flex-1 bg-[#37352F] text-[#FFFEFC] hover:bg-[#2D2B27] text-sm font-medium transition-colors duration-150 disabled:opacity-50"
+              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium transition-colors duration-150 disabled:opacity-50"
             >
               {isPending ? (
                 <span className="flex items-center gap-1.5">

@@ -30,19 +30,19 @@ export function BudgetProgress({
   const getProgressColor = (status: BudgetAlertStatus) => {
     switch (status) {
       case "WARNING":
-        return "bg-amber-500"; // Cam
+        return "bg-amber-500/10 text-amber-5000"; // Cam
       case "EXCEEDED":
-        return "bg-red-500"; // Đỏ
+        return "bg-destructive/10 text-destructive0"; // Đỏ
       case "NORMAL":
       default:
-        return "bg-[#37352F]"; // Đen (Primary của Notion)
+        return "bg-primary"; // Đen (Primary của Notion)
     }
   };
 
   return (
     <div
       className={cn(
-        "h-1.5 w-full bg-[#E8E7E5] rounded-full overflow-hidden",
+        "h-1.5 w-full bg-muted rounded-full overflow-hidden",
         className
       )}
       role="progressbar"

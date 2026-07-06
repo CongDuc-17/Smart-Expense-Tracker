@@ -50,22 +50,22 @@ export function DailyHeatmap({ data, isLoading, year }: DailyHeatmapProps) {
 
   if (isLoading) {
     return (
-      <Card className="p-5 border-[#E8E7E5] shadow-sm flex flex-col justify-center items-center overflow-hidden">
-        <Skeleton className="w-full h-[140px] bg-[#E8E7E5] rounded-md" />
+      <Card className="p-5 border-border shadow-sm flex flex-col justify-center items-center overflow-hidden">
+        <Skeleton className="w-full h-[140px] bg-muted rounded-md" />
       </Card>
     );
   }
 
   if (!data || data.length === 0) {
     return (
-      <Card className="p-5 border-[#E8E7E5] shadow-sm flex flex-col justify-center items-center text-center min-h-[140px]">
-        <span className="text-sm text-[#9B9A97]">Chưa có dữ liệu</span>
+      <Card className="p-5 border-border shadow-sm flex flex-col justify-center items-center text-center min-h-[140px]">
+        <span className="text-sm text-muted-foreground">Chưa có dữ liệu</span>
       </Card>
     );
   }
 
   const getColor = (amount: number) => {
-    if (amount === 0) return "bg-[#F7F6F3]";
+    if (amount === 0) return "bg-muted";
     const ratio = amount / maxAmount;
     if (ratio <= 0.25) return "bg-[#FF6B6B40]";
     if (ratio <= 0.5) return "bg-[#FF6B6B70]";
@@ -74,13 +74,13 @@ export function DailyHeatmap({ data, isLoading, year }: DailyHeatmapProps) {
   };
 
   return (
-    <Card className="p-4 sm:p-5 border-[#E8E7E5] shadow-sm flex flex-col overflow-x-auto custom-scrollbar">
-      <h3 className="text-sm font-semibold text-[#37352F] mb-4">Tần suất chi tiêu {year}</h3>
+    <Card className="p-4 sm:p-5 border-border shadow-sm flex flex-col overflow-x-auto custom-scrollbar">
+      <h3 className="text-sm font-semibold text-foreground mb-4">Tần suất chi tiêu {year}</h3>
       
       <div className="min-w-max">
         
         {/* Month Labels */}
-        <div className="relative h-5 w-full text-[10px] text-[#9B9A97] ml-6">
+        <div className="relative h-5 w-full text-[10px] text-muted-foreground ml-6">
           {monthLabels.map((label, idx) => (
             <span 
               key={idx} 
@@ -96,7 +96,7 @@ export function DailyHeatmap({ data, isLoading, year }: DailyHeatmapProps) {
         <div className="flex gap-1">
           {/* Days of week labels (T2, T4, T6 only for clarity) */}
           <div 
-            className="grid grid-flow-col gap-1 text-[10px] text-[#9B9A97] font-medium pr-1"
+            className="grid grid-flow-col gap-1 text-[10px] text-muted-foreground font-medium pr-1"
             style={{ gridTemplateRows: "repeat(7, minmax(0, 1fr))" }}
           >
             <span className="h-3 w-5" />
@@ -124,12 +124,12 @@ export function DailyHeatmap({ data, isLoading, year }: DailyHeatmapProps) {
                   <Tooltip key={day.date}>
                     <TooltipTrigger asChild>
                       <div 
-                        className={`w-3 h-3 rounded-[2px] transition-colors hover:ring-1 hover:ring-[#37352F] hover:ring-offset-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none ${getColor(amount)}`}
+                        className={`w-3 h-3 rounded-[2px] transition-colors hover:ring-1 hover:ring-ring hover:ring-offset-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none ${getColor(amount)}`}
                         tabIndex={0}
                         aria-label={`Chi tiêu ngày ${day.date}: ${amount > 0 ? formatVND(amount) : "0đ"}`}
                       />
                     </TooltipTrigger>
-                    <TooltipContent className="bg-[#37352F] text-white border-none shadow-md text-xs px-2.5 py-1.5">
+                    <TooltipContent className="bg-primary text-primary-foreground border-none shadow-md text-xs px-2.5 py-1.5">
                       <p className="font-medium">{day.date}</p>
                       <p>{amount > 0 ? formatVND(amount) : "Không có chi tiêu"}</p>
                     </TooltipContent>
@@ -141,10 +141,10 @@ export function DailyHeatmap({ data, isLoading, year }: DailyHeatmapProps) {
         </div>
         
         {/* Legend */}
-        <div className="flex items-center justify-end gap-1.5 mt-3 text-[10px] text-[#9B9A97] font-medium mr-1">
+        <div className="flex items-center justify-end gap-1.5 mt-3 text-[10px] text-muted-foreground font-medium mr-1">
           <span>Ít</span>
           <div className="flex gap-1">
-            <div className="w-3 h-3 rounded-[2px] bg-[#F7F6F3]" />
+            <div className="w-3 h-3 rounded-[2px] bg-muted" />
             <div className="w-3 h-3 rounded-[2px] bg-[#FF6B6B40]" />
             <div className="w-3 h-3 rounded-[2px] bg-[#FF6B6B70]" />
             <div className="w-3 h-3 rounded-[2px] bg-[#FF6B6B90]" />

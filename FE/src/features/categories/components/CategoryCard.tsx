@@ -76,9 +76,9 @@ export const CategoryCard = memo(function CategoryCard({
       aria-label={`Danh mục ${category.name}, ${isIncome ? "Thu nhập" : "Chi tiêu"}${isDefault ? ", Danh mục hệ thống" : ""}`}
       className={cn(
         "relative flex items-center gap-3 p-4 rounded-lg border",
-        "border-[#E8E7E5] bg-white cursor-default select-none",
+        "border-border bg-card cursor-default select-none",
         // Default category: slightly different background
-        isDefault && "bg-[#FAFAF9]"
+        isDefault && "bg-muted/50"
       )}
     >
       {/* Icon */}
@@ -90,10 +90,10 @@ export const CategoryCard = memo(function CategoryCard({
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-[#37352F] truncate leading-5">
+        <p className="text-sm font-medium text-foreground truncate leading-5">
           {category.name}
         </p>
-        <p className="text-xs text-[#9B9A97] mt-0.5 leading-4">
+        <p className="text-xs text-muted-foreground mt-0.5 leading-4">
           {isIncome ? "Thu nhập" : "Chi tiêu"}
         </p>
       </div>
@@ -110,7 +110,7 @@ export const CategoryCard = memo(function CategoryCard({
                     variant="secondary"
                     className="
                       text-xs font-medium px-2 py-0.5 rounded-full
-                      bg-[#F7F6F3] text-[#9B9A97] border border-[#E8E7E5]
+                      bg-muted text-muted-foreground border border-border
                       cursor-help
                     "
                   >
@@ -121,7 +121,7 @@ export const CategoryCard = memo(function CategoryCard({
               </TooltipTrigger>
               <TooltipContent
                 side="top"
-                className="text-xs bg-[#37352F] text-white border-0 max-w-[200px] text-center"
+                className="text-xs bg-primary text-primary-foreground border-0 max-w-[200px] text-center"
               >
                 Danh mục hệ thống, không thể chỉnh sửa hoặc xóa
               </TooltipContent>
@@ -147,10 +147,10 @@ export const CategoryCard = memo(function CategoryCard({
                 }}
                 className="
                   w-7 h-7 rounded-md flex items-center justify-center
-                  text-[#9B9A97] hover:text-[#37352F]
-                  hover:bg-[rgba(55,53,47,0.08)]
+                  text-muted-foreground hover:text-foreground
+                  hover:bg-accent
                   transition-colors duration-150
-                  focus:outline-none focus-visible:ring-2 focus-visible:ring-[#37352F]
+                  focus:outline-none focus-visible:ring-2 focus-visible:ring-ring
                 "
               >
                 <Pencil className="w-3.5 h-3.5" />
@@ -169,8 +169,8 @@ export const CategoryCard = memo(function CategoryCard({
                 }}
                 className="
                   w-7 h-7 rounded-md flex items-center justify-center
-                  text-[#9B9A97] hover:text-red-500
-                  hover:bg-red-50
+                  text-muted-foreground hover:text-red-500
+                  hover:bg-destructive/10 hover:text-destructive
                   transition-colors duration-150
                   focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400
                 "

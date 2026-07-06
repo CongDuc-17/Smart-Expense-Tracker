@@ -67,7 +67,7 @@ export function SavingGoalList({ goals, onEdit, onDeposit, onDelete }: SavingGoa
 
   if (filteredAndSortedGoals.length === 0) {
     return (
-      <div className="py-12 text-center text-[#9B9A97]">
+      <div className="py-12 text-center text-muted-foreground">
         Không tìm thấy mục tiêu nào phù hợp với bộ lọc.
       </div>
     );

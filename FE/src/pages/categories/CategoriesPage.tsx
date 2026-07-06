@@ -32,8 +32,8 @@ function ErrorBanner({ onRetry }: { onRetry: () => void }) {
     <div
       className="
         flex items-center justify-between px-4 py-3 mb-6
-        rounded-lg border border-[#E8E7E5] bg-[#F7F6F3]
-        text-sm text-[#37352F]
+        rounded-lg border border-border bg-muted
+        text-sm text-foreground
       "
       role="alert"
     >
@@ -41,8 +41,8 @@ function ErrorBanner({ onRetry }: { onRetry: () => void }) {
       <button
         onClick={onRetry}
         className="
-          text-sm font-medium text-[#37352F] underline underline-offset-2
-          hover:text-[#2D2B27] transition-colors duration-150 ml-4
+          text-sm font-medium text-foreground underline underline-offset-2
+          hover:text-foreground/80 transition-colors duration-150 ml-4
         "
       >
         Thử lại
@@ -94,17 +94,17 @@ export function CategoriesPage() {
 
   // ─── Render ──────────────────────────────────────────────────
   return (
-    <div className="flex flex-col min-h-full bg-[#FFFEFC]">
+    <div className="flex flex-col min-h-full bg-background">
       {/* ── Page Container ────────────────────────────────────── */}
       <div className="flex-1 w-full max-w-5xl mx-auto px-6 py-8">
 
         {/* ── Page Header ───────────────────────────────────── */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-semibold text-[#37352F] leading-8 tracking-tight">
+            <h1 className="text-2xl font-semibold text-foreground leading-8 tracking-tight">
               Danh mục
             </h1>
-            <p className="text-sm text-[#9B9A97] mt-1 leading-5">
+            <p className="text-sm text-muted-foreground mt-1 leading-5">
               Quản lý danh mục thu chi của bạn
             </p>
           </div>
@@ -114,8 +114,8 @@ export function CategoriesPage() {
             onClick={openCreateSheet}
             size="sm"
             className="
-              bg-[#37352F] text-[#FFFEFC] text-sm font-medium
-              hover:bg-[#2D2B27] active:bg-[#1F1D1A]
+              bg-primary text-primary-foreground text-sm font-medium
+              hover:bg-primary/90 active:scale-95
               transition-colors duration-150
               flex items-center gap-1.5 h-9
             "

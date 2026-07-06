@@ -233,7 +233,7 @@ export function ForgotPassword() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-muted p-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Quên mật khẩu</CardTitle>
@@ -293,7 +293,7 @@ export function ForgotPassword() {
                     <Button
                       type="button"
                       variant="link"
-                      className="h-auto p-0 text-sm text-gray-500 hover:text-gray-900"
+                      className="h-auto p-0 text-sm text-muted-foreground hover:text-foreground"
                       disabled={isLoading || resendIn > 0}
                       onClick={() => sendOtp()}
                     >
@@ -337,7 +337,7 @@ export function ForgotPassword() {
                       type="button"
                       tabIndex={-1}
                       onClick={() => setShowNewPassword((current) => !current)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 transition-colors hover:text-gray-900"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                       aria-label={showNewPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                     >
                       {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -367,7 +367,7 @@ export function ForgotPassword() {
                       type="button"
                       tabIndex={-1}
                       onClick={() => setShowConfirmPassword((current) => !current)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 transition-colors hover:text-gray-900"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                       aria-label={showConfirmPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                     >
                       {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -403,7 +403,7 @@ export function ForgotPassword() {
                   <Button
                     type="button"
                     variant="ghost"
-                    className="w-full text-gray-500 hover:text-gray-900"
+                    className="w-full text-muted-foreground hover:text-foreground"
                     disabled={isLoading}
                     onClick={handleChangeEmail}
                   >

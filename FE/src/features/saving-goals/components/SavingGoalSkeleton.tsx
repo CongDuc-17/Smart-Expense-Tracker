@@ -8,7 +8,7 @@ export function SavingGoalSkeleton({ count = 3 }: SavingGoalSkeletonProps) {
   return (
     <div className="flex flex-col gap-4">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="p-5 rounded-lg border border-[#E8E7E5] bg-white flex flex-col gap-4">
+        <div key={i} className="p-5 rounded-lg border border-border bg-card flex flex-col gap-4">
           <div className="flex justify-between items-start">
             <div className="space-y-2">
               <Skeleton className="h-5 w-48" />

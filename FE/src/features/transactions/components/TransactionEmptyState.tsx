@@ -20,13 +20,13 @@ export function TransactionEmptyState({
   if (variant === "filtered") {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="w-12 h-12 rounded-2xl bg-[#F7F6F3] flex items-center justify-center mb-4">
-          <SearchX className="w-6 h-6 text-[#9B9A97]" />
+        <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center mb-4">
+          <SearchX className="w-6 h-6 text-muted-foreground" />
         </div>
-        <h3 className="text-sm font-medium text-[#37352F] mb-1">
+        <h3 className="text-sm font-medium text-foreground mb-1">
           Không có giao dịch nào
         </h3>
-        <p className="text-sm text-[#9B9A97] max-w-xs leading-5">
+        <p className="text-sm text-muted-foreground max-w-xs leading-5">
           Không tìm thấy giao dịch trong khoảng thời gian và bộ lọc đã chọn.
         </p>
       </div>
@@ -35,13 +35,13 @@ export function TransactionEmptyState({
 
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
-      <div className="w-12 h-12 rounded-2xl bg-[#F7F6F3] flex items-center justify-center mb-4">
-        <ReceiptText className="w-6 h-6 text-[#9B9A97]" />
+      <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center mb-4">
+        <ReceiptText className="w-6 h-6 text-muted-foreground" />
       </div>
-      <h3 className="text-sm font-medium text-[#37352F] mb-1">
+      <h3 className="text-sm font-medium text-foreground mb-1">
         Chưa có giao dịch nào
       </h3>
-      <p className="text-sm text-[#9B9A97] max-w-xs leading-5 mb-5">
+      <p className="text-sm text-muted-foreground max-w-xs leading-5 mb-5">
         Bắt đầu ghi lại thu chi hàng ngày của bạn.
       </p>
       {onCreateClick && (
@@ -49,8 +49,8 @@ export function TransactionEmptyState({
           onClick={onCreateClick}
           size="sm"
           className="
-            bg-[#37352F] text-[#FFFEFC] text-sm font-medium
-            hover:bg-[#2D2B27] transition-colors duration-200
+            bg-primary text-primary-foreground text-sm font-medium
+            hover:bg-primary/90 transition-colors duration-200
           "
         >
           Thêm giao dịch đầu tiên

@@ -55,17 +55,17 @@ export function CategorySelect({
       >
         <SelectTrigger
           className={cn(
-            "h-9 text-sm bg-white border-[#E8E7E5] text-[#37352F]",
-            "focus:ring-2 focus:ring-[#37352F] focus:border-[#37352F]",
+            "h-9 text-sm bg-card border-border text-foreground",
+            "focus:ring-2 focus:ring-ring focus:border-ring",
             "transition-all duration-150",
             error && "border-red-400 focus:ring-red-400",
-            !value && "text-[#9B9A97]"
+            !value && "text-muted-foreground"
           )}
         >
           <SelectValue placeholder={isLoading ? "Đang tải..." : placeholder} />
         </SelectTrigger>
 
-        <SelectContent className="bg-white border border-[#E8E7E5] shadow-[0_8px_24px_rgba(0,0,0,0.12)] rounded-lg">
+        <SelectContent className="bg-card border border-border shadow-[0_8px_24px_rgba(0,0,0,0.12)] rounded-lg">
           {categories?.map((category) => {
             const IconComponent = getIconComponent(category.icon);
             return (
@@ -73,9 +73,9 @@ export function CategorySelect({
                 key={category.id}
                 value={category.id}
                 className="
-                  text-sm text-[#37352F] cursor-pointer
-                  hover:bg-[rgba(55,53,47,0.06)]
-                  focus:bg-[rgba(55,53,47,0.06)]
+                  text-sm text-foreground cursor-pointer
+                  hover:bg-accent hover:text-accent-foreground
+                  focus:bg-accent focus:text-accent-foreground
                   rounded-md
                 "
               >
@@ -97,7 +97,7 @@ export function CategorySelect({
           })}
 
           {categories?.length === 0 && (
-            <div className="py-3 text-center text-sm text-[#9B9A97]">
+            <div className="py-3 text-center text-sm text-muted-foreground">
               Không có danh mục nào
             </div>
           )}

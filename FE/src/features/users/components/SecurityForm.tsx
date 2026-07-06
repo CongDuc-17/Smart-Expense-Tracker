@@ -63,29 +63,29 @@ export function SecurityForm() {
   ];
 
   return (
-    <div className="bg-white border border-[#E8E7E5] rounded-xl shadow-sm overflow-hidden">
-      <div className="px-6 py-5 border-b border-[#E8E7E5]">
-        <h3 className="text-lg font-semibold text-[#37352F]">Bảo mật</h3>
-        <p className="text-sm text-[#9B9A97] mt-1">Cập nhật mật khẩu để bảo vệ tài khoản của bạn.</p>
+    <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <div className="px-6 py-5 border-b border-border">
+        <h3 className="text-lg font-semibold text-foreground">Bảo mật</h3>
+        <p className="text-sm text-muted-foreground mt-1">Cập nhật mật khẩu để bảo vệ tài khoản của bạn.</p>
       </div>
 
       <div className="p-6">
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             
             <div className="space-y-2">
-              <Label htmlFor="currentPassword" className="text-[#37352F] font-medium">Mật khẩu hiện tại</Label>
+              <Label htmlFor="currentPassword" className="text-foreground font-medium">Mật khẩu hiện tại</Label>
               <div className="relative max-w-md">
                 <Input 
                   id="currentPassword"
                   {...form.register("currentPassword")} 
                   type={showCurrent ? "text" : "password"} 
                   placeholder="Nhập mật khẩu hiện tại" 
-                  className="bg-[#FFFEFC] pr-10" 
+                  className="bg-background pr-10" 
                 />
                 <button
                   type="button"
                   onClick={() => setShowCurrent(!showCurrent)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9B9A97] hover:text-[#37352F] transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showCurrent ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
                 </button>
@@ -97,22 +97,22 @@ export function SecurityForm() {
               )}
             </div>
 
-            <div className="border-t border-[#E8E7E5] pt-6 max-w-md" />
+            <div className="border-t border-border pt-6 max-w-md" />
 
             <div className="space-y-2">
-              <Label htmlFor="newPassword" className="text-[#37352F] font-medium">Mật khẩu mới</Label>
+              <Label htmlFor="newPassword" className="text-foreground font-medium">Mật khẩu mới</Label>
               <div className="relative max-w-md">
                 <Input 
                   id="newPassword"
                   {...form.register("newPassword")} 
                   type={showNew ? "text" : "password"} 
                   placeholder="Nhập mật khẩu mới" 
-                  className="bg-[#FFFEFC] pr-10" 
+                  className="bg-background pr-10" 
                 />
                 <button
                   type="button"
                   onClick={() => setShowNew(!showNew)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9B9A97] hover:text-[#37352F] transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showNew ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
                 </button>
@@ -124,11 +124,11 @@ export function SecurityForm() {
                   {validations.map((v, i) => (
                     <div key={i} className={cn(
                       "flex items-center gap-1.5 transition-colors",
-                      v.isMet ? "text-emerald-600" : "text-[#9B9A97]"
+                      v.isMet ? "text-emerald-600" : "text-muted-foreground"
                     )}>
                       <div className={cn(
                         "w-1.5 h-1.5 rounded-full",
-                        v.isMet ? "bg-emerald-500" : "bg-[#E8E7E5]"
+                        v.isMet ? "bg-emerald-500/10 text-emerald-5000" : "bg-muted"
                       )} />
                       {v.label}
                     </div>
@@ -144,19 +144,19 @@ export function SecurityForm() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-[#37352F] font-medium">Xác nhận mật khẩu mới</Label>
+              <Label htmlFor="confirmPassword" className="text-foreground font-medium">Xác nhận mật khẩu mới</Label>
               <div className="relative max-w-md">
                 <Input 
                   id="confirmPassword"
                   {...form.register("confirmPassword")} 
                   type={showConfirm ? "text" : "password"} 
                   placeholder="Nhập lại mật khẩu mới" 
-                  className="bg-[#FFFEFC] pr-10" 
+                  className="bg-background pr-10" 
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirm(!showConfirm)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9B9A97] hover:text-[#37352F] transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showConfirm ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
                 </button>
@@ -168,11 +168,11 @@ export function SecurityForm() {
               )}
             </div>
 
-            <div className="flex justify-end pt-4 border-t border-[#E8E7E5]">
+            <div className="flex justify-end pt-4 border-t border-border">
               <Button 
                 type="submit" 
                 disabled={!isDirty || !isValid || isPending}
-                className="bg-[#37352F] hover:bg-[#2F2D28] text-white"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 {isPending && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
                 Lưu mật khẩu

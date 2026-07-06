@@ -55,7 +55,7 @@ export function VerifyEmail() {
   };
   return (
     <>
-      <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+      <div className="flex min-h-screen items-center justify-center bg-muted p-4">
         <Card className="mx-auto max-w-md">
           <CardHeader>
             <CardTitle>Xác minh tài khoản</CardTitle>

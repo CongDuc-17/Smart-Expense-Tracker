@@ -33,7 +33,7 @@ function FieldRow({
 }) {
   return (
     <div className="space-y-1.5">
-      <Label htmlFor={htmlFor} className="text-sm font-medium text-[#37352F]">
+      <Label htmlFor={htmlFor} className="text-sm font-medium text-foreground">
         {label}
       </Label>
       {children}
@@ -94,23 +94,23 @@ export function DepositSheet() {
 
   return (
     <Sheet open={isDepositSheetOpen} onOpenChange={(open) => !open && handleClose()}>
-      <SheetContent className="w-full sm:max-w-md border-l border-[#E8E7E5] bg-white p-0 flex flex-col shadow-2xl">
-        <div className="p-6 border-b border-[#E8E7E5] bg-[#FFFEFC]">
+      <SheetContent className="w-full sm:max-w-md border-l border-border bg-card p-0 flex flex-col shadow-2xl">
+        <div className="p-6 border-b border-border bg-background">
           <SheetHeader>
-            <SheetTitle className="text-xl font-semibold text-[#37352F]">
+            <SheetTitle className="text-xl font-semibold text-foreground">
               Nạp tiền
             </SheetTitle>
-            <SheetDescription className="text-sm text-[#9B9A97]">
+            <SheetDescription className="text-sm text-muted-foreground">
               Cập nhật số tiền bạn đã tiết kiệm được cho mục tiêu này.
             </SheetDescription>
           </SheetHeader>
 
           {depositingGoal && (
-            <div className="mt-4 p-3 bg-[#F7F6F3] rounded-lg border border-[#E8E7E5]">
-              <div className="text-sm font-medium text-[#37352F]">{depositingGoal.title}</div>
+            <div className="mt-4 p-3 bg-muted rounded-lg border border-border">
+              <div className="text-sm font-medium text-foreground">{depositingGoal.title}</div>
               <div className="flex justify-between text-xs mt-1">
-                <span className="text-[#9B9A97]">Mục tiêu: {formatVND(depositingGoal.targetAmount)}</span>
-                <span className="text-[#9B9A97]">Còn thiếu: {formatVND(depositingGoal.remainingAmount)}</span>
+                <span className="text-muted-foreground">Mục tiêu: {formatVND(depositingGoal.targetAmount)}</span>
+                <span className="text-muted-foreground">Còn thiếu: {formatVND(depositingGoal.remainingAmount)}</span>
               </div>
             </div>
           )}
@@ -121,12 +121,12 @@ export function DepositSheet() {
             
             <FieldRow label="Số tiền nạp (đ) *" htmlFor="amount" error={form.formState.errors.amount?.message}>
               <div className="relative">
-                <PiggyBank className="absolute left-3 top-2.5 h-4 w-4 text-[#9B9A97]" />
+                <PiggyBank className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input 
                   id="amount"
                   type="number" 
                   placeholder="0" 
-                  className="pl-9 bg-[#FFFEFC] border-[#E8E7E5] focus-visible:ring-1 focus-visible:ring-[#37352F]"
+                  className="pl-9 bg-background border-border focus-visible:ring-1 focus-visible:ring-ring"
                   {...form.register("amount", { valueAsNumber: true })} 
                 />
               </div>
@@ -134,11 +134,11 @@ export function DepositSheet() {
 
             <FieldRow label="Nguồn tiền / Ghi chú" htmlFor="note" error={form.formState.errors.note?.message}>
               <div className="relative">
-                <AlignLeft className="absolute left-3 top-3 h-4 w-4 text-[#9B9A97]" />
+                <AlignLeft className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Textarea 
                   id="note"
                   placeholder="VD: Lương tháng 6..." 
-                  className="pl-9 min-h-[100px] resize-none bg-[#FFFEFC] border-[#E8E7E5] focus-visible:ring-1 focus-visible:ring-[#37352F]"
+                  className="pl-9 min-h-[100px] resize-none bg-background border-border focus-visible:ring-1 focus-visible:ring-ring"
                   {...form.register("note")} 
                 />
               </div>
@@ -146,19 +146,19 @@ export function DepositSheet() {
 
             <div className="pb-20"></div>
 
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-[#FFFEFC] border-t border-[#E8E7E5] flex gap-3">
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-background border-t border-border flex gap-3">
               <Button 
                 type="button" 
                 variant="outline" 
                 onClick={handleClose}
-                className="flex-1 bg-white border-[#E8E7E5] text-[#37352F] hover:bg-[#F7F6F3]"
+                className="flex-1 bg-card border-border text-foreground hover:bg-muted"
                 disabled={isPending}
               >
                 Hủy
               </Button>
               <Button 
                 type="submit" 
-                className="flex-1 bg-[#37352F] text-white hover:bg-[#2D2B27]"
+                className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
                 disabled={isPending}
               >
                 {isPending ? "Đang xử lý..." : "Nạp tiền"}

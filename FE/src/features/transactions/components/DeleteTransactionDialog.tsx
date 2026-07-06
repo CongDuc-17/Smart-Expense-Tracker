@@ -35,12 +35,12 @@ export function DeleteTransactionDialog() {
       open={isDeleteDialogOpen}
       onOpenChange={(open) => { if (!open && !isPending) closeDeleteDialog(); }}
     >
-      <DialogContent className="max-w-sm bg-white border border-[#E8E7E5] shadow-[0_16px_48px_rgba(0,0,0,0.20)] rounded-lg p-6">
+      <DialogContent className="max-w-sm bg-card border border-border shadow-[0_16px_48px_rgba(0,0,0,0.20)] rounded-lg p-6">
         <DialogHeader className="space-y-2">
-          <DialogTitle className="text-base font-semibold text-[#37352F] leading-6">
+          <DialogTitle className="text-base font-semibold text-foreground leading-6">
             Xóa giao dịch?
           </DialogTitle>
-          <DialogDescription className="text-sm text-[#37352F] leading-5">
+          <DialogDescription className="text-sm text-foreground leading-5">
             Bạn có chắc muốn xóa{" "}
             <span className="font-medium">"{deletingTransaction.title}"</span>{" "}
             ({formatVND(deletingTransaction.amount)})? Hành động này không thể hoàn tác.
@@ -54,7 +54,7 @@ export function DeleteTransactionDialog() {
             size="sm"
             disabled={isPending}
             onClick={closeDeleteDialog}
-            className="bg-[#F7F6F3] text-[#37352F] border border-[#E8E7E5] hover:bg-[#EFEFED] text-sm font-medium transition-colors duration-150"
+            className="bg-muted text-foreground border border-border hover:bg-secondary text-sm font-medium transition-colors duration-150"
           >
             Hủy
           </Button>
@@ -63,7 +63,7 @@ export function DeleteTransactionDialog() {
             size="sm"
             disabled={isPending}
             onClick={handleConfirm}
-            className="bg-white border border-red-300 text-red-500 hover:bg-red-50 hover:border-red-400 text-sm font-medium transition-colors duration-150 disabled:opacity-50"
+            className="bg-card border border-red-300 text-red-500 hover:bg-destructive/10 hover:text-destructive hover:border-red-400 text-sm font-medium transition-colors duration-150 disabled:opacity-50"
           >
             {isPending ? (
               <span className="flex items-center gap-1.5">

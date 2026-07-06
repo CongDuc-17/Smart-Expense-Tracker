@@ -12,16 +12,16 @@ interface MonthlyTrendChartProps {
 export function MonthlyTrendChart({ data, isLoading }: MonthlyTrendChartProps) {
   if (isLoading) {
     return (
-      <Card className="p-5 border-[#E8E7E5] shadow-sm h-[350px] flex flex-col justify-center items-center">
-        <Skeleton className="w-full h-[250px] bg-[#E8E7E5] rounded-md" />
+      <Card className="p-5 border-border shadow-sm h-[350px] flex flex-col justify-center items-center">
+        <Skeleton className="w-full h-[250px] bg-muted rounded-md" />
       </Card>
     );
   }
 
   if (!data || data.length === 0) {
     return (
-      <Card className="p-5 border-[#E8E7E5] shadow-sm h-[350px] flex flex-col justify-center items-center text-center">
-        <span className="text-sm text-[#9B9A97]">Chưa có dữ liệu</span>
+      <Card className="p-5 border-border shadow-sm h-[350px] flex flex-col justify-center items-center text-center">
+        <span className="text-sm text-muted-foreground">Chưa có dữ liệu</span>
       </Card>
     );
   }
@@ -33,8 +33,8 @@ export function MonthlyTrendChart({ data, isLoading }: MonthlyTrendChartProps) {
   }));
 
   return (
-    <Card className="p-5 border-[#E8E7E5] shadow-sm h-[350px] flex flex-col">
-      <h3 className="text-sm font-semibold text-[#37352F] mb-6">Xu hướng Thu & Chi</h3>
+    <Card className="p-5 border-border shadow-sm h-[350px] flex flex-col">
+      <h3 className="text-sm font-semibold text-foreground mb-6">Xu hướng Thu & Chi</h3>
       
       <div className="flex-1 w-full min-h-0">
         <ResponsiveContainer width="100%" height="100%">
@@ -76,7 +76,7 @@ export function MonthlyTrendChart({ data, isLoading }: MonthlyTrendChartProps) {
               iconType="circle"
               iconSize={8}
               formatter={(value) => (
-                <span className="text-xs text-[#37352F] font-medium mr-4">
+                <span className="text-xs text-foreground font-medium mr-4">
                   {value === "income" ? "Tổng Thu" : "Tổng Chi"}
                 </span>
               )}

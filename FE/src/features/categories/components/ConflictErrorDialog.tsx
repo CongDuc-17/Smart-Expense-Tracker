@@ -30,7 +30,7 @@ export function ConflictErrorDialog() {
     <Dialog open={isConflictDialogOpen} onOpenChange={closeConflictDialog}>
       <DialogContent
         className="
-          max-w-sm bg-white border border-[#E8E7E5]
+          max-w-sm bg-card border border-border
           shadow-[0_16px_48px_rgba(0,0,0,0.20)]
           rounded-lg p-6
         "
@@ -38,16 +38,16 @@ export function ConflictErrorDialog() {
         <DialogHeader className="space-y-3">
           {/* Warning icon */}
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
+            <div className="w-9 h-9 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center flex-shrink-0">
               <AlertTriangle className="w-5 h-5 text-amber-500" />
             </div>
-            <DialogTitle className="text-base font-semibold text-[#37352F] leading-6">
+            <DialogTitle className="text-base font-semibold text-foreground leading-6">
               Không thể xóa danh mục này
             </DialogTitle>
           </div>
 
           <DialogDescription asChild>
-            <div className="space-y-3 text-sm text-[#37352F] leading-5">
+            <div className="space-y-3 text-sm text-foreground leading-5">
               {deletingCategory && (
                 <p>
                   Danh mục{" "}
@@ -56,14 +56,14 @@ export function ConflictErrorDialog() {
                 </p>
               )}
 
-              <p className="text-[#9B9A97]">
+              <p className="text-muted-foreground">
                 Để xóa danh mục này, hãy chuyển tất cả giao dịch liên quan sang
                 danh mục khác trước.
               </p>
 
               {/* Phase 3 note — sẽ có link đến transactions */}
-              <div className="p-3 rounded-md bg-[#F7F6F3] border border-[#E8E7E5]">
-                <p className="text-xs text-[#9B9A97] leading-4">
+              <div className="p-3 rounded-md bg-muted border border-border">
+                <p className="text-xs text-muted-foreground leading-4">
                   💡 Tính năng chuyển giao dịch hàng loạt sẽ có trong phiên bản
                   tiếp theo.
                 </p>
@@ -78,8 +78,8 @@ export function ConflictErrorDialog() {
             size="sm"
             onClick={closeConflictDialog}
             className="
-              w-full bg-[#37352F] text-[#FFFEFC]
-              hover:bg-[#2D2B27] active:bg-[#1F1D1A]
+              w-full bg-primary text-primary-foreground
+              hover:bg-primary/90 active:scale-95
               text-sm font-medium transition-colors duration-150
             "
           >

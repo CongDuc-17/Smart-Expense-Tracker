@@ -62,18 +62,18 @@ export function TransactionFilters() {
         value={activeTab}
         onValueChange={(val) => setActiveTab(val as TransactionTabFilter)}
       >
-        <TabsList className="h-9 bg-[#F7F6F3] border border-[#E8E7E5] rounded-lg p-0.5 ">
+        <TabsList className="h-9 bg-muted border border-border rounded-lg p-0.5 ">
           {TABS.map((tab) => (
             <TabsTrigger
               key={tab.value}
               value={tab.value}
               className="
                 h-8 px-3 text-sm rounded-md font-medium
-                text-[#9B9A97] transition-all duration-150
-                data-[state=active]:bg-white
-                data-[state=active]:text-[#37352F]
+                text-muted-foreground transition-all duration-150
+                data-[state=active]:bg-background
+                data-[state=active]:text-foreground
                 data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.08)]
-                hover:text-[#37352F]
+                hover:text-foreground
               "
             >
               {tab.label}
@@ -84,11 +84,11 @@ export function TransactionFilters() {
 
       <div className="flex-1 max-w-sm relative">
         <div className="absolute inset-y-0 left-2.5 flex items-center pointer-events-none">
-          <Search className="w-4 h-4 text-[#9B9A97]" />
+          <Search className="w-4 h-4 text-muted-foreground" />
         </div>
         <Input
           placeholder="Tìm giao dịch..."
-          className="pl-9 h-9 border-[#E8E7E5] text-sm focus-visible:ring-1 focus-visible:ring-[#37352F]"
+          className="pl-9 h-9 border-border text-sm focus-visible:ring-1 focus-visible:ring-ring"
           value={localSearch}
           onChange={(e) => setLocalSearch(e.target.value)}
         />
@@ -96,7 +96,7 @@ export function TransactionFilters() {
 
       <div className="flex items-center gap-2">
         <Select value={sortMode} onValueChange={(val) => setSortMode(val as TransactionSortMode)}>
-          <SelectTrigger className="h-9 border-[#E8E7E5] bg-white min-w-[130px] text-sm">
+          <SelectTrigger className="h-9 border-border bg-card min-w-[130px] text-sm">
             <SelectValue placeholder="Sắp xếp" />
           </SelectTrigger>
           <SelectContent>

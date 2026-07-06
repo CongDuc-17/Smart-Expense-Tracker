@@ -72,7 +72,7 @@ function FieldRow({
 }) {
   return (
     <div className="space-y-1.5">
-      <Label htmlFor={htmlFor} className="text-sm font-medium text-[#37352F]">
+      <Label htmlFor={htmlFor} className="text-sm font-medium text-foreground">
         {label}
       </Label>
       {children}
@@ -112,10 +112,10 @@ function AmountInput({
           onChange(isNaN(raw) ? 0 : raw);
         }}
         className="
-          h-9 text-sm bg-white border-[#E8E7E5] text-[#37352F]
-          placeholder:text-[#9B9A97]
-          focus-visible:ring-2 focus-visible:ring-[#37352F]
-          focus-visible:border-[#37352F]
+          h-9 text-sm bg-card border-border text-foreground
+          placeholder:text-muted-foreground
+          focus-visible:ring-2 focus-visible:ring-ring
+          focus-visible:border-ring
           transition-all duration-150
           [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
         "
@@ -216,9 +216,9 @@ function CreateTransactionSheet({
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => { if (!open && !isPending) onClose(); }}>
-      <SheetContent side="right" className="w-full sm:max-w-[480px] bg-white border-l border-[#E8E7E5] flex flex-col p-0">
-        <SheetHeader className="px-6 py-5 border-b border-[#E8E7E5]">
-          <SheetTitle className="text-base font-semibold text-[#37352F]">
+      <SheetContent side="right" className="w-full sm:max-w-[480px] bg-card border-l border-border flex flex-col p-0">
+        <SheetHeader className="px-6 py-5 border-b border-border">
+          <SheetTitle className="text-base font-semibold text-foreground">
             Thêm giao dịch
           </SheetTitle>
         </SheetHeader>
@@ -235,11 +235,11 @@ function CreateTransactionSheet({
                     field.onChange(val as TransactionType);
                     setValue("categoryId", "");
                   }}>
-                    <TabsList className="h-9 bg-[#F7F6F3] border border-[#E8E7E5] rounded-lg p-0.5 w-full">
-                      <TabsTrigger value="EXPENSE" className="flex-1 h-8 text-sm rounded-md font-medium text-[#9B9A97] data-[state=active]:bg-white data-[state=active]:text-[#37352F] data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:text-[#37352F] transition-all duration-150">
+                    <TabsList className="h-9 bg-muted border border-border rounded-lg p-0.5 w-full">
+                      <TabsTrigger value="EXPENSE" className="flex-1 h-8 text-sm rounded-md font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:text-foreground transition-all duration-150">
                         Chi tiêu
                       </TabsTrigger>
-                      <TabsTrigger value="INCOME" className="flex-1 h-8 text-sm rounded-md font-medium text-[#9B9A97] data-[state=active]:bg-white data-[state=active]:text-[#37352F] data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:text-[#37352F] transition-all duration-150">
+                      <TabsTrigger value="INCOME" className="flex-1 h-8 text-sm rounded-md font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:text-foreground transition-all duration-150">
                         Thu nhập
                       </TabsTrigger>
                     </TabsList>
@@ -281,7 +281,7 @@ function CreateTransactionSheet({
                 disabled={isPending}
                 autoFocus
                 {...register("title")}
-                className="h-9 text-sm bg-white border-[#E8E7E5] text-[#37352F] placeholder:text-[#9B9A97] focus-visible:ring-2 focus-visible:ring-[#37352F] focus-visible:border-[#37352F] transition-all duration-150"
+                className="h-9 text-sm bg-card border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring transition-all duration-150"
               />
             </FieldRow>
 
@@ -310,7 +310,7 @@ function CreateTransactionSheet({
                 disabled={isPending}
                 max={todayInputValue()}
                 {...register("date")}
-                className="h-9 text-sm bg-white border-[#E8E7E5] text-[#37352F] focus-visible:ring-2 focus-visible:ring-[#37352F] focus-visible:border-[#37352F] transition-all duration-150"
+                className="h-9 text-sm bg-card border-border text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring transition-all duration-150"
               />
             </FieldRow>
 
@@ -323,9 +323,9 @@ function CreateTransactionSheet({
                 rows={2}
                 {...register("note")}
                 className="
-                  w-full px-3 py-2 text-sm bg-white border border-[#E8E7E5] rounded-md
-                  text-[#37352F] placeholder:text-[#9B9A97] resize-none
-                  focus:outline-none focus:ring-2 focus:ring-[#37352F] focus:border-[#37352F]
+                  w-full px-3 py-2 text-sm bg-card border border-border rounded-md
+                  text-foreground placeholder:text-muted-foreground resize-none
+                  focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring
                   transition-all duration-150 disabled:opacity-50
                 "
               />
@@ -357,13 +357,13 @@ function CreateTransactionSheet({
             )}
           </div>
 
-          <SheetFooter className="px-6 py-4 border-t border-[#E8E7E5] flex flex-row gap-2">
+          <SheetFooter className="px-6 py-4 border-t border-border flex flex-row gap-2">
             <Button type="button" variant="secondary" size="sm" disabled={isPending} onClick={onClose}
-              className="flex-1 bg-[#F7F6F3] text-[#37352F] border border-[#E8E7E5] hover:bg-[#EFEFED] text-sm font-medium transition-colors duration-150">
+              className="flex-1 bg-muted text-foreground border border-border hover:bg-secondary text-sm font-medium transition-colors duration-150">
               Hủy
             </Button>
             <Button type="submit" size="sm" disabled={isPending}
-              className="flex-1 bg-[#37352F] text-[#FFFEFC] hover:bg-[#2D2B27] text-sm font-medium transition-colors duration-150 disabled:opacity-50">
+              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium transition-colors duration-150 disabled:opacity-50">
               {isPending ? (
                 <span className="flex items-center gap-1.5">
                   <span className="w-3.5 h-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
@@ -448,9 +448,9 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => { if (!open && !isPending) closeEditSheet(); }}>
-      <SheetContent side="right" className="w-full sm:max-w-[480px] bg-white border-l border-[#E8E7E5] flex flex-col p-0">
-        <SheetHeader className="px-6 py-5 border-b border-[#E8E7E5]">
-          <SheetTitle className="text-base font-semibold text-[#37352F]">
+      <SheetContent side="right" className="w-full sm:max-w-[480px] bg-card border-l border-border flex flex-col p-0">
+        <SheetHeader className="px-6 py-5 border-b border-border">
+          <SheetTitle className="text-base font-semibold text-foreground">
             Chỉnh sửa giao dịch
           </SheetTitle>
         </SheetHeader>
@@ -461,10 +461,10 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
             {/* Type — disabled */}
             <FieldRow label="Loại giao dịch">
               <div className="flex items-center gap-2">
-                <div className="h-9 px-3 flex items-center text-sm text-[#9B9A97] bg-[#F7F6F3] border border-[#E8E7E5] rounded-md cursor-not-allowed select-none">
+                <div className="h-9 px-3 flex items-center text-sm text-muted-foreground bg-muted border border-border rounded-md cursor-not-allowed select-none">
                   {editingTransaction.type === "INCOME" ? "Thu nhập" : "Chi tiêu"}
                 </div>
-                <p className="text-xs text-[#9B9A97]">Không thể thay đổi</p>
+                <p className="text-xs text-muted-foreground">Không thể thay đổi</p>
               </div>
             </FieldRow>
 
@@ -490,7 +490,7 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
             {/* Title */}
             <FieldRow label="Tiêu đề" htmlFor="title" error={errors.title?.message}>
               <Input id="title" disabled={isPending} {...register("title")}
-                className="h-9 text-sm bg-white border-[#E8E7E5] text-[#37352F] focus-visible:ring-2 focus-visible:ring-[#37352F] focus-visible:border-[#37352F] transition-all duration-150" />
+                className="h-9 text-sm bg-card border-border text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring transition-all duration-150" />
             </FieldRow>
 
             {/* Category */}
@@ -507,7 +507,7 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="h-7 px-2.5 text-xs bg-white hover:bg-violet-100 text-violet-700 hover:text-violet-800"
+                    className="h-7 px-2.5 text-xs bg-card hover:bg-violet-100 text-violet-700 hover:text-violet-800"
                     onClick={() => setValue("categoryId", analysis.suggestedCategoryId!, { shouldValidate: true, shouldDirty: true })}
                   >
                     Áp dụng
@@ -532,13 +532,13 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
             {/* Date */}
             <FieldRow label="Ngày" htmlFor="date" error={errors.date?.message}>
               <Input id="date" type="date" disabled={isPending} max={todayInputValue()} {...register("date")}
-                className="h-9 text-sm bg-white border-[#E8E7E5] text-[#37352F] focus-visible:ring-2 focus-visible:ring-[#37352F] focus-visible:border-[#37352F] transition-all duration-150" />
+                className="h-9 text-sm bg-card border-border text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring transition-all duration-150" />
             </FieldRow>
 
             {/* Note */}
             <FieldRow label="Ghi chú (tuỳ chọn)" htmlFor="note" error={errors.note?.message}>
               <textarea id="note" disabled={isPending} rows={2} {...register("note")}
-                className="w-full px-3 py-2 text-sm bg-white border border-[#E8E7E5] rounded-md text-[#37352F] placeholder:text-[#9B9A97] resize-none focus:outline-none focus:ring-2 focus:ring-[#37352F] focus:border-[#37352F] transition-all duration-150 disabled:opacity-50" />
+                className="w-full px-3 py-2 text-sm bg-card border border-border rounded-md text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-all duration-150 disabled:opacity-50" />
             </FieldRow>
 
             {/* Image Upload - Chỉ hiện cho Chi tiêu */}
@@ -568,13 +568,13 @@ function EditTransactionSheet({ isOpen }: { isOpen: boolean }) {
             )}
           </div>
 
-          <SheetFooter className="px-6 py-4 border-t border-[#E8E7E5] flex flex-row gap-2">
+          <SheetFooter className="px-6 py-4 border-t border-border flex flex-row gap-2">
             <Button type="button" variant="secondary" size="sm" disabled={isPending} onClick={closeEditSheet}
-              className="flex-1 bg-[#F7F6F3] text-[#37352F] border border-[#E8E7E5] hover:bg-[#EFEFED] text-sm font-medium transition-colors duration-150">
+              className="flex-1 bg-muted text-foreground border border-border hover:bg-secondary text-sm font-medium transition-colors duration-150">
               Hủy
             </Button>
             <Button type="submit" size="sm" disabled={isPending}
-              className="flex-1 bg-[#37352F] text-[#FFFEFC] hover:bg-[#2D2B27] text-sm font-medium transition-colors duration-150 disabled:opacity-50">
+              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium transition-colors duration-150 disabled:opacity-50">
               {isPending ? (
                 <span className="flex items-center gap-1.5">
                   <span className="w-3.5 h-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />

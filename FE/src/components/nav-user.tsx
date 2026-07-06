@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { apiClient } from "@/lib/apiClient";
 import { toast } from "sonner";
+import { ModeToggle } from "./mode-toggle";
 
 // ---------------------------------------------------------------
 // Helpers
@@ -78,28 +79,28 @@ export function NavUser({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-[rgba(55,53,47,0.08)] hover:bg-[rgba(55,53,47,0.06)] transition-colors duration-150"
+              className="data-[state=open]:bg-[rgba(55,53,47,0.08)] hover:bg-accent hover:text-accent-foreground transition-colors duration-150"
             >
               <Avatar className="h-7 w-7 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg bg-[#37352F] text-white text-xs font-medium">
+                <AvatarFallback className="rounded-lg bg-primary text-primary-foreground text-xs font-medium">
                   {getInitials(user.name)}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate text-sm font-medium text-[#37352F]">
+                <span className="truncate text-sm font-medium text-foreground">
                   {user.name}
                 </span>
-                <span className="truncate text-xs text-[#9B9A97]">
+                <span className="truncate text-xs text-muted-foreground">
                   {user.email}
                 </span>
               </div>
-              <EllipsisVerticalIcon className="ml-auto size-4 text-[#9B9A97]" />
+              <EllipsisVerticalIcon className="ml-auto size-4 text-muted-foreground" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg border border-[#E8E7E5] bg-white shadow-[0_8px_24px_rgba(0,0,0,0.16)]"
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg border border-border bg-card shadow-[0_8px_24px_rgba(0,0,0,0.16)]"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
@@ -109,38 +110,46 @@ export function NavUser({
               <div className="flex items-center gap-2 px-3 py-2.5">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg bg-[#37352F] text-white text-xs font-medium">
+                  <AvatarFallback className="rounded-lg bg-primary text-primary-foreground text-xs font-medium">
                     {getInitials(user.name)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium text-[#37352F]">
+                  <span className="truncate font-medium text-foreground">
                     {user.name}
                   </span>
-                  <span className="truncate text-xs text-[#9B9A97]">
+                  <span className="truncate text-xs text-muted-foreground">
                     {user.email}
                   </span>
                 </div>
               </div>
             </DropdownMenuLabel>
 
-            <DropdownMenuSeparator className="bg-[#E8E7E5]" />
+            <DropdownMenuSeparator className="bg-muted" />
 
             <DropdownMenuGroup>
               <DropdownMenuItem
-                className="text-sm text-[#37352F] cursor-pointer hover:bg-[rgba(55,53,47,0.06)] focus:bg-[rgba(55,53,47,0.06)]"
+                className="text-sm text-foreground cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                 onClick={() => navigate("/settings")}
               >
-                <CircleUserRoundIcon className="mr-2 h-4 w-4 text-[#9B9A97]" />
+                <CircleUserRoundIcon className="mr-2 h-4 w-4 text-muted-foreground" />
                 Tài khoản
               </DropdownMenuItem>
+              <DropdownMenuItem
+                className="flex justify-between text-sm text-foreground cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+
+              >
+                <span>Giao diện</span>
+                <ModeToggle />
+              </DropdownMenuItem>
+
 
             </DropdownMenuGroup>
 
-            <DropdownMenuSeparator className="bg-[#E8E7E5]" />
+            <DropdownMenuSeparator className="bg-muted" />
 
             <DropdownMenuItem
-              className="text-sm text-red-500 cursor-pointer hover:bg-red-50 focus:bg-red-50 focus:text-red-500"
+              className="text-sm text-red-500 cursor-pointer hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 text-destructive focus:text-red-500"
               onClick={handleLogout}
             >
               <LogOutIcon className="mr-2 h-4 w-4" />

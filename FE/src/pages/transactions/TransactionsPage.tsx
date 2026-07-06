@@ -66,7 +66,7 @@ function SummaryBar({ summary }: { summary: TransactionSummary }) {
       {items.map(({ label, value, icon: Icon, color, bg, status, statusColor }) => (
         <div
           key={label}
-          className="flex flex-col gap-2 p-4 rounded-lg border border-[#E8E7E5] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] relative overflow-hidden"
+          className="flex flex-col gap-2 p-4 rounded-lg border border-border bg-card shadow-[0_1px_3px_rgba(0,0,0,0.06)] relative overflow-hidden"
         >
           <div className="flex items-center gap-2">
             <div
@@ -75,7 +75,7 @@ function SummaryBar({ summary }: { summary: TransactionSummary }) {
             >
               <Icon className="w-3.5 h-3.5" style={{ color }} />
             </div>
-            <span className="text-xs text-[#9B9A97] font-medium">{label}</span>
+            <span className="text-xs text-muted-foreground font-medium">{label}</span>
           </div>
           <div className="flex items-end justify-between mt-1">
             <p className="text-base font-semibold leading-5" style={{ color }}>
@@ -99,9 +99,9 @@ function SummaryBar({ summary }: { summary: TransactionSummary }) {
 
 function ErrorBanner({ onRetry }: { onRetry: () => void }) {
   return (
-    <div className="flex items-center justify-between px-4 py-3 mb-6 rounded-lg border border-[#E8E7E5] bg-[#F7F6F3] text-sm text-[#37352F]" role="alert">
+    <div className="flex items-center justify-between px-4 py-3 mb-6 rounded-lg border border-border bg-muted text-sm text-foreground" role="alert">
       <span>Không thể tải giao dịch. Vui lòng thử lại.</span>
-      <button onClick={onRetry} className="text-sm font-medium text-[#37352F] underline underline-offset-2 hover:text-[#2D2B27] transition-colors duration-150 ml-4">
+      <button onClick={onRetry} className="text-sm font-medium text-foreground underline underline-offset-2 hover:text-foreground/80 transition-colors duration-150 ml-4">
         Thử lại
       </button>
     </div>
@@ -152,18 +152,18 @@ export function TransactionsPage() {
 
   // ─── Render ──────────────────────────────────────────────────
   return (
-    <div className="flex flex-col min-h-full bg-[#FFFEFC]">
+    <div className="flex flex-col min-h-full bg-background">
       <div className="flex-1 w-full max-w-5xl mx-auto px-6 py-8">
 
         {/* Page Header */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-semibold text-[#37352F] leading-8 tracking-tight">
+            <h1 className="text-2xl font-semibold text-foreground leading-8 tracking-tight">
               Giao dịch
             </h1>
-            <p className="text-sm text-[#9B9A97] mt-1 flex items-center gap-2 leading-5">
+            <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2 leading-5">
               Theo dõi thu chi
-              <span className="w-1 h-1 rounded-full bg-[#E8E7E5]" />
+              <span className="w-1 h-1 rounded-full bg-muted" />
               <span>
                 {isLoading ? "Đang tải..." : `${transactions.length} giao dịch tháng ${selectedMonth}/${selectedYear}`}
               </span>
@@ -172,7 +172,7 @@ export function TransactionsPage() {
           <Button
             onClick={() => openCreateSheet()}
             size="sm"
-            className="bg-[#37352F] text-[#FFFEFC] text-sm font-medium hover:bg-[#2D2B27] active:bg-[#1F1D1A] transition-colors duration-150 flex items-center gap-1.5 h-9"
+            className="bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 active:scale-95 transition-colors duration-150 flex items-center gap-1.5 h-9"
           >
             <Plus className="w-4 h-4" />
             Thêm giao dịch

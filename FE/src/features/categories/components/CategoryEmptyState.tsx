@@ -30,15 +30,15 @@ export function CategoryEmptyState({
     return (
       <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
         {/* Icon */}
-        <div className="w-12 h-12 rounded-2xl bg-[#F7F6F3] flex items-center justify-center mb-4">
-          <SearchX className="w-6 h-6 text-[#9B9A97]" />
+        <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center mb-4">
+          <SearchX className="w-6 h-6 text-muted-foreground" />
         </div>
 
         {/* Text */}
-        <h3 className="text-sm font-medium text-[#37352F] mb-1">
+        <h3 className="text-sm font-medium text-foreground mb-1">
           Không tìm thấy danh mục
         </h3>
-        <p className="text-sm text-[#9B9A97] max-w-xs leading-5">
+        <p className="text-sm text-muted-foreground max-w-xs leading-5">
           Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc khác.
         </p>
       </div>
@@ -49,15 +49,15 @@ export function CategoryEmptyState({
   return (
     <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
       {/* Icon */}
-      <div className="w-12 h-12 rounded-2xl bg-[#F7F6F3] flex items-center justify-center mb-4">
-        <FolderOpen className="w-6 h-6 text-[#9B9A97]" />
+      <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center mb-4">
+        <FolderOpen className="w-6 h-6 text-muted-foreground" />
       </div>
 
       {/* Text */}
-      <h3 className="text-sm font-medium text-[#37352F] mb-1">
+      <h3 className="text-sm font-medium text-foreground mb-1">
         Chưa có danh mục cá nhân
       </h3>
-      <p className="text-sm text-[#9B9A97] max-w-xs leading-5 mb-5">
+      <p className="text-sm text-muted-foreground max-w-xs leading-5 mb-5">
         Tạo danh mục đầu tiên để bắt đầu phân loại giao dịch theo cách của bạn.
       </p>
 
@@ -67,8 +67,8 @@ export function CategoryEmptyState({
           onClick={onCreateClick}
           size="sm"
           className="
-            bg-[#37352F] text-[#FFFEFC] text-sm font-medium
-            hover:bg-[#2D2B27] active:bg-[#1F1D1A]
+            bg-primary text-primary-foreground text-sm font-medium
+            hover:bg-primary/90 active:scale-95
             transition-colors duration-200
           "
         >

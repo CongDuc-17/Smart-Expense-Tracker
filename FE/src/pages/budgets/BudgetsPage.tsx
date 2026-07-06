@@ -35,22 +35,22 @@ function BudgetMonthPicker() {
   const isCurrentMonth = month === now.getMonth() + 1 && year === now.getFullYear();
 
   return (
-    <div className="flex items-center gap-1 bg-[#F7F6F3] border border-[#E8E7E5] rounded-lg p-0.5">
+    <div className="flex items-center gap-1 bg-muted border border-border rounded-lg p-0.5">
       <button
         onClick={goToPrevMonth}
-        className="w-8 h-8 rounded-md flex items-center justify-center text-[#9B9A97] hover:text-[#37352F] hover:bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#37352F]"
+        className="w-8 h-8 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent hover:text-accent-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <ChevronLeft className="w-4 h-4" />
       </button>
 
-      <span className="text-sm font-medium text-[#37352F] min-w-[110px] text-center select-none">
+      <span className="text-sm font-medium text-foreground min-w-[110px] text-center select-none">
         {MONTH_NAMES[month - 1]}, {year}
       </span>
 
       <button
         onClick={goToNextMonth}
         disabled={isCurrentMonth}
-        className="w-8 h-8 rounded-md flex items-center justify-center text-[#9B9A97] hover:text-[#37352F] hover:bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#37352F] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+        className="w-8 h-8 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent hover:text-accent-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent"
       >
         <ChevronRight className="w-4 h-4" />
       </button>
@@ -72,14 +72,14 @@ export default function BudgetsPage() {
       {/* ── Header ─────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-[#37352F] mb-1">Ngân sách</h1>
-          <p className="text-sm text-[#9B9A97]">Kiểm soát chi tiêu theo danh mục</p>
+          <h1 className="text-2xl font-bold text-foreground mb-1">Ngân sách</h1>
+          <p className="text-sm text-muted-foreground">Kiểm soát chi tiêu theo danh mục</p>
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
           <BudgetMonthPicker />
           <Button
             onClick={openCreateSheet}
-            className="bg-[#37352F] text-[#FFFEFC] hover:bg-[#2D2B27] h-9 px-4 text-sm font-medium shadow-sm transition-all duration-200"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 text-sm font-medium shadow-sm transition-all duration-200"
           >
             <Plus className="w-4 h-4 mr-2" />
             Tạo mới
