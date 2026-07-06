@@ -92,7 +92,7 @@ export function Register() {
             slowTimerRef.current = setTimeout(() => setIsSlowResponse(true), 5000);
 
             await apiClient.post(
-                "/auth/register",
+                "auth/register",
                 { email, password, name },
                 { withCredentials: true },
             );

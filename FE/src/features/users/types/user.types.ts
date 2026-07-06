@@ -6,6 +6,7 @@ export interface User {
   name: string;
   avatar: string | null;
   status: UserStatusEnum;
+  role: "USER" | "ADMIN";
   createdAt: string;
   updatedAt: string;
 }

@@ -15,10 +15,16 @@ export const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use((config) => {
-  const accessToken = cookieStore.get("accessToken");
-
-  if (accessToken) {
-    config.headers["Authorization"] = `Bearer ${accessToken}`;
+  if (config.url?.startsWith("/admin")) {
+    const adminToken = localStorage.getItem("adminToken");
+    if (adminToken) {
+      config.headers["Authorization"] = `Bearer ${adminToken}`;
+    }
+  } else {
+    const accessToken = cookieStore.get("accessToken");
+    if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    }
   }
   if (config.data instanceof FormData) {
     delete config.headers["Content-Type"];
@@ -48,8 +54,15 @@ axiosClient.interceptors.response.use(
       _retry?: boolean;
     };
 
+    // Nếu là lỗi 401 từ API admin, chuyển hướng về trang admin/login
+    if (error.response?.status === 401 && originalRequest.url?.startsWith("/admin")) {
+      localStorage.removeItem("adminToken");
+      window.location.href = "/admin/login";
+      return Promise.reject(error);
+    }
+
     // Skip refresh token nếu đang ở auth pages
-    const authPages = ["/login", "/register", "/verify", "/forgot-password"];
+    const authPages = ["/login", "/register", "/verify", "/forgot-password", "/admin/login"];
     const isAuthPage = authPages.some((page) =>
       window.location.pathname.includes(page),
     );

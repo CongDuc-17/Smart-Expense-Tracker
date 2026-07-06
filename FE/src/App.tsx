@@ -10,6 +10,10 @@ import { AiInsightsPage } from "./pages/ai-insights/AiInsightsPage";
 import SettingsPage from "./pages/settings/SettingsPage";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
 
+import { AdminLayout } from "./components/admin/AdminLayout";
+import { AdminDashboard } from "./pages/admin/AdminDashboard";
+import { AdminUsers } from "./pages/admin/AdminUsers";
+import { AdminLogin } from "./pages/admin/AdminLogin";
 import { AppLayout } from "./components/AppLayout";
 import { VerifyEmail } from "./pages/auth/VerifyEmail";
 import { ForgotPassword } from "./pages/auth/ForgotPassword";
@@ -24,6 +28,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/verify" element={<VerifyEmail />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
 
         {/* ── Authenticated routes (with AppLayout sidebar) ─ */}
         <Route element={<AppLayout />}>
@@ -34,6 +39,12 @@ function App() {
           <Route path="/savings" element={<SavingGoalsPage />} />
           <Route path="/insights" element={<AiInsightsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+        </Route>
+
+        {/* ── Admin routes ──────────────────────────────────── */}
+        <Route element={<AdminLayout />}>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
         </Route>
 
         {/* ── Fallback ────────────────────────────────────── */}

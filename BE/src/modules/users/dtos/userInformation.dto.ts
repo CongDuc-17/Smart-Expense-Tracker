@@ -10,6 +10,7 @@ export class UserInformationDto {
 	avatarPublicId: string | null;
 	verify: boolean;
 	status: UserStatusEnum;
+	role: import('@prisma/client').RoleEnum;
 	createdAt: Date;
 	updatedAt: Date;
 	deletedAt: Date | null;
@@ -22,6 +23,7 @@ export class UserInformationDto {
 		this.avatarPublicId = user.avatarPublicId ?? null;
 		this.verify = user.verify;
 		this.status = user.status;
+		this.role = user.role;
 		this.createdAt = user.createdAt;
 		this.updatedAt = user.updatedAt;
 		this.deletedAt = user.deletedAt ?? null;

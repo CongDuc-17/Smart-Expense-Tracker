@@ -15,7 +15,9 @@
     "test:unit": "jest --testPathPattern=tests/unit",
     "test:integration": "jest --testPathPattern=tests/integration",
     "test:e2e": "jest --testPathPattern=tests/e2e",
-    "db:push": "npx prisma db push",
+    "db:pull": "npx prisma db pull",
+    "db:push": "npx prisma db push && npx prisma db seed",
+    "db:seed": "npx prisma db seed",
     "db:gen-dto": "npx prisma generate",
     "db:gen-migration": "npx prisma migrate dev --create-only --name"
   },
@@ -91,5 +93,8 @@
     "tsup": "^8.5.0",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2"
+  },
+  "prisma": {
+    "seed": "npx tsx prisma/seedAdminAccess.ts"
   }
 }

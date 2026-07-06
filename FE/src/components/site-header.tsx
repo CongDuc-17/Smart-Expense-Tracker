@@ -51,7 +51,7 @@ export function SiteHeader() {
       </h1>
 
       <div className="flex items-center gap-2 ml-auto">
-        <NotificationBell />
+        {!location.pathname.startsWith('/admin') && <NotificationBell />}
       </div>
     </header>
   );
