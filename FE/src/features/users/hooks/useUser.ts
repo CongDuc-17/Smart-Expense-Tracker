@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { usersService } from "../services/users.service";
-import { useUserStore } from "../stores/user.store";
+import { useAuthStore } from "@/features/auth/stores/auth.store";
 import { toast } from "sonner";
 import type { UpdateProfilePayload, ChangePasswordPayload } from "../types/user.types";
 
@@ -10,14 +10,14 @@ export const userKeys = {
 };
 
 export function useCurrentUser() {
-  const setUser = useUserStore((state) => state.setUser);
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   return useQuery({
     queryKey: userKeys.me(),
     queryFn: async () => {
       const response = await usersService.getMe();
       if (response.data) {
-        setUser(response.data);
+        setAuth(response.data);
       }
       return response.data;
     },
@@ -27,7 +27,7 @@ export function useCurrentUser() {
 
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
-  const updateUser = useUserStore((state) => state.updateUser);
+  const updateUser = useAuthStore((state) => state.updateUser);
 
   return useMutation({
     mutationFn: (payload: UpdateProfilePayload) => usersService.updateMe(payload),

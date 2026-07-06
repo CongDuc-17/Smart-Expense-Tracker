@@ -28,8 +28,7 @@ import {
   CircleUserRoundIcon,
   LogOutIcon,
 } from "lucide-react";
-import { apiClient } from "@/lib/apiClient";
-import { toast } from "sonner";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { ModeToggle } from "./mode-toggle";
 
 // ---------------------------------------------------------------
@@ -60,16 +59,10 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
-  async function handleLogout() {
-    try {
-      await apiClient.post("/auth/logout", {}, { withCredentials: true });
-    } catch {
-      // Vẫn logout phía FE dù API lỗi
-    } finally {
-      toast.success("Đã đăng xuất");
-      navigate("/login", { replace: true });
-    }
+  function handleLogout() {
+    logout();
   }
 
   return (

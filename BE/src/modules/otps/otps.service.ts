@@ -1,4 +1,4 @@
-import { otps } from '@prisma/client';
+import { Otp } from '@prisma/client';
 import { Exception } from '@tsed/exceptions';
 import { StatusCodes } from 'http-status-codes';
 
@@ -13,9 +13,9 @@ export class OtpsService {
 	constructor(
 		private readonly usersRepository = new UsersRepository(),
 		private readonly otpsRepository = new OtpsRepository(),
-	) {}
+	) { }
 
-	async generateOtp({ userId }: { userId: string }): Promise<otps | Exception> {
+	async generateOtp({ userId }: { userId: string }): Promise<Otp | Exception> {
 		const otpExists = await this.otpsRepository.findOtp({ userId });
 		if (otpExists && otpExists.expiresAt > new Date()) {
 			throw new OptionalException(
@@ -24,7 +24,7 @@ export class OtpsService {
 			);
 		}
 
-		const otp = Math.floor(100000 + Math.random() * 999999).toString();
+		const otp = Math.floor(100000 + Math.random() * 900000).toString();
 		const otpExpiresAt = new Date(Date.now() + otpsConfig.otpExpiresIn * 60 * 1000);
 
 		if (otpExists) {

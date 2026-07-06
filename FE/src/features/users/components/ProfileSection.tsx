@@ -2,10 +2,10 @@
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useUserStore, useUserInitials, useUserRole } from "../stores/user.store";
+import { useAuthStore, useUserInitials, useUserRole } from "@/features/auth/stores/auth.store";
 
 export function ProfileSection() {
-  const user = useUserStore((state) => state.currentUser);
+  const user = useAuthStore((state) => state.currentUser);
   const initials = useUserInitials();
   const role = useUserRole();
 

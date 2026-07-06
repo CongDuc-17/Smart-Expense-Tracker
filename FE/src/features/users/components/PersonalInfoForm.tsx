@@ -5,7 +5,7 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useUserStore } from "../stores/user.store";
+import { useAuthStore } from "@/features/auth/stores/auth.store";
 import { useUpdateProfile } from "../hooks/useUser";
 import { Loader2Icon, UploadIcon } from "lucide-react";
 
@@ -15,7 +15,7 @@ const formSchema = z.object({
 });
 
 export function PersonalInfoForm() {
-  const user = useUserStore((state) => state.currentUser);
+  const user = useAuthStore((state) => state.currentUser);
   const { mutate: updateProfile, isPending } = useUpdateProfile();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
