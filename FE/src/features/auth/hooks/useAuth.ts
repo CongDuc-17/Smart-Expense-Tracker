@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/apiClient";
 import { useAuthStore } from "../stores/auth.store";
 import { toast } from "sonner";
@@ -25,14 +25,13 @@ export const authService = {
 
 export function useAuth() {
   const queryClient = useQueryClient();
-  const { setAuth, clearAuth, setInitializing } = useAuthStore();
+  const { setAuth, clearAuth } = useAuthStore();
   const navigate = useNavigate();
 
   const loginMutation = useMutation({
     mutationFn: authService.login,
     onSuccess: async () => {
       try {
-        // Fetch current user after successful login
         const userData = await authService.getMe();
         if (userData.data) {
           setAuth(userData.data);
@@ -51,7 +50,6 @@ export function useAuth() {
   const logoutMutation = useMutation({
     mutationFn: authService.logout,
     onSettled: () => {
-      // Clear all state regardless of whether logout API call succeeded or failed
       queryClient.clear();
       clearAuth();
       navigate("/login");

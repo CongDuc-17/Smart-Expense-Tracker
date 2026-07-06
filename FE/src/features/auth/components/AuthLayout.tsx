@@ -22,7 +22,6 @@ interface AuthLayoutProps {
 export function AuthLayout({
   title,
   description,
-  actionText,
   actionLink,
   actionLabel,
   children,
