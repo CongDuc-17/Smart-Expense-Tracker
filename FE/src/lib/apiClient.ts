@@ -1,9 +1,9 @@
 import axios, {
   AxiosError,
   type AxiosRequestConfig,
-
   type InternalAxiosRequestConfig,
 } from "axios";
+import { useAuthStore } from "@/features/auth/stores/auth.store";
 
 export const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -11,15 +11,11 @@ export const axiosClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  // Essential for sending HttpOnly cookies (accessToken, refreshToken)
   withCredentials: true,
 });
 
 axiosClient.interceptors.request.use((config) => {
-  const accessToken = cookieStore.get("accessToken");
-
-  if (accessToken) {
-    config.headers["Authorization"] = `Bearer ${accessToken}`;
-  }
   if (config.data instanceof FormData) {
     delete config.headers["Content-Type"];
   }
@@ -28,14 +24,14 @@ axiosClient.interceptors.request.use((config) => {
 
 // Biến để tránh việc gọi refresh token nhiều lần cùng lúc
 let isRefreshing = false;
-let failedQueue: any[] = [];
+let failedQueue: Array<{ resolve: (value?: unknown) => void; reject: (reason?: any) => void }> = [];
 
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: any) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
     } else {
-      prom.resolve(token);
+      prom.resolve();
     }
   });
   failedQueue = [];
@@ -57,6 +53,7 @@ axiosClient.interceptors.response.use(
     // Kiểm tra nếu lỗi 401 và chưa được retry (và không phải auth page)
     if (
       error.response?.status === 401 &&
+      originalRequest &&
       !originalRequest._retry &&
       !isAuthPage
     ) {
@@ -65,8 +62,8 @@ axiosClient.interceptors.response.use(
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
-          .then((token) => {
-            originalRequest.headers["Authorization"] = `Bearer ${token}`;
+          .then(() => {
+            // Không cần set Header vì cookie tự động được gửi qua withCredentials
             return axiosClient(originalRequest);
           })
           .catch((err) => Promise.reject(err));
@@ -77,7 +74,7 @@ axiosClient.interceptors.response.use(
 
       try {
         // Gọi API lấy token mới - dùng axios gốc để tránh interceptor này lặp vô tận
-        const res = await axios.post(
+        await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/auth/refresh-token`,
           {},
           {
@@ -85,19 +82,16 @@ axiosClient.interceptors.response.use(
           },
         );
 
-        const { accessToken } = res.data;
+        // Backend đã set lại HttpOnly cookie mới trong response
+        processQueue(null);
 
-        cookieStore.set("accessToken", accessToken);
-
-        processQueue(null, accessToken);
-
-        // Thực hiện lại request ban đầu với token mới
-        originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
+        // Thực hiện lại request ban đầu với cookie mới
         return axiosClient(originalRequest);
       } catch (refreshError) {
-        processQueue(refreshError, null);
-        // Nếu refresh cũng lỗi (hết hạn cả refreshToken), cho đăng xuất
-        window.location.href = "/login";
+        processQueue(refreshError);
+        // Nếu refresh cũng lỗi (hết hạn cả refreshToken), clear auth store
+        useAuthStore.getState().clearAuth();
+        // Return error, the hook/component will handle the redirect via useAuth or AuthGuard
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
@@ -141,4 +135,3 @@ export const apiClient = {
     return axiosClient.delete<T>(url, config).then((res) => res.data);
   },
 };
-

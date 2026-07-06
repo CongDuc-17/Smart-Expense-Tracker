@@ -11,7 +11,7 @@ export function SavingGoalEmptyState({ variant = "empty", onCreateClick }: Savin
     <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-card rounded-xl border border-border shadow-sm">
       <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
         {variant === "empty" ? (
-          <span className="text-3xl">🎯</span>
+          <Target className="w-8 h-8 text-muted-foreground" />
         ) : (
           <Target className="w-8 h-8 text-muted-foreground" />
         )}

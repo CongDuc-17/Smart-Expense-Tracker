@@ -52,10 +52,10 @@ const NAV_SECONDARY = [
 // Component
 // ---------------------------------------------------------------
 
-import { useUserStore } from "@/features/users/stores/user.store";
+import { useAuthStore } from "@/features/auth/stores/auth.store";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const user = useUserStore((state) => state.currentUser);
+  const user = useAuthStore((state) => state.currentUser);
   
   // Safe default if data is not loaded yet
   const safeUser = user ? {
