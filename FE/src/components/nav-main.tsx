@@ -28,7 +28,7 @@ export function NavMain({
   return (
     <SidebarGroup>
       {label && (
-        <SidebarGroupLabel className="text-xs text-[#9B9A97] font-medium uppercase tracking-wider px-2 mb-1">
+        <SidebarGroupLabel className="text-xs text-muted-foreground font-medium uppercase tracking-wider px-2 mb-1">
           {label}
         </SidebarGroupLabel>
       )}
@@ -40,7 +40,7 @@ export function NavMain({
                 asChild
                 tooltip={item.title}
                 className={cn(
-                  "text-[#9B9A97] hover:text-[#37352F] hover:bg-[rgba(55,53,47,0.06)]",
+                  "text-muted-foreground hover:text-foreground hover:bg-accent hover:text-accent-foreground",
                   "transition-colors duration-150 rounded-md"
                 )}
               >
@@ -50,8 +50,8 @@ export function NavMain({
                     cn(
                       "flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-sm",
                       isActive
-                        ? "bg-[rgba(55,53,47,0.08)] text-[#37352F] font-medium"
-                        : "text-[#9B9A97]"
+                        ? "bg-[rgba(55,53,47,0.08)] text-foreground font-medium"
+                        : "text-muted-foreground"
                     )
                   }
                 >

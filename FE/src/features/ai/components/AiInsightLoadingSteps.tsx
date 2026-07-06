@@ -22,9 +22,9 @@ export function AiInsightLoadingSteps() {
   }, [currentStep]);
 
   return (
-    <div className="h-full flex flex-col items-center justify-center p-8 bg-white min-h-[400px]">
+    <div className="h-full flex flex-col items-center justify-center p-8 bg-card min-h-[400px]">
       <div className="max-w-xs w-full space-y-6">
-        <h3 className="text-lg font-semibold text-[#37352F] text-center mb-6">
+        <h3 className="text-lg font-semibold text-foreground text-center mb-6">
           AI đang phân tích
         </h3>
 
@@ -36,7 +36,7 @@ export function AiInsightLoadingSteps() {
             return (
               <div
                 key={index}
-                className={`flex items-center gap-3 text-sm transition-all duration-300 ${isCompleted ? "text-emerald-600" : isActive ? "text-[#37352F] font-medium" : "text-[#9B9A97]"
+                className={`flex items-center gap-3 text-sm transition-all duration-300 ${isCompleted ? "text-emerald-600" : isActive ? "text-foreground font-medium" : "text-muted-foreground"
                   }`}
               >
                 {isCompleted ? (

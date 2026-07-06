@@ -54,37 +54,37 @@ export function BudgetSummary({ budgets }: BudgetSummaryProps) {
       {/* 3 Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Card 1: Tổng hạn mức */}
-        <div className="bg-[#FFFFFF] p-5 rounded-lg border border-[#E8E7E5] shadow-sm flex flex-col justify-center">
-          <p className="text-sm font-medium text-[#9B9A97] mb-1">Tổng hạn mức</p>
-          <p className="text-2xl font-bold text-[#37352F]">{formatVND(summary.totalLimit)}</p>
-          <p className="text-xs text-[#9B9A97] mt-2 font-medium">{stats.totalCount} ngân sách</p>
+        <div className="bg-card p-5 rounded-lg border border-border shadow-sm flex flex-col justify-center">
+          <p className="text-sm font-medium text-muted-foreground mb-1">Tổng hạn mức</p>
+          <p className="text-2xl font-bold text-foreground">{formatVND(summary.totalLimit)}</p>
+          <p className="text-xs text-muted-foreground mt-2 font-medium">{stats.totalCount} ngân sách</p>
         </div>
 
         {/* Card 2: Đã chi tiêu */}
-        <div className="bg-[#FFFFFF] p-5 rounded-lg border border-[#E8E7E5] shadow-sm flex flex-col justify-center">
-          <p className="text-sm font-medium text-[#9B9A97] mb-1">Đã chi tiêu</p>
+        <div className="bg-card p-5 rounded-lg border border-border shadow-sm flex flex-col justify-center">
+          <p className="text-sm font-medium text-muted-foreground mb-1">Đã chi tiêu</p>
           <p className={`text-2xl font-bold ${summary.totalSpent > summary.totalLimit ? "text-red-600" : "text-amber-600"}`}>
             {formatVND(summary.totalSpent)}
           </p>
-          <p className="text-xs text-[#9B9A97] mt-2 font-medium">{percentageUsed}% đã dùng</p>
+          <p className="text-xs text-muted-foreground mt-2 font-medium">{percentageUsed}% đã dùng</p>
         </div>
 
         {/* Card 3: Thâm hụt / Còn lại */}
-        <div className="bg-[#FFFFFF] p-5 rounded-lg border border-[#E8E7E5] shadow-sm flex flex-col justify-center">
-          <p className="text-sm font-medium text-[#9B9A97] mb-1">
+        <div className="bg-card p-5 rounded-lg border border-border shadow-sm flex flex-col justify-center">
+          <p className="text-sm font-medium text-muted-foreground mb-1">
             {summary.totalRemaining >= 0 ? "Còn lại" : "Thâm hụt"}
           </p>
-          <p className={`text-2xl font-bold ${summary.totalRemaining >= 0 ? "text-[#37352F]" : "text-red-600"}`}>
+          <p className={`text-2xl font-bold ${summary.totalRemaining >= 0 ? "text-foreground" : "text-red-600"}`}>
             {formatVND(summary.totalRemaining)}
           </p>
           <div className="mt-2">
             {summary.totalRemaining >= 0 ? (
-              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
+              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-full">
                 <CheckCircle2 className="w-3 h-3" />
                 Trong giới hạn
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-red-700 bg-red-50 px-2 py-0.5 rounded-full">
+              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-red-700 bg-destructive/10 text-destructive px-2 py-0.5 rounded-full">
                 <AlertTriangle className="w-3 h-3" />
                 Đã vượt ngân sách
               </span>
@@ -94,7 +94,7 @@ export function BudgetSummary({ budgets }: BudgetSummaryProps) {
       </div>
 
       {/* Dòng Metadata Notion-like */}
-      <div className="flex items-center gap-2 text-xs font-medium text-[#9B9A97] px-1">
+      <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground px-1">
         <span>{stats.totalCount} ngân sách</span>
         <span>•</span>
         <span>{stats.safeCount} an toàn</span>

@@ -39,13 +39,13 @@ function PasswordStrength({ password }: { password: string }) {
                 {[0, 1, 2].map((i) => (
                     <div
                         key={i}
-                        className={`h-1 flex-1 rounded-full transition-colors duration-300 ${i < strength ? colors[strength - 1] : "bg-[#E8E7E5]"
+                        className={`h-1 flex-1 rounded-full transition-colors duration-300 ${i < strength ? colors[strength - 1] : "bg-muted"
                             }`}
                     />
                 ))}
             </div>
-            <p className="text-xs text-gray-500">
-                Độ mạnh: <span className="font-medium text-gray-900">{labels[strength - 1] ?? "Quá ngắn"}</span>
+            <p className="text-xs text-muted-foreground">
+                Độ mạnh: <span className="font-medium text-foreground">{labels[strength - 1] ?? "Quá ngắn"}</span>
             </p>
         </div>
     );
@@ -101,7 +101,7 @@ export function Register() {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+        <div className="flex min-h-screen items-center justify-center bg-muted p-4">
             <Card className="w-full max-w-sm">
                 <CardHeader>
                     <CardTitle>Tạo tài khoản</CardTitle>
@@ -179,7 +179,7 @@ export function Register() {
                                         type="button"
                                         tabIndex={-1}
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900 transition-colors"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                                         aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                                     >
                                         {showPassword ? (
@@ -216,7 +216,7 @@ export function Register() {
                                         type="button"
                                         tabIndex={-1}
                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900 transition-colors"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                                         aria-label={showConfirmPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                                     >
                                         {showConfirmPassword ? (

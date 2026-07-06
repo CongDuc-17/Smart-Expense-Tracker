@@ -70,7 +70,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       collapsible="icon"
-      className="border-r border-[#E8E7E5] bg-[#FFFEFC]"
+      className="border-r border-border bg-background"
       {...props}
     >
       {/* ── Header: Logo ────────────────────────────────── */}
@@ -80,14 +80,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton
               asChild
               size="lg"
-              className="hover:bg-[rgba(55,53,47,0.06)] transition-colors duration-150"
+              className="hover:bg-accent hover:text-accent-foreground transition-colors duration-150"
               tooltip="Expense Tracker"
             >
               <a href="/dashboard" className="flex items-center gap-2.5">
-                <div className="w-7 h-7 bg-[#37352F] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <DollarSignIcon className="w-4 h-4 text-white" />
+                <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+                  <DollarSignIcon className="w-4 h-4 text-primary-foreground" />
                 </div>
-                <span className="text-sm font-semibold text-[#37352F] truncate">
+                <span className="text-sm font-semibold text-foreground truncate">
                   Expense Tracker
                 </span>
               </a>
@@ -102,14 +102,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={NAV_MAIN} />
 
         {/* Separator */}
-        <SidebarSeparator className="bg-[#E8E7E5] my-1" />
+        <SidebarSeparator className="bg-muted my-1" />
 
         {/* Secondary nav */}
         <NavMain items={NAV_SECONDARY} />
       </SidebarContent>
 
       {/* ── Footer: User menu ───────────────────────────── */}
-      <SidebarFooter className="px-3 pb-4 border-t border-[#E8E7E5] pt-3">
+      <SidebarFooter className="px-3 pb-4 border-t border-border pt-3">
         <NavUser user={safeUser} />
       </SidebarFooter>
     </Sidebar>

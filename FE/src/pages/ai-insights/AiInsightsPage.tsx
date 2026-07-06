@@ -63,11 +63,11 @@ export function AiInsightsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[#37352F] flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Sparkles className="w-6 h-6 text-violet-600" />
             AI Insights
           </h1>
-          <p className="text-sm text-[#9B9A97] mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Phân tích chuyên sâu về tình hình tài chính của bạn bởi AI.
           </p>
         </div>
@@ -75,23 +75,23 @@ export function AiInsightsPage() {
         {/* Controls */}
         <div className="flex items-center gap-3">
           {/* Month Selector */}
-          <div className="flex items-center gap-1 bg-[#F7F6F3] border border-[#E8E7E5] rounded-lg p-0.5">
+          <div className="flex items-center gap-1 bg-muted border border-border rounded-lg p-0.5">
             <button
               onClick={prevMonth}
               disabled={isWorking}
-              className="w-8 h-8 rounded-md flex items-center justify-center text-[#9B9A97] hover:text-[#37352F] hover:bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#37352F] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+              className="w-8 h-8 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent hover:text-accent-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
 
-            <span className="text-sm font-medium text-[#37352F] min-w-[110px] text-center select-none">
+            <span className="text-sm font-medium text-foreground min-w-[110px] text-center select-none">
               Tháng {month}, {year}
             </span>
 
             <button
               onClick={nextMonth}
               disabled={isWorking || (month === new Date().getMonth() + 1 && year === new Date().getFullYear())}
-              className="w-8 h-8 rounded-md flex items-center justify-center text-[#9B9A97] hover:text-[#37352F] hover:bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#37352F] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+              className="w-8 h-8 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent hover:text-accent-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -103,7 +103,7 @@ export function AiInsightsPage() {
               variant="outline"
               size="sm"
               onClick={() => setShowConfirm(true)}
-              className="h-10 bg-white border-[#E8E7E5] text-[#37352F] hover:bg-[#F7F6F3]"
+              className="h-10 bg-card border-border text-foreground hover:bg-muted"
             >
               <RotateCw className="w-4 h-4 mr-2" />
               Phân tích lại
@@ -111,7 +111,7 @@ export function AiInsightsPage() {
           )}
 
           {isWorking && (
-            <Button disabled variant="outline" size="sm" className="h-10 bg-[#F7F6F3] text-[#9B9A97] border-[#E8E7E5]">
+            <Button disabled variant="outline" size="sm" className="h-10 bg-muted text-muted-foreground border-border">
               <RotateCw className="w-4 h-4 mr-2 animate-spin" />
               Đang xử lý...
             </Button>
@@ -120,7 +120,7 @@ export function AiInsightsPage() {
       </div>
 
       {/* Content */}
-      <div className="bg-white rounded-xl border border-[#E8E7E5] shadow-sm flex flex-col relative overflow-hidden min-h-[500px]">
+      <div className="bg-card rounded-xl border border-border shadow-sm flex flex-col relative overflow-hidden min-h-[500px]">
         {/* Magic gradient border top */}
         <div className="h-1 w-full bg-gradient-to-r from-violet-400 via-fuchsia-400 to-violet-400" />
 
@@ -128,12 +128,12 @@ export function AiInsightsPage() {
           {isGenerating ? (
             <AiInsightLoadingSteps />
           ) : isFetching ? (
-            <div className="h-full flex flex-col items-center justify-center text-[#9B9A97] gap-3 pt-20 min-h-[400px]">
+            <div className="h-full flex flex-col items-center justify-center text-muted-foreground gap-3 pt-20 min-h-[400px]">
               <RotateCw className="w-8 h-8 animate-spin text-violet-500" />
               <p>Đang tải dữ liệu...</p>
             </div>
           ) : isError ? (
-            <div className="h-full flex flex-col items-center justify-center text-[#9B9A97] gap-3 pt-20 min-h-[400px]">
+            <div className="h-full flex flex-col items-center justify-center text-muted-foreground gap-3 pt-20 min-h-[400px]">
               <AlertCircle className="w-8 h-8 text-red-400" />
               <p>Không thể tải phân tích AI. Vui lòng thử lại sau.</p>
               <Button variant="outline" size="sm" onClick={() => refetch()}>
@@ -149,15 +149,15 @@ export function AiInsightsPage() {
             <div>
               {/* Cache Status Badge */}
               <div className="flex items-center gap-2 mb-6">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-500 text-emerald-700 border border-emerald-200">
                   <Sparkles className="w-3 h-3 mr-1" />
                   Đã phân tích
                 </span>
-                <span className="text-xs text-[#9B9A97]">
+                <span className="text-xs text-muted-foreground">
                   {format(new Date(insights.generatedAt), "HH:mm, dd/MM/yyyy", { locale: vi })}
                 </span>
                 {insights.isCached && (
-                  <span className="text-xs text-[#9B9A97] px-2 border-l border-[#E8E7E5]">
+                  <span className="text-xs text-muted-foreground px-2 border-l border-border">
                     (Dữ liệu cache 24h)
                   </span>
                 )}

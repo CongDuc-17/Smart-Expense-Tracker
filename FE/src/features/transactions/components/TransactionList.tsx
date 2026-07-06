@@ -114,17 +114,17 @@ export function TransactionList({
         <section key={group.dateKey} aria-label={group.label}>
           {/* Date group header */}
           <div className="flex items-center justify-between mb-2 px-1">
-            <h3 className="text-xs font-semibold text-[#9B9A97] uppercase tracking-wider leading-4">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider leading-4">
               {group.label}
             </h3>
-            <div className="flex items-center gap-2 text-xs text-[#9B9A97]">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               {group.dayIncome > 0 && (
                 <span className="text-[#1DD1A1] font-medium">
                   Thu: +{formatVND(group.dayIncome)}
                 </span>
               )}
               {group.dayIncome > 0 && group.dayExpense > 0 && (
-                <span className="text-[#E8E7E5]">|</span>
+                <span className="text-muted-foreground">|</span>
               )}
               {group.dayExpense > 0 && (
                 <span className="text-[#FF6B6B] font-medium">

@@ -27,26 +27,26 @@ export function SiteHeader() {
   return (
     <header className="
       flex h-12 shrink-0 items-center gap-2
-      border-b border-[#E8E7E5] bg-[#FFFEFC]
+      border-b border-border bg-background
       px-4 lg:px-6
       transition-[width,height] ease-linear
     ">
       {/* Sidebar toggle button */}
       <SidebarTrigger
         className="
-          -ml-1 w-7 h-7 text-[#9B9A97]
-          hover:text-[#37352F] hover:bg-[rgba(55,53,47,0.08)]
+          -ml-1 w-7 h-7 text-muted-foreground
+          hover:text-foreground hover:bg-accent
           rounded-md transition-colors duration-150
         "
       />
 
       <Separator
         orientation="vertical"
-        className="mx-1 h-4 bg-[#E8E7E5]"
+        className="mx-1 h-4 bg-muted"
       />
 
       {/* Page title */}
-      <h1 className="text-sm font-medium text-[#37352F] flex-1">
+      <h1 className="text-sm font-medium text-foreground flex-1">
         {pageTitle}
       </h1>
 

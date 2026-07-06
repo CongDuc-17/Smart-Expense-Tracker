@@ -61,7 +61,7 @@ function FieldRow({ label, htmlFor, error, children }: FieldRowProps) {
     <div className="space-y-2">
       <Label
         htmlFor={htmlFor}
-        className="text-sm font-medium text-[#37352F]"
+        className="text-sm font-medium text-foreground"
       >
         {label}
       </Label>
@@ -122,10 +122,10 @@ function CreateCategorySheet({ isOpen }: { isOpen: boolean }) {
     >
       <SheetContent
         side="right"
-        className="w-full sm:max-w-[480px] bg-white border-l border-[#E8E7E5] flex flex-col p-0 overflow-y-auto"
+        className="w-full sm:max-w-[480px] bg-card border-l border-border flex flex-col p-0 overflow-y-auto"
       >
-        <SheetHeader className="px-6 py-5 border-b border-[#E8E7E5]">
-          <SheetTitle className="text-base font-semibold text-[#37352F]">
+        <SheetHeader className="px-6 py-5 border-b border-border">
+          <SheetTitle className="text-base font-semibold text-foreground">
             Tạo danh mục
           </SheetTitle>
         </SheetHeader>
@@ -148,10 +148,10 @@ function CreateCategorySheet({ isOpen }: { isOpen: boolean }) {
                 autoFocus
                 {...register("name")}
                 className="
-                  h-9 text-sm bg-white border-[#E8E7E5] text-[#37352F]
-                  placeholder:text-[#9B9A97]
-                  focus-visible:ring-2 focus-visible:ring-[#37352F]
-                  focus-visible:border-[#37352F]
+                  h-9 text-sm bg-card border-border text-foreground
+                  placeholder:text-muted-foreground
+                  focus-visible:ring-2 focus-visible:ring-ring
+                  focus-visible:border-ring
                   transition-all duration-150
                 "
               />
@@ -167,15 +167,15 @@ function CreateCategorySheet({ isOpen }: { isOpen: boolean }) {
                   })
                 }
               >
-                <TabsList className="h-9 bg-[#F7F6F3] border border-[#E8E7E5] rounded-lg p-0.5 w-full">
+                <TabsList className="h-9 bg-muted border border-border rounded-lg p-0.5 w-full">
                   <TabsTrigger
                     value="EXPENSE"
                     className="
                       flex-1 h-8 text-sm rounded-md font-medium
-                      text-[#9B9A97]
-                      data-[state=active]:bg-white data-[state=active]:text-[#37352F]
+                      text-muted-foreground
+                      data-[state=active]:bg-background data-[state=active]:text-foreground
                       data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.08)]
-                      hover:text-[#37352F] transition-all duration-150
+                      hover:text-foreground transition-all duration-150
                     "
                   >
                     Chi tiêu
@@ -184,10 +184,10 @@ function CreateCategorySheet({ isOpen }: { isOpen: boolean }) {
                     value="INCOME"
                     className="
                       flex-1 h-8 text-sm rounded-md font-medium
-                      text-[#9B9A97]
-                      data-[state=active]:bg-white data-[state=active]:text-[#37352F]
+                      text-muted-foreground
+                      data-[state=active]:bg-background data-[state=active]:text-foreground
                       data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.08)]
-                      hover:text-[#37352F] transition-all duration-150
+                      hover:text-foreground transition-all duration-150
                     "
                   >
                     Thu nhập
@@ -219,7 +219,7 @@ function CreateCategorySheet({ isOpen }: { isOpen: boolean }) {
 
             {/* Preview */}
             <div className="space-y-2">
-              <p className="text-sm font-medium text-[#37352F]">Xem trước</p>
+              <p className="text-sm font-medium text-foreground">Xem trước</p>
               <CategoryPreview
                 name={watchedValues.name}
                 type={watchedValues.type}
@@ -230,7 +230,7 @@ function CreateCategorySheet({ isOpen }: { isOpen: boolean }) {
           </div>
 
           {/* ── Footer Actions ──────────────────────────────── */}
-          <SheetFooter className="px-6 py-4 border-t border-[#E8E7E5] flex flex-row gap-2">
+          <SheetFooter className="px-6 py-4 border-t border-border flex flex-row gap-2">
             <Button
               type="button"
               variant="secondary"
@@ -238,8 +238,8 @@ function CreateCategorySheet({ isOpen }: { isOpen: boolean }) {
               disabled={isPending}
               onClick={closeCreateSheet}
               className="
-                flex-1 bg-[#F7F6F3] text-[#37352F] border border-[#E8E7E5]
-                hover:bg-[#EFEFED] text-sm font-medium transition-colors duration-150
+                flex-1 bg-muted text-foreground border border-border
+                hover:bg-secondary text-sm font-medium transition-colors duration-150
               "
             >
               Hủy
@@ -249,8 +249,8 @@ function CreateCategorySheet({ isOpen }: { isOpen: boolean }) {
               size="sm"
               disabled={isPending}
               className="
-                flex-1 bg-[#37352F] text-[#FFFEFC]
-                hover:bg-[#2D2B27] active:bg-[#1F1D1A]
+                flex-1 bg-primary text-primary-foreground
+                hover:bg-primary/90 active:scale-95
                 text-sm font-medium transition-colors duration-150
                 disabled:opacity-50 disabled:cursor-not-allowed
               "
@@ -331,10 +331,10 @@ function EditCategorySheet({ isOpen }: { isOpen: boolean }) {
     >
       <SheetContent
         side="right"
-        className="w-full sm:max-w-[480px] bg-white border-l border-[#E8E7E5] flex flex-col p-0 overflow-y-auto"
+        className="w-full sm:max-w-[480px] bg-card border-l border-border flex flex-col p-0 overflow-y-auto"
       >
-        <SheetHeader className="px-6 py-5 border-b border-[#E8E7E5]">
-          <SheetTitle className="text-base font-semibold text-[#37352F]">
+        <SheetHeader className="px-6 py-5 border-b border-border">
+          <SheetTitle className="text-base font-semibold text-foreground">
             Chỉnh sửa danh mục
           </SheetTitle>
         </SheetHeader>
@@ -355,10 +355,10 @@ function EditCategorySheet({ isOpen }: { isOpen: boolean }) {
                 autoFocus
                 {...register("name")}
                 className="
-                  h-9 text-sm bg-white border-[#E8E7E5] text-[#37352F]
-                  placeholder:text-[#9B9A97]
-                  focus-visible:ring-2 focus-visible:ring-[#37352F]
-                  focus-visible:border-[#37352F]
+                  h-9 text-sm bg-card border-border text-foreground
+                  placeholder:text-muted-foreground
+                  focus-visible:ring-2 focus-visible:ring-ring
+                  focus-visible:border-ring
                   transition-all duration-150
                 "
               />
@@ -369,14 +369,14 @@ function EditCategorySheet({ isOpen }: { isOpen: boolean }) {
               <div className="flex items-center gap-2">
                 <div
                   className="
-                    h-9 px-3 flex items-center text-sm text-[#9B9A97]
-                    bg-[#F7F6F3] border border-[#E8E7E5] rounded-md
+                    h-9 px-3 flex items-center text-sm text-muted-foreground
+                    bg-muted border border-border rounded-md
                     cursor-not-allowed select-none
                   "
                 >
                   {editingCategory.type === "INCOME" ? "Thu nhập" : "Chi tiêu"}
                 </div>
-                <p className="text-xs text-[#9B9A97]">
+                <p className="text-xs text-muted-foreground">
                   Không thể thay đổi sau khi tạo
                 </p>
               </div>
@@ -405,7 +405,7 @@ function EditCategorySheet({ isOpen }: { isOpen: boolean }) {
 
             {/* Preview */}
             <div className="space-y-2">
-              <p className="text-sm font-medium text-[#37352F]">Xem trước</p>
+              <p className="text-sm font-medium text-foreground">Xem trước</p>
               <CategoryPreview
                 name={watchedValues.name}
                 type={editingCategory.type}
@@ -415,7 +415,7 @@ function EditCategorySheet({ isOpen }: { isOpen: boolean }) {
             </div>
           </div>
 
-          <SheetFooter className="px-6 py-4 border-t border-[#E8E7E5] flex flex-row gap-2">
+          <SheetFooter className="px-6 py-4 border-t border-border flex flex-row gap-2">
             <Button
               type="button"
               variant="secondary"
@@ -423,8 +423,8 @@ function EditCategorySheet({ isOpen }: { isOpen: boolean }) {
               disabled={isPending}
               onClick={closeEditSheet}
               className="
-                flex-1 bg-[#F7F6F3] text-[#37352F] border border-[#E8E7E5]
-                hover:bg-[#EFEFED] text-sm font-medium transition-colors duration-150
+                flex-1 bg-muted text-foreground border border-border
+                hover:bg-secondary text-sm font-medium transition-colors duration-150
               "
             >
               Hủy
@@ -434,8 +434,8 @@ function EditCategorySheet({ isOpen }: { isOpen: boolean }) {
               size="sm"
               disabled={isPending}
               className="
-                flex-1 bg-[#37352F] text-[#FFFEFC]
-                hover:bg-[#2D2B27] active:bg-[#1F1D1A]
+                flex-1 bg-primary text-primary-foreground
+                hover:bg-primary/90 active:scale-95
                 text-sm font-medium transition-colors duration-150
                 disabled:opacity-50 disabled:cursor-not-allowed
               "

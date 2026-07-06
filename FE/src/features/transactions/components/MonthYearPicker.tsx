@@ -52,8 +52,8 @@ export function MonthYearPicker() {
         disabled={isCurrentMonth}
         className="
           px-2.5 h-7 rounded-md text-xs font-medium mr-1
-          text-[#9B9A97] hover:text-[#37352F]
-          hover:bg-[rgba(55,53,47,0.08)]
+          text-muted-foreground hover:text-foreground
+          hover:bg-accent
           transition-colors duration-150
           disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent
         "
@@ -68,17 +68,17 @@ export function MonthYearPicker() {
         aria-label="Tháng trước"
         className="
           w-7 h-7 rounded-md flex items-center justify-center
-          text-[#9B9A97] hover:text-[#37352F]
-          hover:bg-[rgba(55,53,47,0.08)]
+          text-muted-foreground hover:text-foreground
+          hover:bg-accent
           transition-colors duration-150
-          focus:outline-none focus-visible:ring-2 focus-visible:ring-[#37352F]
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-ring
         "
       >
         <ChevronLeft className="w-4 h-4" />
       </button>
 
       {/* Label */}
-      <span className="text-sm font-medium text-[#37352F] min-w-[110px] text-center select-none">
+      <span className="text-sm font-medium text-foreground min-w-[110px] text-center select-none">
         {MONTH_NAMES[selectedMonth - 1]}, {selectedYear}
       </span>
 
@@ -91,10 +91,10 @@ export function MonthYearPicker() {
         aria-disabled={isCurrentMonth}
         className="
           w-7 h-7 rounded-md flex items-center justify-center
-          text-[#9B9A97] hover:text-[#37352F]
-          hover:bg-[rgba(55,53,47,0.08)]
+          text-muted-foreground hover:text-foreground
+          hover:bg-accent
           transition-colors duration-150
-          focus:outline-none focus-visible:ring-2 focus-visible:ring-[#37352F]
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-ring
           disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent
         "
       >

@@ -56,7 +56,7 @@ export function ImageUpload({
 
   if (value) {
     return (
-      <div className="relative group w-full h-40 rounded-md border border-[#E8E7E5] bg-[#F7F6F3] overflow-hidden">
+      <div className="relative group w-full h-40 rounded-md border border-border bg-muted overflow-hidden">
         <img
           src={value}
           alt="Preview"
@@ -84,23 +84,23 @@ export function ImageUpload({
         onClick={() => !disabled && !isUploading && fileInputRef.current?.click()}
         className={`
           flex flex-col items-center justify-center w-full h-32 
-          border-2 border-dashed border-[#E8E7E5] rounded-md bg-[#FAFAFA]
+          border-2 border-dashed border-border rounded-md bg-[#FAFAFA]
           transition-colors duration-150 group
-          ${disabled || isUploading ? "cursor-not-allowed opacity-70" : "cursor-pointer hover:bg-[#F7F6F3] hover:border-[#D4D4D4]"}
+          ${disabled || isUploading ? "cursor-not-allowed opacity-70" : "cursor-pointer hover:bg-muted hover:border-border"}
         `}
       >
         {isUploading ? (
-          <div className="flex flex-col items-center gap-2 text-[#9B9A97]">
-            <Loader2 className="w-6 h-6 animate-spin text-[#37352F]" />
-            <span className="text-sm font-medium text-[#37352F]">Đang tải lên...</span>
+          <div className="flex flex-col items-center gap-2 text-muted-foreground">
+            <Loader2 className="w-6 h-6 animate-spin text-foreground" />
+            <span className="text-sm font-medium text-foreground">Đang tải lên...</span>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-2 text-[#9B9A97]">
-            <div className="p-3 bg-white rounded-full shadow-sm group-hover:shadow transition-shadow">
-              <ImageIcon className="w-5 h-5 text-[#37352F]" />
+          <div className="flex flex-col items-center gap-2 text-muted-foreground">
+            <div className="p-3 bg-card rounded-full shadow-sm group-hover:shadow transition-shadow">
+              <ImageIcon className="w-5 h-5 text-foreground" />
             </div>
             <div className="text-center">
-              <span className="text-sm font-medium text-[#37352F]">Tải ảnh lên</span>
+              <span className="text-sm font-medium text-foreground">Tải ảnh lên</span>
               <p className="text-xs mt-0.5">JPG, PNG, WebP tối đa 5MB</p>
             </div>
           </div>

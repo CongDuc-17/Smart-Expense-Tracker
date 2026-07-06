@@ -44,7 +44,7 @@ export function CategoryFilters() {
       >
         <TabsList
           className="
-            h-9 bg-[#F7F6F3] border border-[#E8E7E5] rounded-lg p-0.5
+            h-9 bg-muted border border-border rounded-lg p-0.5
             gap-0
           "
         >
@@ -54,12 +54,12 @@ export function CategoryFilters() {
               value={tab.value}
               className="
                 h-8 px-3 text-sm rounded-md font-medium
-                text-[#9B9A97] transition-all duration-150
-                data-[state=active]:bg-white
-                data-[state=active]:text-[#37352F]
+                text-muted-foreground transition-all duration-150
+                data-[state=active]:bg-background
+                data-[state=active]:text-foreground
                 data-[state=active]:shadow-[0_1px_3px_rgba(0,0,0,0.08)]
-                hover:text-[#37352F]
-                focus-visible:ring-2 focus-visible:ring-[#37352F]
+                hover:text-foreground
+                focus-visible:ring-2 focus-visible:ring-ring
               "
             >
               {tab.label}
@@ -70,7 +70,7 @@ export function CategoryFilters() {
 
       {/* ── Search Input ──────────────────────────────────── */}
       <div className="relative flex-1 w-full sm:max-w-xs">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9B9A97] pointer-events-none" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
         <Input
           type="text"
           placeholder="Tìm danh mục..."
@@ -79,10 +79,10 @@ export function CategoryFilters() {
           aria-label="Tìm kiếm danh mục"
           className="
             h-9 pl-9 pr-8 text-sm
-            bg-white border-[#E8E7E5] text-[#37352F]
-            placeholder:text-[#9B9A97]
-            focus-visible:ring-2 focus-visible:ring-[#37352F]
-            focus-visible:border-[#37352F]
+            bg-card border-border text-foreground
+            placeholder:text-muted-foreground
+            focus-visible:ring-2 focus-visible:ring-ring
+            focus-visible:border-ring
             rounded-lg transition-all duration-150
           "
         />
@@ -95,7 +95,7 @@ export function CategoryFilters() {
             className="
               absolute right-2.5 top-1/2 -translate-y-1/2
               w-4 h-4 flex items-center justify-center
-              text-[#9B9A97] hover:text-[#37352F]
+              text-muted-foreground hover:text-foreground
               transition-colors duration-150
             "
           >

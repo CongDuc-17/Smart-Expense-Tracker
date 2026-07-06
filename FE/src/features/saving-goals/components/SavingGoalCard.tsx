@@ -51,24 +51,24 @@ export const SavingGoalCard = React.memo(function SavingGoalCard({ goal, onEdit,
 
   // Determine status and style
   const getStatus = () => {
-    if (isCompleted) return { text: "Hoàn thành", icon: CheckCircle2, style: "text-emerald-700 bg-emerald-50" };
-    if (goal.deadline && daysLeft < 0) return { text: "Quá hạn", icon: Edit, style: "text-red-700 bg-red-50" }; // fallback icon
-    if (goal.deadline && daysLeft < 30) return { text: "Sắp đến hạn", icon: Edit, style: "text-amber-700 bg-amber-50" };
-    return { text: "Đang thực hiện", icon: TrendingUp, style: "text-[#37352F] bg-[#F7F6F3]" };
+    if (isCompleted) return { text: "Hoàn thành", icon: CheckCircle2, style: "text-emerald-700 bg-emerald-500/10 text-emerald-500" };
+    if (goal.deadline && daysLeft < 0) return { text: "Quá hạn", icon: Edit, style: "text-red-700 bg-destructive/10 text-destructive" }; // fallback icon
+    if (goal.deadline && daysLeft < 30) return { text: "Sắp đến hạn", icon: Edit, style: "text-amber-700 bg-amber-500/10 text-amber-500" };
+    return { text: "Đang thực hiện", icon: TrendingUp, style: "text-foreground bg-muted" };
   };
   const status = getStatus();
   const StatusIcon = status.icon;
 
   return (
-    <Card className="p-5 border border-[#E8E7E5] rounded-xl shadow-sm hover:shadow-md hover:border-[#D0CECA] transition-all duration-150 ease-in-out cursor-pointer bg-white flex flex-col h-full relative group">
+    <Card className="p-5 border border-border rounded-xl shadow-sm hover:shadow-md hover:border-border transition-all duration-150 ease-in-out cursor-pointer bg-card flex flex-col h-full relative group">
       {/* Decorative top border for completed goals */}
       {isCompleted && (
-        <div className="absolute top-0 left-0 w-full h-1 bg-emerald-500" />
+        <div className="absolute top-0 left-0 w-full h-1 bg-emerald-500/10 text-emerald-5000" />
       )}
 
       {/* 1. Header: Title and Menu */}
       <div className="flex justify-between items-start mb-4">
-        <h3 className="text-base font-bold text-[#37352F] truncate pr-2">
+        <h3 className="text-base font-bold text-foreground truncate pr-2">
           {goal.title}
         </h3>
 
@@ -77,31 +77,31 @@ export const SavingGoalCard = React.memo(function SavingGoalCard({ goal, onEdit,
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 opacity-0 group-hover:opacity-100 text-[#9B9A97] hover:text-[#37352F] hover:bg-[#F7F6F3] -mt-1 -mr-1 shrink-0 transition-opacity border border-[#E8E7E5] shadow-sm rounded-md bg-white"
+              className="h-7 w-7 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground hover:bg-muted -mt-1 -mr-1 shrink-0 transition-opacity border border-border shadow-sm rounded-md bg-card"
             >
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48 bg-white border-[#E8E7E5] shadow-lg rounded-md">
+          <DropdownMenuContent align="end" className="w-48 bg-card border-border shadow-lg rounded-md">
             <DropdownMenuItem
               onClick={() => onDeposit(goal)}
-              className="text-sm font-medium text-[#37352F] cursor-pointer py-2 focus:bg-[#F7F6F3]"
+              className="text-sm font-medium text-foreground cursor-pointer py-2 focus:bg-muted"
               disabled={isCompleted}
             >
-              <PiggyBank className="w-4 h-4 mr-2 text-[#9B9A97]" />
+              <PiggyBank className="w-4 h-4 mr-2 text-muted-foreground" />
               Nạp thêm
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-[#E8E7E5]" />
+            <DropdownMenuSeparator className="bg-muted" />
             <DropdownMenuItem
               onClick={() => onEdit(goal)}
-              className="text-sm text-[#37352F] cursor-pointer focus:bg-[#F7F6F3]"
+              className="text-sm text-foreground cursor-pointer focus:bg-muted"
             >
-              <Edit className="w-4 h-4 mr-2 text-[#9B9A97]" />
+              <Edit className="w-4 h-4 mr-2 text-muted-foreground" />
               Chỉnh sửa
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => onDelete(goal)}
-              className="text-sm text-red-600 cursor-pointer focus:bg-red-50 focus:text-red-700"
+              className="text-sm text-red-600 cursor-pointer focus:bg-destructive/10 text-destructive focus:text-red-700"
             >
               <Trash2 className="w-4 h-4 mr-2 text-red-500" />
               Xóa mục tiêu
@@ -112,13 +112,13 @@ export const SavingGoalCard = React.memo(function SavingGoalCard({ goal, onEdit,
 
       {/* 2 & 3. Progress % and Bar */}
       <div className="mb-3">
-        <div className="text-3xl font-bold tracking-tight text-[#37352F] mb-2">
+        <div className="text-3xl font-bold tracking-tight text-foreground mb-2">
           {goal.progressPercentage}%
         </div>
         <div
           className={cn(
             "h-1.5 w-full rounded-full overflow-hidden",
-            isCompleted ? "bg-emerald-100" : "bg-[#E8E7E5]"
+            isCompleted ? "bg-emerald-100" : "bg-muted"
           )}
           role="progressbar"
           aria-valuenow={Math.min(goal.progressPercentage, 100)}
@@ -128,7 +128,7 @@ export const SavingGoalCard = React.memo(function SavingGoalCard({ goal, onEdit,
           <motion.div
             className={cn(
               "h-full rounded-full",
-              isCompleted ? "bg-emerald-500" : "bg-[#37352F]"
+              isCompleted ? "bg-emerald-500/10 text-emerald-5000" : "bg-primary"
             )}
             initial={{ width: 0 }}
             animate={{ width: `${Math.min(goal.progressPercentage, 100)}%` }}
@@ -140,12 +140,12 @@ export const SavingGoalCard = React.memo(function SavingGoalCard({ goal, onEdit,
       {/* 4. Saved / Target & 5. Remaining */}
       <div className="flex justify-between items-end mb-3">
         <div>
-          <div className="text-[13px] font-semibold text-[#37352F]">
-            {formatVND(goal.savedAmount)} <span className="text-[#9B9A97] font-normal">/ {formatVND(goal.targetAmount)}</span>
+          <div className="text-[13px] font-semibold text-foreground">
+            {formatVND(goal.savedAmount)} <span className="text-muted-foreground font-normal">/ {formatVND(goal.targetAmount)}</span>
           </div>
         </div>
         {!isCompleted && Number(goal.remainingAmount) > 0 && (
-          <div className="text-xs font-medium text-[#9B9A97]">
+          <div className="text-xs font-medium text-muted-foreground">
             Còn {formatVND(goal.remainingAmount)}
           </div>
         )}
@@ -154,7 +154,7 @@ export const SavingGoalCard = React.memo(function SavingGoalCard({ goal, onEdit,
       {/* 6. Monthly saving needed & Motivation Text */}
       <div className="mb-4">
         {!isCompleted && monthlyNeeded > 0 && (
-          <div className="inline-flex items-center text-xs font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-100 mb-1">
+          <div className="inline-flex items-center text-xs font-medium text-blue-700 bg-blue-500/10 text-blue-500 px-2 py-0.5 rounded border border-blue-100 mb-1">
             Cần ≈ {formatVND(monthlyNeeded)} / tháng
           </div>
         )}
@@ -164,17 +164,17 @@ export const SavingGoalCard = React.memo(function SavingGoalCard({ goal, onEdit,
             <span className="text-sm"><PartyPopper /></span> Bạn đã đạt mục tiêu.
           </p>
         ) : goal.progressPercentage >= 80 ? (
-          <p className="text-xs text-[#37352F] font-medium mt-1 flex items-center gap-1">
+          <p className="text-xs text-foreground font-medium mt-1 flex items-center gap-1">
             <span className="text-sm"><Target /></span> Chỉ còn {formatVND(goal.remainingAmount)} nữa là hoàn thành.
           </p>
         ) : null}
       </div>
 
       {/* 7. Footer: Deadline and Status Badge */}
-      <div className="mt-auto pt-4 border-t border-[#E8E7E5] flex justify-between items-end">
+      <div className="mt-auto pt-4 border-t border-border flex justify-between items-end">
         <div>
           {goal.deadline ? (
-            <div className={cn("text-xs font-medium", daysLeft < 30 && !isCompleted ? "text-amber-600" : "text-[#9B9A97]")}>
+            <div className={cn("text-xs font-medium", daysLeft < 30 && !isCompleted ? "text-amber-600" : "text-muted-foreground")}>
               {daysLeft > 0
                 ? `Còn ${daysLeft} ngày`
                 : daysLeft === 0
@@ -182,7 +182,7 @@ export const SavingGoalCard = React.memo(function SavingGoalCard({ goal, onEdit,
                   : `Quá hạn ${Math.abs(daysLeft)} ngày`}
             </div>
           ) : (
-            <div className="text-xs text-[#9B9A97]">Không có thời hạn</div>
+            <div className="text-xs text-muted-foreground">Không có thời hạn</div>
           )}
         </div>
 

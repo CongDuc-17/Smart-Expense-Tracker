@@ -16,14 +16,14 @@ export function formatVND(amount: string | number) {
 
 function SummaryCardSkeleton() {
   return (
-    <div className="p-5 rounded-lg border border-[#E8E7E5] bg-white shadow-sm flex flex-col justify-between h-32">
+    <div className="p-5 rounded-lg border border-border bg-card shadow-sm flex flex-col justify-between h-32">
       <div className="flex justify-between items-center">
-        <Skeleton className="h-4 w-24 bg-[#E8E7E5]" />
-        <Skeleton className="h-8 w-8 rounded-md bg-[#E8E7E5]" />
+        <Skeleton className="h-4 w-24 bg-muted" />
+        <Skeleton className="h-8 w-8 rounded-md bg-muted" />
       </div>
       <div>
-        <Skeleton className="h-8 w-32 bg-[#E8E7E5] mb-2" />
-        <Skeleton className="h-3 w-20 bg-[#E8E7E5]" />
+        <Skeleton className="h-8 w-32 bg-muted mb-2" />
+        <Skeleton className="h-3 w-20 bg-muted" />
       </div>
     </div>
   );
@@ -63,16 +63,16 @@ export function DashboardSummary({ data, isLoading }: DashboardSummaryProps) {
       title: "Số Dư",
       amount: data.netBalance,
       icon: Wallet,
-      iconColor: "text-[#37352F]",
-      iconBg: "bg-[#F7F6F3]",
+      iconColor: "text-foreground",
+      iconBg: "bg-muted",
       diff: undefined,
     },
     {
       title: "Tỉ Lệ Tiết Kiệm",
       amount: `${data.savingsRate}%`,
       icon: Target,
-      iconColor: "text-[#37352F]",
-      iconBg: "bg-[#F7F6F3]",
+      iconColor: "text-foreground",
+      iconBg: "bg-muted",
       diff: undefined,
     },
   ];
@@ -82,10 +82,10 @@ export function DashboardSummary({ data, isLoading }: DashboardSummaryProps) {
       {summaryItems.map((item, idx) => (
         <div
           key={idx}
-          className="p-5 rounded-lg border border-[#E8E7E5] bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+          className="p-5 rounded-lg border border-border bg-card shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
         >
           <div className="flex justify-between items-start mb-4">
-            <span className="text-sm font-medium text-[#9B9A97]">
+            <span className="text-sm font-medium text-muted-foreground">
               {item.title}
             </span>
             <div className={`p-2 rounded-md ${item.iconBg}`}>
@@ -93,7 +93,7 @@ export function DashboardSummary({ data, isLoading }: DashboardSummaryProps) {
             </div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-[#37352F] tracking-tight truncate">
+            <div className="text-2xl font-bold text-foreground tracking-tight truncate">
               {item.title === "Tỉ Lệ Tiết Kiệm" ? item.amount : formatVND(item.amount)}
             </div>
             {item.diff !== undefined && (
@@ -107,7 +107,7 @@ export function DashboardSummary({ data, isLoading }: DashboardSummaryProps) {
                     ? item.title === "Tổng Thu"
                       ? "text-[#FF6B6B]"
                       : "text-[#1DD1A1]"
-                    : "text-[#9B9A97]"
+                    : "text-muted-foreground"
                 }`}
               >
                 {item.diff > 0 ? "+" : ""}

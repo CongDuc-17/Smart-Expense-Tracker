@@ -48,13 +48,13 @@ export function SavingGoalFilterBar({
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6">
       <div className="relative w-full sm:max-w-xs">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9B9A97]" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           placeholder="Tìm mục tiêu..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           disabled={disabled}
-          className="pl-9 h-9 bg-white border-[#E8E7E5] text-sm focus-visible:ring-[#37352F] focus-visible:border-[#37352F] w-full"
+          className="pl-9 h-9 bg-card border-border text-sm focus-visible:ring-ring focus-visible:border-ring w-full"
         />
       </div>
 
@@ -65,9 +65,9 @@ export function SavingGoalFilterBar({
               variant="outline"
               size="sm"
               disabled={disabled}
-              className="h-9 bg-white border-[#E8E7E5] text-[#37352F] hover:bg-[#F7F6F3] flex-1 sm:flex-none"
+              className="h-9 bg-card border-border text-foreground hover:bg-muted flex-1 sm:flex-none"
             >
-              <ListFilter className="w-4 h-4 mr-2 text-[#9B9A97]" />
+              <ListFilter className="w-4 h-4 mr-2 text-muted-foreground" />
               {selectedFilterLabel}
             </Button>
           </PopoverTrigger>
@@ -80,7 +80,7 @@ export function SavingGoalFilterBar({
                     onSelect={() => onFilterChange(opt.value)}
                     className={cn(
                       "text-sm cursor-pointer",
-                      filterType === opt.value ? "bg-[#F7F6F3] font-medium" : ""
+                      filterType === opt.value ? "bg-muted font-medium" : ""
                     )}
                   >
                     {opt.label}
@@ -97,9 +97,9 @@ export function SavingGoalFilterBar({
               variant="outline"
               size="sm"
               disabled={disabled}
-              className="h-9 bg-white border-[#E8E7E5] text-[#37352F] hover:bg-[#F7F6F3] flex-1 sm:flex-none"
+              className="h-9 bg-card border-border text-foreground hover:bg-muted flex-1 sm:flex-none"
             >
-              <ArrowDownUp className="w-4 h-4 mr-2 text-[#9B9A97]" />
+              <ArrowDownUp className="w-4 h-4 mr-2 text-muted-foreground" />
               {selectedSortLabel}
             </Button>
           </PopoverTrigger>
@@ -112,7 +112,7 @@ export function SavingGoalFilterBar({
                     onSelect={() => onSortChange(opt.value)}
                     className={cn(
                       "text-sm cursor-pointer",
-                      sortType === opt.value ? "bg-[#F7F6F3] font-medium" : ""
+                      sortType === opt.value ? "bg-muted font-medium" : ""
                     )}
                   >
                     {opt.label}

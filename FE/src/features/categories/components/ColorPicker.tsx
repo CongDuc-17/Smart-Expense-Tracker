@@ -57,9 +57,9 @@ export function ColorPicker({
               // Base: circle button 32x32
               "relative w-8 h-8 rounded-full flex items-center justify-center",
               "transition-all duration-150 cursor-pointer",
-              "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#37352F]",
+              "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ring",
               // Selected: thêm ring ngoài
-              isSelected && "ring-2 ring-offset-2 ring-[#37352F]"
+              isSelected && "ring-2 ring-offset-2 ring-ring"
             )}
             style={{ backgroundColor: color.value }}
           >
@@ -71,7 +71,7 @@ export function ColorPicker({
                 transition={{ duration: 0.15, ease: "easeOut" }}
               >
                 <Check
-                  className="w-3.5 h-3.5 text-white drop-shadow-sm"
+                  className="w-3.5 h-3.5 text-primary-foreground drop-shadow-sm"
                   strokeWidth={3}
                 />
               </motion.div>

@@ -35,14 +35,14 @@ export function DeleteBudgetDialog() {
     <AlertDialog open={isOpen} onOpenChange={(open) => {
       if (!open && !isPending) closeDeleteDialog();
     }}>
-      <AlertDialogContent className="bg-white border-[#E8E7E5] rounded-xl max-w-md p-6">
+      <AlertDialogContent className="bg-card border-border rounded-xl max-w-md p-6">
         <AlertDialogHeader className="space-y-3 text-left">
-          <AlertDialogTitle className="text-xl font-semibold text-[#37352F]">
+          <AlertDialogTitle className="text-xl font-semibold text-foreground">
             Xóa ngân sách
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-base text-[#9B9A97]">
+          <AlertDialogDescription className="text-base text-muted-foreground">
             Bạn có chắc chắn muốn xóa ngân sách cho danh mục{" "}
-            <strong className="text-[#37352F] font-medium">
+            <strong className="text-foreground font-medium">
               {deletingBudget?.category.name}
             </strong>
             ? Hành động này không thể hoàn tác. Các giao dịch chi tiêu vẫn được giữ lại.
@@ -51,7 +51,7 @@ export function DeleteBudgetDialog() {
         <AlertDialogFooter className="mt-6 flex gap-3 sm:justify-end">
           <AlertDialogCancel
             disabled={isPending}
-            className="mt-0 bg-transparent text-[#37352F] hover:bg-[#F7F6F3] border-none font-medium h-10 px-4 transition-colors"
+            className="mt-0 bg-transparent text-foreground hover:bg-muted border-none font-medium h-10 px-4 transition-colors"
           >
             Hủy
           </AlertDialogCancel>
@@ -61,7 +61,7 @@ export function DeleteBudgetDialog() {
               e.preventDefault();
               handleDelete();
             }}
-            className="bg-red-600 hover:bg-red-700 text-white font-medium h-10 px-4 rounded-md transition-colors disabled:opacity-50"
+            className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-medium h-10 px-4 rounded-md transition-colors disabled:opacity-50"
           >
             {isPending ? (
               <span className="flex items-center gap-2">

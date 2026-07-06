@@ -64,14 +64,14 @@ interface SectionHeaderProps {
 function SectionHeader({ title, badge, isDefault }: SectionHeaderProps) {
   return (
     <div className="flex items-center gap-2 mb-3">
-      <h2 className="text-xs font-semibold text-[#9B9A97] uppercase tracking-wider leading-4">
+      <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider leading-4">
         {title}
       </h2>
       {badge && isDefault && (
         <Badge
           className="
             text-[10px] font-medium px-1.5 py-0 rounded-full h-4
-            bg-[#37352F] text-[#FFFEFC]
+            bg-primary text-primary-foreground
           "
         >
           <ShieldCheck className="w-2.5 h-2.5 mr-0.5 inline-block" />
@@ -83,7 +83,7 @@ function SectionHeader({ title, badge, isDefault }: SectionHeaderProps) {
           variant="secondary"
           className="
             text-[10px] font-medium px-1.5 py-0 rounded-full h-4
-            bg-[#F7F6F3] text-[#9B9A97] border border-[#E8E7E5]
+            bg-muted text-muted-foreground border border-border
           "
         >
           {badge}
@@ -158,16 +158,16 @@ export function CategoryGrid({
 
         {userCategories.length === 0 ? (
           // Empty state chỉ cho user section
-          <div className="flex flex-col items-center justify-center py-8 px-4 rounded-lg border border-dashed border-[#E8E7E5] text-center">
-            <p className="text-sm text-[#9B9A97] mb-3">
+          <div className="flex flex-col items-center justify-center py-8 px-4 rounded-lg border border-dashed border-border text-center">
+            <p className="text-sm text-muted-foreground mb-3">
               Bạn chưa tạo danh mục nào
             </p>
             <button
               onClick={onCreateClick}
               className="
-                text-sm font-medium text-[#37352F] underline underline-offset-2
-                hover:text-[#2D2B27] transition-colors duration-150
-                focus:outline-none focus-visible:ring-2 focus-visible:ring-[#37352F] rounded
+                text-sm font-medium text-foreground underline underline-offset-2
+                hover:text-foreground/80 transition-colors duration-150
+                focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded
               "
             >
               Tạo danh mục đầu tiên

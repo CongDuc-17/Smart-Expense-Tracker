@@ -94,11 +94,11 @@ export function IconPicker({
               // Base: square button với icon centered
               "w-9 h-9 rounded-lg flex items-center justify-center",
               "transition-all duration-150 cursor-pointer",
-              "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#37352F] focus-visible:ring-offset-1",
+              "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
               // Default state
-              !isSelected && "bg-[#F7F6F3] hover:bg-[#EFEFED] text-[#37352F]",
+              !isSelected && "bg-muted hover:bg-secondary text-foreground",
               // Selected state
-              isSelected && "text-white"
+              isSelected && "text-primary-foreground"
             )}
             style={
               isSelected

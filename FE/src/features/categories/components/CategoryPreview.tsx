@@ -37,8 +37,8 @@ export function CategoryPreview({
   return (
     <div
       className="
-        flex items-center gap-3 p-4 rounded-lg border border-[#E8E7E5]
-        bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]
+        flex items-center gap-3 p-4 rounded-lg border border-border
+        bg-card shadow-[0_1px_3px_rgba(0,0,0,0.08)]
       "
     >
       {/* Icon */}
@@ -51,12 +51,12 @@ export function CategoryPreview({
       {/* Text */}
       <div className="flex-1 min-w-0">
         <p
-          className="text-sm font-500 text-[#37352F] truncate leading-5"
+          className="text-sm font-500 text-foreground truncate leading-5"
           style={{ fontWeight: name.trim() ? 500 : 400 }}
         >
           {displayName}
         </p>
-        <p className="text-xs text-[#9B9A97] mt-0.5 leading-4">
+        <p className="text-xs text-muted-foreground mt-0.5 leading-4">
           {isIncome ? "Thu nhập" : "Chi tiêu"}
         </p>
       </div>

@@ -37,12 +37,12 @@ export function AppLayout() {
         <AppSidebar />
 
         {/* ── Main content area ─────────────────────────── */}
-        <SidebarInset className="bg-[#FFFEFC] min-h-screen">
+        <SidebarInset className="bg-background min-h-screen">
           {/* Top bar với trigger + page title */}
           <SiteHeader />
 
           {/* Page content — mỗi route render vào đây */}
-          <main className="flex flex-1 flex-col p-4 pt-0 min-h-0 bg-[#FFFEFC]">
+          <main className="flex flex-1 flex-col p-4 pt-0 min-h-0 bg-background">
             <Outlet />
           </main>
         </SidebarInset>

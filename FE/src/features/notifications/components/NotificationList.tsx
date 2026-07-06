@@ -23,7 +23,7 @@ const getNotificationIcon = (type: NotificationType) => {
       return <Sparkles className="w-5 h-5 text-purple-500" />;
     case "SYSTEM":
     default:
-      return <Bell className="w-5 h-5 text-[#9B9A97]" />;
+      return <Bell className="w-5 h-5 text-muted-foreground" />;
   }
 };
 
@@ -57,7 +57,7 @@ const NotificationItemComponent = React.memo(({
     <div
       className={cn(
         "flex items-start gap-3 p-3 mx-2 my-1 rounded-lg transition-colors duration-150 cursor-pointer group",
-        !notification.isRead ? "bg-[#F7F6F3]" : "hover:bg-[rgba(55,53,47,0.04)]"
+        !notification.isRead ? "bg-muted" : "hover:bg-[rgba(55,53,47,0.04)]"
       )}
       onClick={() => {
         if (!notification.isRead) {
@@ -72,19 +72,19 @@ const NotificationItemComponent = React.memo(({
       </div>
       
       <div className="flex-1 min-w-0 pr-2">
-        <h4 className="text-sm font-medium text-[#37352F] mb-0.5 truncate">
+        <h4 className="text-sm font-medium text-foreground mb-0.5 truncate">
           {notification.title}
         </h4>
-        <p className="text-[13px] text-[#5A5A57] line-clamp-2 leading-snug">
+        <p className="text-[13px] text-muted-foreground line-clamp-2 leading-snug">
           {notification.message}
         </p>
         <div className="flex items-center gap-2 mt-1.5">
-          <span className="text-xs text-[#9B9A97]">
+          <span className="text-xs text-muted-foreground">
             {formatRelativeTime(notification.createdAt)}
           </span>
           {!notification.isRead && (
             <span className="flex items-center text-[10px] font-medium text-blue-500">
-              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-1.5" />
+              <span className="w-1.5 h-1.5 bg-blue-500/10 text-blue-5000 rounded-full mr-1.5" />
               Mới
             </span>
           )}
@@ -102,11 +102,11 @@ export function NotificationList({ notifications, isLoading, onMarkAsRead }: Not
       <div className="flex flex-col p-2">
         {[...Array(4)].map((_, i) => (
           <div key={i} className="flex gap-3 p-3 mx-2 my-1">
-            <div className="w-5 h-5 rounded-full bg-[#E8E7E5] animate-pulse shrink-0 mt-0.5" />
+            <div className="w-5 h-5 rounded-full bg-muted animate-pulse shrink-0 mt-0.5" />
             <div className="flex-1 space-y-2">
-              <div className="h-4 bg-[#E8E7E5] rounded animate-pulse w-2/3" />
-              <div className="h-3 bg-[#E8E7E5] rounded animate-pulse w-full" />
-              <div className="h-3 bg-[#E8E7E5] rounded animate-pulse w-1/4 mt-2" />
+              <div className="h-4 bg-muted rounded animate-pulse w-2/3" />
+              <div className="h-3 bg-muted rounded animate-pulse w-full" />
+              <div className="h-3 bg-muted rounded animate-pulse w-1/4 mt-2" />
             </div>
           </div>
         ))}
@@ -117,11 +117,11 @@ export function NotificationList({ notifications, isLoading, onMarkAsRead }: Not
   if (notifications.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 px-6 text-center h-[250px]">
-        <div className="w-12 h-12 rounded-2xl bg-[#F7F6F3] flex items-center justify-center mb-4 text-[#9B9A97]">
+        <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center mb-4 text-muted-foreground">
           <BellRing className="w-6 h-6 stroke-[1.5]" />
         </div>
-        <p className="text-[15px] font-medium text-[#37352F] mb-1">Chưa có thông báo</p>
-        <p className="text-[13px] text-[#9B9A97] max-w-[200px] leading-relaxed">
+        <p className="text-[15px] font-medium text-foreground mb-1">Chưa có thông báo</p>
+        <p className="text-[13px] text-muted-foreground max-w-[200px] leading-relaxed">
           Khi có giao dịch hoặc AI Insight mới, thông báo sẽ xuất hiện tại đây.
         </p>
       </div>

@@ -26,9 +26,9 @@ export const BudgetCard = React.memo(function BudgetCard({ budget, onEdit, onDel
 
   // Helper để lấy text hiển thị trạng thái
   const getStatusContent = () => {
-    if (budget.alertStatus === "EXCEEDED") return { text: "Vượt hạn mức", icon: AlertCircle, color: "text-red-600 bg-red-50 border border-red-100" };
-    if (budget.alertStatus === "WARNING") return { text: "Sắp vượt", icon: AlertTriangle, color: "text-amber-600 bg-amber-50 border border-amber-100" };
-    return { text: "An toàn", icon: CheckCircle2, color: "text-emerald-700 bg-emerald-50 border border-emerald-100" };
+    if (budget.alertStatus === "EXCEEDED") return { text: "Vượt hạn mức", icon: AlertCircle, color: "text-red-600 bg-destructive/10 text-destructive border border-red-100" };
+    if (budget.alertStatus === "WARNING") return { text: "Sắp vượt", icon: AlertTriangle, color: "text-amber-600 bg-amber-500/10 text-amber-500 border border-amber-100" };
+    return { text: "An toàn", icon: CheckCircle2, color: "text-emerald-700 bg-emerald-500/10 text-emerald-500 border border-emerald-100" };
   };
 
   const status = getStatusContent();
@@ -40,8 +40,8 @@ export const BudgetCard = React.memo(function BudgetCard({ budget, onEdit, onDel
   return (
     <div
       className="
-        group relative flex flex-col p-5 rounded-xl bg-[#FFFFFF] border border-[#E8E7E5]
-        shadow-sm hover:shadow-md hover:border-[#D0CECA] transition-all duration-150 ease-in-out cursor-pointer
+        group relative flex flex-col p-5 rounded-xl bg-card border border-border
+        shadow-sm hover:shadow-md hover:border-border transition-all duration-150 ease-in-out cursor-pointer
       "
     >
       {/* ─── Header: Icon + Category Name + Status Badge ────────── */}
@@ -56,7 +56,7 @@ export const BudgetCard = React.memo(function BudgetCard({ budget, onEdit, onDel
               style={{ color: budget.category.color }}
             />
           </div>
-          <span className="text-sm font-semibold text-[#37352F]">
+          <span className="text-sm font-semibold text-foreground">
             {budget.category.name}
           </span>
         </div>
@@ -67,27 +67,27 @@ export const BudgetCard = React.memo(function BudgetCard({ budget, onEdit, onDel
             <PopoverTrigger asChild>
               <button
                 onClick={(e) => e.stopPropagation()}
-                className="w-7 h-7 flex items-center justify-center rounded-md bg-white border border-[#E8E7E5] text-[#9B9A97] hover:text-[#37352F] hover:bg-[#F7F6F3] shadow-sm transition-all"
+                className="w-7 h-7 flex items-center justify-center rounded-md bg-card border border-border text-muted-foreground hover:text-foreground hover:bg-muted shadow-sm transition-all"
               >
                 <MoreHorizontal className="w-4 h-4" />
               </button>
             </PopoverTrigger>
-            <PopoverContent className="w-36 p-1 bg-white border border-[#E8E7E5] shadow-lg rounded-lg" align="end">
+            <PopoverContent className="w-36 p-1 bg-card border border-border shadow-lg rounded-lg" align="end">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onEdit(budget);
                 }}
-                className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-[#37352F] hover:bg-[#F7F6F3] rounded-md transition-colors"
+                className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-foreground hover:bg-muted rounded-md transition-colors"
               >
-                <Pencil className="w-3.5 h-3.5 text-[#9B9A97]" /> Sửa
+                <Pencil className="w-3.5 h-3.5 text-muted-foreground" /> Sửa
               </button>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onDelete(budget);
                 }}
-                className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-red-600 hover:bg-destructive/10 hover:text-destructive rounded-md transition-colors"
               >
                 <Trash2 className="w-3.5 h-3.5 text-red-500" /> Xóa
               </button>
@@ -98,10 +98,10 @@ export const BudgetCard = React.memo(function BudgetCard({ budget, onEdit, onDel
 
       {/* ─── Body: % And Amounts ──────────────────────────────────────── */}
       <div className="mb-3 flex items-end gap-2">
-        <span className="text-3xl font-bold tracking-tight text-[#37352F]">
+        <span className="text-3xl font-bold tracking-tight text-foreground">
           {budget.percentage}%
         </span>
-        <span className="text-sm font-medium text-[#9B9A97] mb-1 pb-[2px]">
+        <span className="text-sm font-medium text-muted-foreground mb-1 pb-[2px]">
           đã dùng
         </span>
       </div>
@@ -113,12 +113,12 @@ export const BudgetCard = React.memo(function BudgetCard({ budget, onEdit, onDel
       />
 
       <div className="mt-2.5 flex items-center justify-between">
-        <div className="text-xs font-medium text-[#37352F]">
-          {formatVND(budget.spentAmount)} <span className="text-[#9B9A97] font-normal">/ {formatVND(budget.limitAmount)}</span>
+        <div className="text-xs font-medium text-foreground">
+          {formatVND(budget.spentAmount)} <span className="text-muted-foreground font-normal">/ {formatVND(budget.limitAmount)}</span>
         </div>
 
         {budget.remainingAmount >= 0 ? (
-          <span className="text-[11px] text-[#9B9A97] font-medium">
+          <span className="text-[11px] text-muted-foreground font-medium">
             Còn lại {formatVND(budget.remainingAmount)}
           </span>
         ) : (
@@ -129,8 +129,8 @@ export const BudgetCard = React.memo(function BudgetCard({ budget, onEdit, onDel
       </div>
 
       {/* ─── Footer: Metadata & Status ──────────────────────────── */}
-      <div className="mt-4 pt-4 border-t border-[#E8E7E5] flex items-center justify-between">
-        <span className="text-[11px] text-[#9B9A97]">
+      <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+        <span className="text-[11px] text-muted-foreground">
           Reset {resetDateString}
         </span>
         <span

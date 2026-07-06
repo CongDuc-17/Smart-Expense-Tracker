@@ -97,7 +97,7 @@ export function BudgetGrid({ budgets, isLoading }: BudgetGridProps) {
         {[...Array(6)].map((_, i) => (
           <div
             key={i}
-            className="h-32 bg-[#F7F6F3] rounded-lg animate-pulse"
+            className="h-32 bg-muted rounded-lg animate-pulse"
           />
         ))}
       </div>
@@ -106,17 +106,17 @@ export function BudgetGrid({ budgets, isLoading }: BudgetGridProps) {
 
   if (budgets.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-white rounded-xl border border-[#E8E7E5] shadow-sm">
-        <div className="w-16 h-16 bg-[#F7F6F3] rounded-full flex items-center justify-center mb-4">
+      <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-card rounded-xl border border-border shadow-sm">
+        <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
           <span className="text-2xl"> <ChartNoAxesColumn /></span>
         </div>
-        <h3 className="text-lg font-semibold text-[#37352F] mb-1">Bạn chưa tạo ngân sách</h3>
-        <p className="text-sm text-[#9B9A97] max-w-sm mb-6 leading-relaxed">
+        <h3 className="text-lg font-semibold text-foreground mb-1">Bạn chưa tạo ngân sách</h3>
+        <p className="text-sm text-muted-foreground max-w-sm mb-6 leading-relaxed">
           Theo dõi ngân sách giúp kiểm soát chi tiêu hiệu quả hơn và tránh được việc vung tay quá trán.
         </p>
         <button
           onClick={() => useBudgetStore.getState().openCreateSheet()}
-          className="bg-[#37352F] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#2f2d28] transition-colors shadow-sm"
+          className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm"
         >
           + Tạo ngân sách đầu tiên
         </button>
@@ -136,7 +136,7 @@ export function BudgetGrid({ budgets, isLoading }: BudgetGridProps) {
       />
 
       {filteredAndSortedBudgets.length === 0 ? (
-        <div className="py-12 text-center text-[#9B9A97]">
+        <div className="py-12 text-center text-muted-foreground">
           Không tìm thấy ngân sách nào phù hợp với bộ lọc.
         </div>
       ) : (

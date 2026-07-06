@@ -45,16 +45,16 @@ export function DeleteCategoryDialog() {
     >
       <DialogContent
         className="
-          max-w-sm bg-white border border-[#E8E7E5]
+          max-w-sm bg-card border border-border
           shadow-[0_16px_48px_rgba(0,0,0,0.20)]
           rounded-lg p-6
         "
       >
         <DialogHeader className="space-y-2">
-          <DialogTitle className="text-base font-semibold text-[#37352F] leading-6">
+          <DialogTitle className="text-base font-semibold text-foreground leading-6">
             Xóa danh mục?
           </DialogTitle>
-          <DialogDescription className="text-sm text-[#37352F] leading-5">
+          <DialogDescription className="text-sm text-foreground leading-5">
             Bạn có chắc muốn xóa danh mục{" "}
             <span className="font-medium">"{deletingCategory.name}"</span>?{" "}
             Hành động này không thể hoàn tác.
@@ -70,8 +70,8 @@ export function DeleteCategoryDialog() {
             disabled={isPending}
             onClick={closeDeleteDialog}
             className="
-              bg-[#F7F6F3] text-[#37352F] border border-[#E8E7E5]
-              hover:bg-[#EFEFED] hover:border-[#D0CECA]
+              bg-muted text-foreground border border-border
+              hover:bg-secondary hover:border-border
               text-sm font-medium transition-colors duration-150
             "
           >
@@ -85,8 +85,8 @@ export function DeleteCategoryDialog() {
             disabled={isPending}
             onClick={handleConfirm}
             className="
-              bg-white border border-red-300 text-red-500
-              hover:bg-red-50 hover:border-red-400
+              bg-card border border-red-300 text-red-500
+              hover:bg-destructive/10 hover:text-destructive hover:border-red-400
               active:bg-red-100
               text-sm font-medium transition-colors duration-150
               disabled:opacity-50 disabled:cursor-not-allowed

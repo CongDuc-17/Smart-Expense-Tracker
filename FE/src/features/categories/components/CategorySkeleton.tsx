@@ -13,21 +13,21 @@ function CategoryCardSkeleton() {
   return (
     <div
       className="
-        flex items-center gap-3 p-4 rounded-lg border border-[#E8E7E5]
-        bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]
+        flex items-center gap-3 p-4 rounded-lg border border-border
+        bg-card shadow-[0_1px_3px_rgba(0,0,0,0.08)]
       "
     >
       {/* Icon skeleton */}
-      <Skeleton className="w-9 h-9 rounded-xl flex-shrink-0 bg-[#E8E7E5]" />
+      <Skeleton className="w-9 h-9 rounded-xl flex-shrink-0 bg-muted" />
 
       {/* Text skeletons */}
       <div className="flex-1 space-y-2">
-        <Skeleton className="h-4 w-3/4 bg-[#E8E7E5]" />
-        <Skeleton className="h-3 w-1/2 bg-[#E8E7E5]" />
+        <Skeleton className="h-4 w-3/4 bg-muted" />
+        <Skeleton className="h-3 w-1/2 bg-muted" />
       </div>
 
       {/* Badge skeleton */}
-      <Skeleton className="h-5 w-8 rounded-full bg-[#E8E7E5]" />
+      <Skeleton className="h-5 w-8 rounded-full bg-muted" />
     </div>
   );
 }
@@ -39,8 +39,8 @@ function CategoryCardSkeleton() {
 function SectionHeaderSkeleton() {
   return (
     <div className="flex items-center gap-3 mb-3">
-      <Skeleton className="h-4 w-28 bg-[#E8E7E5]" />
-      <Skeleton className="h-5 w-16 rounded-full bg-[#E8E7E5]" />
+      <Skeleton className="h-4 w-28 bg-muted" />
+      <Skeleton className="h-5 w-16 rounded-full bg-muted" />
     </div>
   );
 }
