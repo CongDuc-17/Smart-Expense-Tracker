@@ -1,8 +1,7 @@
 import { Prisma, PrismaService } from '../database';
 
 export class ExpensesRepository {
-	constructor(private readonly prismaService = new PrismaService()) { }
-
+	constructor(private readonly prismaService = new PrismaService()) {}
 
 	async findMany({
 		userId,
@@ -25,11 +24,11 @@ export class ExpensesRepository {
 
 			...(month && year
 				? {
-					date: {
-						gte: new Date(year, month - 1, 1),
-						lt: new Date(year, month, 1),
-					},
-				}
+						date: {
+							gte: new Date(year, month - 1, 1),
+							lt: new Date(year, month, 1),
+						},
+					}
 				: {}),
 			...(categoryId ? { categoryId } : {}),
 		};
@@ -42,7 +41,13 @@ export class ExpensesRepository {
 				take: limit,
 				include: {
 					category: {
-						select: { id: true, name: true, icon: true, color: true, type: true },
+						select: {
+							id: true,
+							name: true,
+							icon: true,
+							color: true,
+							type: true,
+						},
 					},
 				},
 				orderBy: { date: 'desc' },

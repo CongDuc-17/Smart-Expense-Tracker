@@ -1,7 +1,8 @@
-import { UserStatusEnum } from '@prisma/client';
+import { UserStatusEnum, RoleEnum } from '@prisma/client';
 import { Exception } from '@tsed/exceptions';
 import { genSalt, hash } from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
+import { sign } from 'jsonwebtoken';
 
 import { Prisma } from '../database';
 import { MailsService } from '../mails/mail.service';
@@ -36,7 +37,7 @@ export class AuthService {
 		private readonly mailsService = new MailsService(),
 		private readonly authRepository = new AuthRepository(),
 		private readonly usersRepository = new UsersRepository(),
-	) { }
+	) {}
 
 	async register(
 		registerDto: RegisterRequestDto,
@@ -46,9 +47,7 @@ export class AuthService {
 		});
 
 		if (user) {
-			throw new ConflictException(
-				'Email này đã được đăng ký.',
-			);
+			throw new ConflictException('Email này đã được đăng ký.');
 		}
 
 		const salt = await genSalt(10);
@@ -73,7 +72,7 @@ export class AuthService {
 				email: registerDto.email,
 			});
 		} catch (error) {
-			console.log(error)
+			console.log(error);
 		}
 
 		return {
@@ -116,6 +115,20 @@ export class AuthService {
 			userId: account.userId,
 		});
 
+		const cookies: any = {
+			accessToken: accessToken,
+			refreshToken: refreshToken,
+		};
+
+		if (account.user?.role === RoleEnum.ADMIN) {
+			const adminToken = sign(
+				{ role: RoleEnum.ADMIN },
+				process.env.ACCESS_KEY_ADMIN || 'supersecretadmin',
+				{ expiresIn: '6h' },
+			);
+			cookies.admin_access_token = adminToken;
+		}
+
 		await this.authRepository.createToken({
 			token: {
 				refreshToken: refreshToken,
@@ -133,11 +146,9 @@ export class AuthService {
 			data: {
 				accessToken: accessToken,
 				refreshToken: refreshToken,
+				role: account.user?.role,
 			},
-			cookies: {
-				accessToken: accessToken,
-				refreshToken: refreshToken,
-			},
+			cookies: cookies,
 		};
 	}
 
@@ -149,6 +160,24 @@ export class AuthService {
 		const { accessToken, refreshToken } = await signJWT({
 			userId: socialAccountInformation.userId,
 		});
+
+		const user = await this.usersRepository.findUser({
+			userId: socialAccountInformation.userId,
+		});
+
+		const cookies: any = {
+			accessToken: accessToken,
+			refreshToken: refreshToken,
+		};
+
+		if (user?.role === RoleEnum.ADMIN) {
+			const adminToken = sign(
+				{ role: RoleEnum.ADMIN },
+				process.env.ACCESS_KEY_ADMIN || 'supersecretadmin',
+				{ expiresIn: '6h' },
+			);
+			cookies.admin_access_token = adminToken;
+		}
 
 		await this.authRepository.createToken({
 			token: {
@@ -167,11 +196,9 @@ export class AuthService {
 			data: {
 				accessToken: accessToken,
 				refreshToken: refreshToken,
+				role: user?.role,
 			},
-			cookies: {
-				accessToken: accessToken,
-				refreshToken: refreshToken,
-			},
+			cookies: cookies,
 		};
 	}
 

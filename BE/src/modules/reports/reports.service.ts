@@ -1,9 +1,12 @@
-import { PrismaService } from '@/modules/database';
-import { OptionalException } from '@/common';
-import ExcelJS from 'exceljs';
-const pdfMake = require('pdfmake');
-import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import path from 'path';
+
+import ExcelJS from 'exceljs';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
+
+import { OptionalException } from '@/common';
+import { PrismaService } from '@/modules/database';
+
+const pdfMake = require('pdfmake');
 
 export class ReportService {
 	private prisma = new PrismaService();
@@ -12,7 +15,7 @@ export class ReportService {
 		userId: string,
 		month: number,
 		year: number,
-		format: 'excel' | 'pdf'
+		format: 'excel' | 'pdf',
 	): Promise<Buffer> {
 		const data = await this.gatherReportData(userId, month, year);
 
@@ -76,13 +79,15 @@ export class ReportService {
 				total: current.total + Number(e.amount),
 			});
 		});
-		
-		const categoryBreakdown = Array.from(categoryBreakdownMap.entries()).map(([name, stats]) => ({
-			name,
-			count: stats.count,
-			total: stats.total,
-			percentage: totalExpense > 0 ? (stats.total / totalExpense) * 100 : 0,
-		}));
+
+		const categoryBreakdown = Array.from(categoryBreakdownMap.entries()).map(
+			([name, stats]) => ({
+				name,
+				count: stats.count,
+				total: stats.total,
+				percentage: totalExpense > 0 ? (stats.total / totalExpense) * 100 : 0,
+			}),
+		);
 		// Sort by total descending
 		categoryBreakdown.sort((a, b) => b.total - a.total);
 
@@ -103,10 +108,16 @@ export class ReportService {
 
 		// Sheet 1: Tổng quan
 		const summarySheet = workbook.addWorksheet('Tổng quan');
-		summarySheet.columns = [{ header: 'Mục', width: 25 }, { header: 'Giá trị', width: 25 }];
+		summarySheet.columns = [
+			{ header: 'Mục', width: 25 },
+			{ header: 'Giá trị', width: 25 },
+		];
 		summarySheet.addRow(['Người dùng', data.user.name]);
 		summarySheet.addRow(['Email', data.user.email]);
-		summarySheet.addRow(['Kỳ báo cáo', `Tháng ${data.period.month}/${data.period.year}`]);
+		summarySheet.addRow([
+			'Kỳ báo cáo',
+			`Tháng ${data.period.month}/${data.period.year}`,
+		]);
 		summarySheet.addRow([]);
 		summarySheet.addRow(['Tổng thu nhập', data.summary.totalIncome]);
 		summarySheet.addRow(['Tổng chi tiêu', data.summary.totalExpense]);
@@ -174,17 +185,35 @@ export class ReportService {
 	private async generatePDF(data: any): Promise<Buffer> {
 		const fonts = {
 			Roboto: {
-				normal: path.join(__dirname, '../../../node_modules/pdfmake/fonts/Roboto/Roboto-Regular.ttf'),
-				bold: path.join(__dirname, '../../../node_modules/pdfmake/fonts/Roboto/Roboto-Medium.ttf'),
-				italics: path.join(__dirname, '../../../node_modules/pdfmake/fonts/Roboto/Roboto-Italic.ttf'),
-				bolditalics: path.join(__dirname, '../../../node_modules/pdfmake/fonts/Roboto/Roboto-MediumItalic.ttf')
-			}
+				normal: path.join(
+					__dirname,
+					'../../../node_modules/pdfmake/fonts/Roboto/Roboto-Regular.ttf',
+				),
+				bold: path.join(
+					__dirname,
+					'../../../node_modules/pdfmake/fonts/Roboto/Roboto-Medium.ttf',
+				),
+				italics: path.join(
+					__dirname,
+					'../../../node_modules/pdfmake/fonts/Roboto/Roboto-Italic.ttf',
+				),
+				bolditalics: path.join(
+					__dirname,
+					'../../../node_modules/pdfmake/fonts/Roboto/Roboto-MediumItalic.ttf',
+				),
+			},
 		};
 
 		const content = [
 			{ text: 'BÁO CÁO TÀI CHÍNH', style: 'header' },
-			{ text: `Người dùng: ${data.user.name} (${data.user.email})`, margin: [0, 5, 0, 5] },
-			{ text: `Kỳ báo cáo: Tháng ${data.period.month}/${data.period.year}`, margin: [0, 0, 0, 20] },
+			{
+				text: `Người dùng: ${data.user.name} (${data.user.email})`,
+				margin: [0, 5, 0, 5],
+			},
+			{
+				text: `Kỳ báo cáo: Tháng ${data.period.month}/${data.period.year}`,
+				margin: [0, 0, 0, 20],
+			},
 
 			{ text: 'TỔNG QUAN', style: 'subheader' },
 			{
@@ -193,46 +222,54 @@ export class ReportService {
 					body: [
 						['Tổng thu nhập', data.summary.totalIncome.toLocaleString()],
 						['Tổng chi tiêu', data.summary.totalExpense.toLocaleString()],
-						['Số dư', data.summary.netBalance.toLocaleString()]
-					]
+						['Số dư', data.summary.netBalance.toLocaleString()],
+					],
 				},
-				margin: [0, 0, 0, 20]
+				margin: [0, 0, 0, 20],
 			},
 
 			{ text: 'CHI TIẾT CHI TIÊU', style: 'subheader' },
-			data.expenses.length > 0 ? {
-				table: {
-					headerRows: 1,
-					widths: ['auto', '*', 'auto', 'auto'],
-					body: [
-						['Ngày', 'Tiêu đề', 'Danh mục', 'Số tiền'],
-						...data.expenses.map((e: any) => [
-							e.date.toISOString().split('T')[0],
-							e.title,
-							e.category.name,
-							Number(e.amount).toLocaleString()
-						])
-					]
-				},
-				margin: [0, 0, 0, 20]
-			} : { text: 'Không có chi tiêu nào trong tháng.', margin: [0, 0, 0, 20], italics: true },
+			data.expenses.length > 0
+				? {
+						table: {
+							headerRows: 1,
+							widths: ['auto', '*', 'auto', 'auto'],
+							body: [
+								['Ngày', 'Tiêu đề', 'Danh mục', 'Số tiền'],
+								...data.expenses.map((e: any) => [
+									e.date.toISOString().split('T')[0],
+									e.title,
+									e.category.name,
+									Number(e.amount).toLocaleString(),
+								]),
+							],
+						},
+						margin: [0, 0, 0, 20],
+					}
+				: {
+						text: 'Không có chi tiêu nào trong tháng.',
+						margin: [0, 0, 0, 20],
+						italics: true,
+					},
 
 			{ text: 'PHÂN TÍCH THEO DANH MỤC CHI TIÊU', style: 'subheader' },
-			data.categoryBreakdown.length > 0 ? {
-				table: {
-					headerRows: 1,
-					widths: ['*', 'auto', 'auto', 'auto'],
-					body: [
-						['Danh mục', 'Số GD', 'Tổng tiền', 'Tỷ trọng'],
-						...data.categoryBreakdown.map((c: any) => [
-							c.name,
-							c.count.toString(),
-							c.total.toLocaleString(),
-							`${c.percentage.toFixed(2)}%`
-						])
-					]
-				}
-			} : { text: 'Không có dữ liệu.', italics: true }
+			data.categoryBreakdown.length > 0
+				? {
+						table: {
+							headerRows: 1,
+							widths: ['*', 'auto', 'auto', 'auto'],
+							body: [
+								['Danh mục', 'Số GD', 'Tổng tiền', 'Tỷ trọng'],
+								...data.categoryBreakdown.map((c: any) => [
+									c.name,
+									c.count.toString(),
+									c.total.toLocaleString(),
+									`${c.percentage.toFixed(2)}%`,
+								]),
+							],
+						},
+					}
+				: { text: 'Không có dữ liệu.', italics: true },
 		];
 
 		// Đăng ký font
@@ -246,10 +283,31 @@ export class ReportService {
 			},
 			content: content as any,
 			styles: {
-				header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10], alignment: 'center' },
-				subheader: { fontSize: 14, bold: true, margin: [0, 15, 0, 5], color: '#333333' },
-				tableHeader: { bold: true, fontSize: 11, color: 'white', fillColor: '#4CAF50', alignment: 'center' },
-				tableTotal: { bold: true, fontSize: 11, fillColor: '#f2f2f2', alignment: 'right' },
+				header: {
+					fontSize: 18,
+					bold: true,
+					margin: [0, 0, 0, 10],
+					alignment: 'center',
+				},
+				subheader: {
+					fontSize: 14,
+					bold: true,
+					margin: [0, 15, 0, 5],
+					color: '#333333',
+				},
+				tableHeader: {
+					bold: true,
+					fontSize: 11,
+					color: 'white',
+					fillColor: '#4CAF50',
+					alignment: 'center',
+				},
+				tableTotal: {
+					bold: true,
+					fontSize: 11,
+					fillColor: '#f2f2f2',
+					alignment: 'right',
+				},
 			},
 		};
 

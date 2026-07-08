@@ -2,10 +2,6 @@ import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express from 'express';
 import z from 'zod';
 
-import { autoBindUtil, validateRequestMiddleware } from '@/common';
-import authMiddleware from '@/common/middlewares/auth.middleware';
-import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
-
 import { AnalyticsController } from './analytics.controller';
 import {
 	byCategoryQueryObjectSchema,
@@ -24,6 +20,10 @@ import {
 	topExpensesQueryObjectSchema,
 	topExpensesQueryValidationSchema,
 } from './dtos';
+
+import { autoBindUtil, validateRequestMiddleware } from '@/common';
+import authMiddleware from '@/common/middlewares/auth.middleware';
+import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
 
 export const analyticsRegistry = new OpenAPIRegistry();
 

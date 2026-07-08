@@ -1,7 +1,5 @@
 import { TransactionTypeEnum } from '@prisma/client';
 
-import { HttpResponseBodySuccessDto } from '@/common';
-
 import { AnalyticsRepository } from './analytics.repository';
 import {
 	CategoryBreakdownResponseDto,
@@ -10,6 +8,8 @@ import {
 	MonthlyTrendResponseDto,
 	TopExpenseResponseDto,
 } from './dtos';
+
+import { HttpResponseBodySuccessDto } from '@/common';
 
 export class AnalyticsService {
 	constructor(private readonly analyticsRepository = new AnalyticsRepository()) {}
@@ -23,7 +23,11 @@ export class AnalyticsService {
 		month: number;
 		year: number;
 	}): Promise<HttpResponseBodySuccessDto<MonthlySummaryResponseDto>> {
-		const current = await this.analyticsRepository.getMonthlySummaryRaw(userId, month, year);
+		const current = await this.analyticsRepository.getMonthlySummaryRaw(
+			userId,
+			month,
+			year,
+		);
 
 		let prevMonth = month - 1;
 		let prevYear = year;
@@ -57,8 +61,12 @@ export class AnalyticsService {
 			expenseCount: current.expenseCount,
 			incomeCount: current.incomeCount,
 			comparedToLastMonth: {
-				expenseDiff: Number(calcDiff(current.totalExpense, previous.totalExpense).toFixed(1)),
-				incomeDiff: Number(calcDiff(current.totalIncome, previous.totalIncome).toFixed(1)),
+				expenseDiff: Number(
+					calcDiff(current.totalExpense, previous.totalExpense).toFixed(1),
+				),
+				incomeDiff: Number(
+					calcDiff(current.totalIncome, previous.totalIncome).toFixed(1),
+				),
 			},
 		});
 
@@ -89,8 +97,7 @@ export class AnalyticsService {
 		const grandTotal = grouped.reduce((sum, item) => sum + item.totalAmount, 0);
 
 		const data = grouped.map((item) => {
-			const percentage =
-				grandTotal > 0 ? (item.totalAmount / grandTotal) * 100 : 0;
+			const percentage = grandTotal > 0 ? (item.totalAmount / grandTotal) * 100 : 0;
 			return new CategoryBreakdownResponseDto({
 				category: item.category,
 				totalAmount: item.totalAmount.toString(),
@@ -112,8 +119,14 @@ export class AnalyticsService {
 		userId: string;
 		year: number;
 	}): Promise<HttpResponseBodySuccessDto<MonthlyTrendResponseDto[]>> {
-		const expenses = await this.analyticsRepository.getMonthlyExpenseTrendRaw(userId, year);
-		const incomes = await this.analyticsRepository.getMonthlyIncomeTrendRaw(userId, year);
+		const expenses = await this.analyticsRepository.getMonthlyExpenseTrendRaw(
+			userId,
+			year,
+		);
+		const incomes = await this.analyticsRepository.getMonthlyIncomeTrendRaw(
+			userId,
+			year,
+		);
 
 		// Transform from array to map for fast lookup
 		const expenseMap = new Map(expenses.map((e) => [e.month, Number(e.total)]));
@@ -148,7 +161,10 @@ export class AnalyticsService {
 		userId: string;
 		year: number;
 	}): Promise<HttpResponseBodySuccessDto<DailyHeatmapResponseDto[]>> {
-		const heatmaps = await this.analyticsRepository.getDailyExpenseHeatmapRaw(userId, year);
+		const heatmaps = await this.analyticsRepository.getDailyExpenseHeatmapRaw(
+			userId,
+			year,
+		);
 
 		// Note: The design says "return 365 days".
 		// We'll generate all dates of the year and map the amounts.
@@ -193,7 +209,12 @@ export class AnalyticsService {
 		year: number;
 		limit: number;
 	}): Promise<HttpResponseBodySuccessDto<TopExpenseResponseDto[]>> {
-		const expenses = await this.analyticsRepository.getTopExpenses(userId, month, year, limit);
+		const expenses = await this.analyticsRepository.getTopExpenses(
+			userId,
+			month,
+			year,
+			limit,
+		);
 
 		const data = expenses.map(
 			(exp) =>

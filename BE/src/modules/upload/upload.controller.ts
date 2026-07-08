@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
+
 import { UploadService, UploadContext } from './upload.service';
+
 import { OptionalException } from '@/common';
 
 export class UploadController {
@@ -9,7 +11,10 @@ export class UploadController {
 	uploadImage = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			if (!req.file) {
-				throw new OptionalException(StatusCodes.BAD_REQUEST, 'Vui lòng cung cấp một file ảnh');
+				throw new OptionalException(
+					StatusCodes.BAD_REQUEST,
+					'Vui lòng cung cấp một file ảnh',
+				);
 			}
 
 			// Lấy context từ query, ép kiểu an toàn

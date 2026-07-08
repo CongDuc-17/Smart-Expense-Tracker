@@ -40,7 +40,13 @@ export class IncomesRepository {
 				take: limit,
 				include: {
 					category: {
-						select: { id: true, name: true, icon: true, color: true, type: true },
+						select: {
+							id: true,
+							name: true,
+							icon: true,
+							color: true,
+							type: true,
+						},
 					},
 				},
 				orderBy: { date: 'desc' },

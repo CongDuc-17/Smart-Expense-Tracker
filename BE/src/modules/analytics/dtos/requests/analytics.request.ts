@@ -17,7 +17,10 @@ export const summaryQueryValidationSchema: ZodValidationSchema = {
 export const byCategoryQueryObjectSchema = z.object({
 	month: z.coerce.number().int().min(1).max(12),
 	year: z.coerce.number().int().min(2020).max(2100),
-	type: z.nativeEnum(TransactionTypeEnum).optional().default(TransactionTypeEnum.EXPENSE),
+	type: z
+		.nativeEnum(TransactionTypeEnum)
+		.optional()
+		.default(TransactionTypeEnum.EXPENSE),
 });
 
 export const byCategoryQueryValidationSchema: ZodValidationSchema = {

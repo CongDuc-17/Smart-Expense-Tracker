@@ -1,60 +1,73 @@
 import { PrismaClient, RoleEnum } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const email = 'vunguyens3rd2919@gmail.com';
-  const fixedJwt = 'FIXED_ADMIN_JWT_TOKEN_123';
-  const adminPassword = 'quadbra1783@%$';
-  
-  // Hash password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(adminPassword, salt);
-  
-  // 1. Tạo hoặc cập nhật ở bảng AdminAccess (dành cho Admin Login API)
-  await prisma.adminAccess.upsert({
-    where: { email },
-    update: {
-      password: hashedPassword,
-      jwtToken: fixedJwt,
-      role: RoleEnum.ADMIN
-    },
-    create: {
-      email,
-      password: hashedPassword,
-      jwtToken: fixedJwt,
-      role: RoleEnum.ADMIN
-    }
-  });
+  const adminAccounts = process.env.ADMIN_ACCOUNTS || 'admin@gmail.com:ankara2214';
+  const accounts = adminAccounts.split(',');
 
-  // 2. Cập nhật Frontend User Table (Phòng trường hợp đăng nhập bình thường)
-  let user = await prisma.user.findUnique({ where: { email } });
-  if (!user) {
-    user = await prisma.user.create({
-      data: {
-        email,
-        name: 'Super Admin',
-        role: RoleEnum.ADMIN,
-        verify: true,
-      }
-    });
+  for (const account of accounts) {
+    const [email, adminPassword] = account.split(':');
     
-    await prisma.account.create({
-      data: {
-        userId: user.id,
-        password: hashedPassword,
-        salt,
+    if (!email || !adminPassword) {
+      console.log(`Bỏ qua tài khoản không hợp lệ: ${account}`);
+      continue;
+    }
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(adminPassword, salt);
+    
+    // Cập nhật Frontend User Table
+    let user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          email,
+          name: 'Super Admin',
+          role: RoleEnum.ADMIN,
+          verify: true,
+        }
+      });
+      
+      await prisma.account.create({
+        data: {
+          userId: user.id,
+          password: hashedPassword,
+          salt,
+        }
+      });
+      console.log(`Đã tạo mới Admin! Email: ${email}`);
+    } else {
+      await prisma.user.update({
+        where: { email },
+        data: { role: RoleEnum.ADMIN }
+      });
+      
+      const existingAccount = await prisma.account.findUnique({ where: { userId: user.id } });
+      if (existingAccount) {
+        await prisma.account.update({
+          where: { userId: user.id },
+          data: { password: hashedPassword, salt }
+        });
+      } else {
+        await prisma.account.create({
+          data: {
+            userId: user.id,
+            password: hashedPassword,
+            salt,
+          }
+        });
       }
-    });
-  } else {
-    await prisma.user.update({
-      where: { email },
-      data: { role: RoleEnum.ADMIN }
-    });
+      console.log(`Đã cập nhật Admin! Email: ${email}`);
+    }
   }
 
-  console.log(`Seed Admin hoàn tất! Email: ${email} | Pass: ${adminPassword}`);
+  console.log('Seed Admin hoàn tất!');
 }
 
 main()

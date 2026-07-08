@@ -9,7 +9,7 @@ import { AuthRepository } from '../auth.repository';
 
 import { InternalServerException, OptionalException } from '@/common';
 import { GoogleOauthConfig } from '@/configs';
-import { socialAccountsWithPartialRelations } from '@/models';
+import { SocialAccountWithPartialRelations } from '@/models';
 
 export class GoogleOauthStrategy {
 	constructor(
@@ -51,7 +51,7 @@ export class GoogleOauthStrategy {
 				email: user.email,
 			});
 
-			let socialAccount: socialAccountsWithPartialRelations | null;
+			let socialAccount: SocialAccountWithPartialRelations | null;
 
 			if (!existingUser) {
 				socialAccount = await this.authRepository.createSocialAccount({

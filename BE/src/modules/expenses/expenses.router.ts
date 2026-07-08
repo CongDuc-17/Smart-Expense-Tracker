@@ -3,11 +3,6 @@ import express from 'express';
 import { StatusCodes } from 'http-status-codes';
 import z from 'zod';
 
-import { autoBindUtil, validateRequestMiddleware } from '@/common';
-import authMiddleware from '@/common/middlewares/auth.middleware';
-import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
-
-import { ExpensesController } from './expenses.controller';
 import {
 	createExpenseRequestSchema,
 	createExpenseValidationSchema,
@@ -17,17 +12,20 @@ import {
 	getExpenseByIdValidationSchema,
 	getExpensesQueryObjectSchema,
 	getExpensesQueryValidationSchema,
-	updateExpenseBodyObjectSchema,
 	updateExpenseRequestSchema,
 	updateExpenseValidationSchema,
 } from './dtos';
+import { ExpensesController } from './expenses.controller';
+
+import { autoBindUtil, validateRequestMiddleware } from '@/common';
+import authMiddleware from '@/common/middlewares/auth.middleware';
+import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
 
 export const expensesRegistry = new OpenAPIRegistry();
 
 const expensesController = new ExpensesController();
 const router = express.Router({ mergeParams: true });
 autoBindUtil(expensesController);
-
 
 expensesRegistry.registerPath({
 	method: 'get',
@@ -55,7 +53,6 @@ router.get(
 	expensesController.findAll,
 );
 
-
 expensesRegistry.registerPath({
 	method: 'get',
 	path: '/expenses/{id}',
@@ -71,14 +68,17 @@ router.get(
 	expensesController.findById,
 );
 
-
 expensesRegistry.registerPath({
 	method: 'post',
 	path: '/expenses',
 	tags: ['Expenses'],
 	security: [{ BearerAuth: [] }],
 	request: createExpenseRequestSchema,
-	responses: createApiResponse(expenseResponseDtoSchema, 'Created', StatusCodes.CREATED),
+	responses: createApiResponse(
+		expenseResponseDtoSchema,
+		'Created',
+		StatusCodes.CREATED,
+	),
 });
 router.post(
 	'/',
@@ -86,7 +86,6 @@ router.post(
 	validateRequestMiddleware(createExpenseValidationSchema),
 	expensesController.create,
 );
-
 
 expensesRegistry.registerPath({
 	method: 'patch',
@@ -105,7 +104,6 @@ router.patch(
 	validateRequestMiddleware(updateExpenseValidationSchema),
 	expensesController.update,
 );
-
 
 expensesRegistry.registerPath({
 	method: 'delete',

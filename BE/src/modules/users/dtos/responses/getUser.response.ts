@@ -1,8 +1,9 @@
 import { UserStatusEnum } from '@prisma/client';
 import z from 'zod';
 
-import { User } from '@/models';
 import { UserInformationDto } from '../userInformation.dto';
+
+import { User } from '@/models';
 
 export class GetUserResponseDto {
 	id: string;

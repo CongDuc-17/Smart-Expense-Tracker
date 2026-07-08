@@ -3,10 +3,6 @@ import express from 'express';
 import { StatusCodes } from 'http-status-codes';
 import z from 'zod';
 
-import { autoBindUtil, validateRequestMiddleware } from '@/common';
-import authMiddleware from '@/common/middlewares/auth.middleware';
-import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
-
 import { CategoriesController } from './categories.controller';
 import {
 	categoryIdParamsSchema,
@@ -21,12 +17,15 @@ import {
 	updateCategoryValidationSchema,
 } from './dtos';
 
+import { autoBindUtil, validateRequestMiddleware } from '@/common';
+import authMiddleware from '@/common/middlewares/auth.middleware';
+import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
+
 export const categoriesRegistry = new OpenAPIRegistry();
 
 const categoriesController = new CategoriesController();
 const router = express.Router({ mergeParams: true });
 autoBindUtil(categoriesController);
-
 
 categoriesRegistry.registerPath({
 	method: 'get',
@@ -45,7 +44,6 @@ router.get(
 	categoriesController.getCategories,
 );
 
-
 categoriesRegistry.registerPath({
 	method: 'get',
 	path: '/categories/{id}',
@@ -63,14 +61,17 @@ router.get(
 	categoriesController.getCategoryById,
 );
 
-
 categoriesRegistry.registerPath({
 	method: 'post',
 	path: '/categories',
 	tags: ['Categories'],
 	security: [{ BearerAuth: [] }],
 	request: createCategoryRequestSchema,
-	responses: createApiResponse(categoryResponseDtoSchema, 'Created', StatusCodes.CREATED),
+	responses: createApiResponse(
+		categoryResponseDtoSchema,
+		'Created',
+		StatusCodes.CREATED,
+	),
 });
 router.post(
 	'/',
@@ -78,7 +79,6 @@ router.post(
 	validateRequestMiddleware(createCategoryValidationSchema),
 	categoriesController.createCategory,
 );
-
 
 categoriesRegistry.registerPath({
 	method: 'patch',
@@ -97,7 +97,6 @@ router.patch(
 	validateRequestMiddleware(updateCategoryValidationSchema),
 	categoriesController.updateCategory,
 );
-
 
 categoriesRegistry.registerPath({
 	method: 'delete',

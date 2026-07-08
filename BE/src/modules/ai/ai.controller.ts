@@ -1,29 +1,39 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { OcrService } from './ocr.service';
-import { ImageClassificationService } from './image-classification.service';
+
 import { AiInsightService } from './ai-insight.service';
+import { ImageClassificationService } from './image-classification.service';
+import { OcrService } from './ocr.service';
+
 import { OptionalException } from '@/common';
 
 export class AiController {
 	constructor(
 		private readonly ocrService = new OcrService(),
 		private readonly imageClassificationService = new ImageClassificationService(),
-		private readonly aiInsightService = new AiInsightService()
-	) { }
+		private readonly aiInsightService = new AiInsightService(),
+	) {}
 
 	scanReceipt = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const file = req.file;
 			if (!file) {
-				throw new OptionalException(StatusCodes.BAD_REQUEST, 'Không tìm thấy file');
+				throw new OptionalException(
+					StatusCodes.BAD_REQUEST,
+					'Không tìm thấy file',
+				);
 			}
 			const expenseId = req.body.expenseId; // Có thể undefined
 
 			// Lấy userId từ authMiddleware
 			const userId = (req.user as any).id;
 
-			const ocrResultId = await this.ocrService.scanReceipt(userId, file.buffer, file.mimetype, expenseId);
+			const ocrResultId = await this.ocrService.scanReceipt(
+				userId,
+				file.buffer,
+				file.mimetype,
+				expenseId,
+			);
 
 			res.status(StatusCodes.ACCEPTED).json({
 				success: true,
@@ -73,7 +83,10 @@ export class AiController {
 			const expenseId = req.params.expenseId as string;
 			const userId = (req.user as any).id;
 
-			const result = await this.imageClassificationService.getAnalysis(userId, expenseId);
+			const result = await this.imageClassificationService.getAnalysis(
+				userId,
+				expenseId,
+			);
 
 			res.status(StatusCodes.OK).json({
 				success: true,
@@ -107,7 +120,11 @@ export class AiController {
 			const year = Number(req.query.year);
 			const userId = (req.user as any).id;
 
-			const result = await this.aiInsightService.generateInsights(userId, month, year);
+			const result = await this.aiInsightService.generateInsights(
+				userId,
+				month,
+				year,
+			);
 
 			res.status(StatusCodes.OK).json({
 				success: true,
@@ -121,7 +138,8 @@ export class AiController {
 	previewClassification = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const { imageUrl } = req.body;
-			const result = await this.imageClassificationService.previewClassification(imageUrl);
+			const result =
+				await this.imageClassificationService.previewClassification(imageUrl);
 
 			res.status(StatusCodes.OK).json({
 				success: true,

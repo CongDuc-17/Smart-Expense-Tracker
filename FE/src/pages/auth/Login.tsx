@@ -56,13 +56,21 @@ export function Login() {
         setIsLoading(true);
 
         try {
-            await apiClient.post(
+            const response = await apiClient.post(
                 "/auth/login",
                 { email, password },
                 { withCredentials: true },
             );
-            toast.success("Đăng nhập thành công!");
-            navigate("/dashboard", { replace: true });
+            
+            if (response.data?.role === 'ADMIN') {
+                localStorage.setItem("adminToken", "true");
+                toast.success("Đăng nhập Admin thành công!");
+                navigate("/admin/dashboard", { replace: true });
+            } else {
+                localStorage.removeItem("adminToken");
+                toast.success("Đăng nhập thành công!");
+                navigate("/dashboard", { replace: true });
+            }
         } catch (error) {
             const message = getErrorMessage(error, "Đăng nhập thất bại");
             setError(message);

@@ -3,10 +3,6 @@ import express from 'express';
 import { StatusCodes } from 'http-status-codes';
 import z from 'zod';
 
-import { autoBindUtil, validateRequestMiddleware } from '@/common';
-import authMiddleware from '@/common/middlewares/auth.middleware';
-import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
-
 import { BudgetsController } from './budgets.controller';
 import {
 	budgetIdParamsSchema,
@@ -19,6 +15,10 @@ import {
 	updateBudgetRequestSchema,
 	updateBudgetValidationSchema,
 } from './dtos';
+
+import { autoBindUtil, validateRequestMiddleware } from '@/common';
+import authMiddleware from '@/common/middlewares/auth.middleware';
+import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
 
 export const budgetsRegistry = new OpenAPIRegistry();
 

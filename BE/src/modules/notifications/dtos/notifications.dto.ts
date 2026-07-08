@@ -1,6 +1,7 @@
-import { z } from 'zod';
 import { NotificationTypeEnum } from '@prisma/client';
-import { PaginationSchema, ZodValidationSchema } from '@/common';
+import { z } from 'zod';
+
+import { ZodValidationSchema } from '@/common';
 
 export const getNotificationsQueryObjectSchema = z.object({
 	isRead: z

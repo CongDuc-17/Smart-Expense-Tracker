@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { ZodValidationSchema } from '@/common';
 
 export const verifyOcrSchema: ZodValidationSchema = {
@@ -15,8 +16,16 @@ export const verifyOcrSchema: ZodValidationSchema = {
 
 export const aiInsightsQuerySchema: ZodValidationSchema = {
 	query: z.object({
-		month: z.coerce.number().int().min(1, 'Tháng phải từ 1 đến 12').max(12, 'Tháng phải từ 1 đến 12'),
-		year: z.coerce.number().int().min(2020, 'Năm không hợp lệ').max(2100, 'Năm không hợp lệ'),
+		month: z.coerce
+			.number()
+			.int()
+			.min(1, 'Tháng phải từ 1 đến 12')
+			.max(12, 'Tháng phải từ 1 đến 12'),
+		year: z.coerce
+			.number()
+			.int()
+			.min(2020, 'Năm không hợp lệ')
+			.max(2100, 'Năm không hợp lệ'),
 	}),
 };
 

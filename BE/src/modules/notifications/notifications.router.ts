@@ -1,11 +1,7 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express from 'express';
+import { z } from 'zod';
 
-import { autoBindUtil, validateRequestMiddleware } from '@/common';
-import authMiddleware from '@/common/middlewares/auth.middleware';
-import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
-
-import { NotificationsController } from './notifications.controller';
 import {
 	getNotificationsQueryObjectSchema,
 	getNotificationsQueryValidationSchema,
@@ -13,7 +9,11 @@ import {
 	notificationIdParamValidationSchema,
 	notificationResponseSchema,
 } from './dtos';
-import { z } from 'zod';
+import { NotificationsController } from './notifications.controller';
+
+import { autoBindUtil, validateRequestMiddleware } from '@/common';
+import authMiddleware from '@/common/middlewares/auth.middleware';
+import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
 
 export const notificationsRegistry = new OpenAPIRegistry();
 

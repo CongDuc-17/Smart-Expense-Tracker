@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { ZodValidationSchema } from '@/common';
 
 export const uploadContextEnum = z.enum(['expense', 'avatar', 'ocr']);

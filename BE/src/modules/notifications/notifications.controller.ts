@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
+
 import { NotificationsService } from './notifications.service';
 
 export class NotificationsController {
@@ -14,7 +15,12 @@ export class NotificationsController {
 			const parsedLimit = limit ? parseInt(limit as string, 10) : 20;
 			const parsedIsRead = isRead !== undefined ? isRead === 'true' : undefined;
 
-			const result = await this.notificationsService.findAll(userId, parsedIsRead, parsedPage, parsedLimit);
+			const result = await this.notificationsService.findAll(
+				userId,
+				parsedIsRead,
+				parsedPage,
+				parsedLimit,
+			);
 
 			res.status(StatusCodes.OK).json({
 				status: 'success',

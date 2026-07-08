@@ -3,11 +3,9 @@ import z from 'zod';
 
 import { ZodValidationSchema } from '@/common';
 
-
 export const categoryIdParamsSchema = z.object({
 	id: z.string().cuid('ID không hợp lệ'),
 });
-
 
 export const getCategoriesQueryObjectSchema = z.object({
 	type: z.nativeEnum(TransactionTypeEnum).optional(),
@@ -20,7 +18,6 @@ export const getCategoriesQueryValidationSchema: ZodValidationSchema = {
 export const getCategoryByIdValidationSchema: ZodValidationSchema = {
 	params: categoryIdParamsSchema,
 };
-
 
 export class CreateCategoryDto {
 	name: string;
@@ -58,13 +55,11 @@ export const createCategoryRequestSchema = {
 	},
 };
 
-
 export class UpdateCategoryDto {
 	name?: string;
 	icon?: string;
 	color?: string;
 }
-
 
 export const updateCategoryBodyObjectSchema = z.object({
 	name: z.string().min(2, 'Tên danh mục phải có ít nhất 2 ký tự').max(50).optional(),
@@ -74,7 +69,6 @@ export const updateCategoryBodyObjectSchema = z.object({
 		.regex(/^#[0-9A-Fa-f]{6}$/, 'Mã màu phải là định dạng Hex (vd: #FF0000)')
 		.optional(),
 });
-
 
 export const updateCategoryBodySchema = updateCategoryBodyObjectSchema.refine(
 	(data) => Object.values(data).some((v) => v !== undefined),
@@ -96,7 +90,6 @@ export const updateCategoryRequestSchema = {
 		},
 	},
 };
-
 
 export const deleteCategoryValidationSchema: ZodValidationSchema = {
 	params: categoryIdParamsSchema,

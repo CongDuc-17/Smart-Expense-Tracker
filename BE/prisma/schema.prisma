@@ -354,18 +354,3 @@ model Notification {
   @@map("notifications")
 }
 
-model AdminAccess {
-  id         String   @id @default(cuid())
-  email      String   @unique
-  role       RoleEnum @default(ADMIN)
-  password   String
-  jwtToken   String   @db.Text @map("jwt_token")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("admin_access")
-}
-
-
-

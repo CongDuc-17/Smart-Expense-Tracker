@@ -1,10 +1,10 @@
 import { TransactionTypeEnum } from '@prisma/client';
 import { Request } from 'express';
 
+import { AnalyticsService } from './analytics.service';
+
 import { HttpResponseDto } from '@/common';
 import { UserInformationDto } from '@/modules/users/dtos';
-
-import { AnalyticsService } from './analytics.service';
 
 export class AnalyticsController {
 	constructor(private readonly analyticsService = new AnalyticsService()) {}
@@ -14,7 +14,11 @@ export class AnalyticsController {
 		const month = Number(req.query.month);
 		const year = Number(req.query.year);
 
-		const result = await this.analyticsService.getMonthlySummary({ userId, month, year });
+		const result = await this.analyticsService.getMonthlySummary({
+			userId,
+			month,
+			year,
+		});
 		return new HttpResponseDto().success(result);
 	}
 
@@ -55,7 +59,12 @@ export class AnalyticsController {
 		const year = Number(req.query.year);
 		const limit = Number(req.query.limit);
 
-		const result = await this.analyticsService.getTopExpenses({ userId, month, year, limit });
+		const result = await this.analyticsService.getTopExpenses({
+			userId,
+			month,
+			year,
+			limit,
+		});
 		return new HttpResponseDto().success(result);
 	}
 }

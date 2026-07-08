@@ -25,7 +25,7 @@ import {
 import { appEnv } from '@/configs';
 
 export class AuthController {
-	constructor(private readonly authService = new AuthService()) { }
+	constructor(private readonly authService = new AuthService()) {}
 
 	async register(req: Request): Promise<Response> {
 		const registerDto = req.body as RegisterRequestDto;
@@ -96,7 +96,11 @@ export class AuthController {
 					});
 				});
 
-				return res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+				const redirectPath =
+					(result as any).data?.role === 'ADMIN'
+						? '/admin/dashboard?oauth_admin=true'
+						: '/dashboard';
+				return res.redirect(`${process.env.FRONTEND_URL}${redirectPath}`);
 			},
 		)(req, res, next);
 	};

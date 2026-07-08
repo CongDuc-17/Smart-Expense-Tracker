@@ -1,11 +1,9 @@
 import { Category, Expense } from '@prisma/client';
 import z from 'zod';
 
-
 type CategorySummary = Pick<Category, 'id' | 'name' | 'icon' | 'color' | 'type'>;
 
 type ExpenseWithCategory = Expense & { category: CategorySummary };
-
 
 export class ExpenseResponseDto {
 	id: string;
@@ -28,8 +26,11 @@ export class ExpenseResponseDto {
 		this.amount = expense.amount.toString();
 		this.title = expense.title;
 		this.note = expense.note ?? null;
-		this.imageUrl = (expense as Expense & { imageUrl?: string | null }).imageUrl ?? null;
-		this.imagePublicId = (expense as Expense & { imagePublicId?: string | null }).imagePublicId ?? null;
+		this.imageUrl =
+			(expense as Expense & { imageUrl?: string | null }).imageUrl ?? null;
+		this.imagePublicId =
+			(expense as Expense & { imagePublicId?: string | null }).imagePublicId ??
+			null;
 		this.date = expense.date.toISOString();
 		this.createdAt = expense.createdAt.toISOString();
 		this.updatedAt = expense.updatedAt.toISOString();

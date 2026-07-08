@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
+
 import { appEnv } from './app.config';
 
 cloudinary.config({

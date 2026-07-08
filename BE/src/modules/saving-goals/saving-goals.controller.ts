@@ -1,22 +1,18 @@
 import { Exception } from '@tsed/exceptions';
 import { Request } from 'express';
 
+import { CreateSavingGoalDto, DepositSavingGoalDto, UpdateSavingGoalDto } from './dtos';
+import { SavingGoalsService } from './saving-goals.service';
+
 import { HttpResponseDto } from '@/common';
 import { UserInformationDto } from '@/modules/users/dtos';
-
-import {
-	CreateSavingGoalDto,
-	DepositSavingGoalDto,
-	UpdateSavingGoalDto,
-} from './dtos';
-import { SavingGoalsService } from './saving-goals.service';
 
 export class SavingGoalsController {
 	constructor(private readonly savingGoalsService = new SavingGoalsService()) {}
 
 	async findAll(req: Request) {
 		const { id: userId } = req.user as UserInformationDto;
-		
+
 		let isCompleted: boolean | undefined = undefined;
 		if (req.query.isCompleted === 'true') isCompleted = true;
 		else if (req.query.isCompleted === 'false') isCompleted = false;

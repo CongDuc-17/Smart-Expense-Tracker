@@ -16,7 +16,11 @@ import {
 } from './dtos';
 import { UsersController } from './users.controller';
 
-import { autoBindUtil, uploadAvatarMiddleware, validateRequestMiddleware } from '@/common';
+import {
+	autoBindUtil,
+	uploadAvatarMiddleware,
+	validateRequestMiddleware,
+} from '@/common';
 import authMiddleware from '@/common/middlewares/auth.middleware';
 import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
 

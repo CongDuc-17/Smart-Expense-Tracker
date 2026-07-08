@@ -30,7 +30,13 @@ export class SavingGoalsRepository {
 		});
 	}
 
-	async update({ id, data }: { id: string; data: Prisma.SavingGoalUncheckedUpdateInput }) {
+	async update({
+		id,
+		data,
+	}: {
+		id: string;
+		data: Prisma.SavingGoalUncheckedUpdateInput;
+	}) {
 		return this.prismaService.savingGoal.update({
 			where: { id },
 			data,
@@ -43,7 +49,9 @@ export class SavingGoalsRepository {
 				where: { savingGoalId: id },
 				select: { expenseId: true },
 			});
-			const expenseIds = deposits.map((d) => d.expenseId).filter(Boolean) as string[];
+			const expenseIds = deposits
+				.map((d) => d.expenseId)
+				.filter(Boolean) as string[];
 
 			const deletedGoal = await tx.savingGoal.delete({
 				where: { id },

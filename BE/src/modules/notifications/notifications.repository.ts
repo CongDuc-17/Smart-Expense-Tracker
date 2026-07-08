@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+
 import { PrismaService } from '../database';
 
 export class NotificationsRepository {
@@ -16,16 +17,20 @@ export class NotificationsRepository {
 			...(isRead !== undefined ? { isRead } : {}),
 		};
 
-		const [notifications, total, unreadCount] = await this.prismaService.$transaction([
-			this.prismaService.notification.findMany({
-				where: whereClause,
-				skip,
-				take,
-				orderBy: { createdAt: 'desc' },
-			}),
-			this.prismaService.notification.count({ where: whereClause }),
-			this.prismaService.notification.count({ where: { userId, isRead: false } }),
-		]);
+		const [notifications, total, unreadCount] = await this.prismaService.$transaction(
+			[
+				this.prismaService.notification.findMany({
+					where: whereClause,
+					skip,
+					take,
+					orderBy: { createdAt: 'desc' },
+				}),
+				this.prismaService.notification.count({ where: whereClause }),
+				this.prismaService.notification.count({
+					where: { userId, isRead: false },
+				}),
+			],
+		);
 
 		return { notifications, total, unreadCount };
 	}

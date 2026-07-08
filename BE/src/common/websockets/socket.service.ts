@@ -1,11 +1,13 @@
 import { Server as HttpServer } from 'http';
+
+import { UserStatusEnum } from '@prisma/client';
 import { verify } from 'jsonwebtoken';
 import { Server, Socket } from 'socket.io';
 
-import { jwtConfig, appEnv } from '@/configs';
-import { ITokenPayload } from '@/common/interfaces';
 import { UsersRepository } from '@/modules/users/users.repository';
-import { UserStatusEnum } from '@prisma/client';
+
+import { ITokenPayload } from '@/common/interfaces';
+import { jwtConfig, appEnv } from '@/configs';
 
 export class SocketService {
 	private static instance: SocketService;
@@ -43,7 +45,7 @@ export class SocketService {
 			try {
 				// Allow taking token from handshake auth or cookie
 				let token = socket.handshake.auth?.token;
-				
+
 				if (!token && socket.handshake.headers.cookie) {
 					token = socket.handshake.headers.cookie
 						.split('; ')
@@ -55,14 +57,19 @@ export class SocketService {
 					return next(new Error('Authentication error: No token provided'));
 				}
 
-				const payload = verify(token, jwtConfig.secretAccessToken) as ITokenPayload;
+				const payload = verify(
+					token,
+					jwtConfig.secretAccessToken,
+				) as ITokenPayload;
 				const user = await this.userRepository.findUser({
 					userId: payload.userId,
 					userStatus: UserStatusEnum.ACTIVE,
 				});
 
 				if (!user) {
-					return next(new Error('Authentication error: User not found or inactive'));
+					return next(
+						new Error('Authentication error: User not found or inactive'),
+					);
 				}
 
 				// Attach user info to socket

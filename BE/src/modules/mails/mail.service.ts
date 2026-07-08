@@ -1,13 +1,13 @@
 import { SendMailOptions } from 'nodemailer';
+
 import { SendEmailDto } from './dtos';
+
 import { MailConfig, TransporterConfig } from '@/configs/mails.config';
 
 export class MailsService {
-	constructor() { }
+	constructor() {}
 
-	async sendEmail(
-		data: SendEmailDto
-	): Promise<{ success: boolean } | null> {
+	async sendEmail(data: SendEmailDto): Promise<{ success: boolean } | null> {
 		try {
 			const { sender, recipients, subject, html, text } = data;
 

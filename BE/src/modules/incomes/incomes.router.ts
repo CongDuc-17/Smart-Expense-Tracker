@@ -3,11 +3,6 @@ import express from 'express';
 import { StatusCodes } from 'http-status-codes';
 import z from 'zod';
 
-import { autoBindUtil, validateRequestMiddleware } from '@/common';
-import authMiddleware from '@/common/middlewares/auth.middleware';
-import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
-
-import { IncomesController } from './incomes.controller';
 import {
 	createIncomeRequestSchema,
 	createIncomeValidationSchema,
@@ -17,17 +12,20 @@ import {
 	getIncomesQueryValidationSchema,
 	incomeIdParamsSchema,
 	incomeResponseDtoSchema,
-	updateIncomeBodyObjectSchema,
 	updateIncomeRequestSchema,
 	updateIncomeValidationSchema,
 } from './dtos';
+import { IncomesController } from './incomes.controller';
+
+import { autoBindUtil, validateRequestMiddleware } from '@/common';
+import authMiddleware from '@/common/middlewares/auth.middleware';
+import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
 
 export const incomesRegistry = new OpenAPIRegistry();
 
 const incomesController = new IncomesController();
 const router = express.Router({ mergeParams: true });
 autoBindUtil(incomesController);
-
 
 incomesRegistry.registerPath({
 	method: 'get',
@@ -55,7 +53,6 @@ router.get(
 	incomesController.findAll,
 );
 
-
 incomesRegistry.registerPath({
 	method: 'get',
 	path: '/incomes/{id}',
@@ -71,7 +68,6 @@ router.get(
 	incomesController.findById,
 );
 
-
 incomesRegistry.registerPath({
 	method: 'post',
 	path: '/incomes',
@@ -86,7 +82,6 @@ router.post(
 	validateRequestMiddleware(createIncomeValidationSchema),
 	incomesController.create,
 );
-
 
 incomesRegistry.registerPath({
 	method: 'patch',
@@ -105,7 +100,6 @@ router.patch(
 	validateRequestMiddleware(updateIncomeValidationSchema),
 	incomesController.update,
 );
-
 
 incomesRegistry.registerPath({
 	method: 'delete',

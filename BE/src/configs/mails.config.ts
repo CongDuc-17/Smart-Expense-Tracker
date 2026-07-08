@@ -4,13 +4,9 @@ export const MailConfig = {
 	smtpLogin: String(process.env.BREVO_SMTP_LOGIN),
 	smtpKey: String(process.env.BREVO_SMTP_KEY),
 
-	senderAddress:
-		String(process.env.MAIL_SENDER_ADDRESS) ||
-		'no-reply@localhost.com',
+	senderAddress: String(process.env.MAIL_SENDER_ADDRESS) || 'no-reply@localhost.com',
 
-	senderName:
-		String(process.env.MAIL_SENDER_NAME) ||
-		'No Reply',
+	senderName: String(process.env.MAIL_SENDER_NAME) || 'No Reply',
 };
 
 export const TransporterConfig = nodemailer.createTransport({

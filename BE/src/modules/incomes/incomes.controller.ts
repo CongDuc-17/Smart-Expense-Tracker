@@ -1,14 +1,14 @@
 import { Exception } from '@tsed/exceptions';
 import { Request } from 'express';
 
-import { HttpResponseDto } from '@/common';
-import { UserInformationDto } from '@/modules/users/dtos';
-
 import { CreateIncomeDto, UpdateIncomeDto } from './dtos';
 import { IncomesService } from './incomes.service';
 
+import { HttpResponseDto } from '@/common';
+import { UserInformationDto } from '@/modules/users/dtos';
+
 export class IncomesController {
-	constructor(private readonly incomesService = new IncomesService()) { }
+	constructor(private readonly incomesService = new IncomesService()) {}
 
 	async findAll(req: Request) {
 		const { id: userId } = req.user as UserInformationDto;
@@ -32,7 +32,6 @@ export class IncomesController {
 		return new HttpResponseDto().success(result as never);
 	}
 
-
 	async findById(req: Request) {
 		const { id: userId } = req.user as UserInformationDto;
 		const id = req.params.id as string;
@@ -43,7 +42,6 @@ export class IncomesController {
 		}
 		return new HttpResponseDto().success(result);
 	}
-
 
 	async create(req: Request) {
 		const { id: userId } = req.user as UserInformationDto;
@@ -56,7 +54,6 @@ export class IncomesController {
 		return new HttpResponseDto().created(result);
 	}
 
-
 	async update(req: Request) {
 		const { id: userId } = req.user as UserInformationDto;
 		const id = req.params.id as string;
@@ -68,7 +65,6 @@ export class IncomesController {
 		}
 		return new HttpResponseDto().success(result);
 	}
-
 
 	async delete(req: Request) {
 		const { id: userId } = req.user as UserInformationDto;

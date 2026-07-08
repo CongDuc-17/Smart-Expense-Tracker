@@ -3,10 +3,6 @@ import express from 'express';
 import { StatusCodes } from 'http-status-codes';
 import z from 'zod';
 
-import { autoBindUtil, validateRequestMiddleware } from '@/common';
-import authMiddleware from '@/common/middlewares/auth.middleware';
-import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
-
 import {
 	createSavingGoalRequestSchema,
 	createSavingGoalValidationSchema,
@@ -22,6 +18,10 @@ import {
 	updateSavingGoalValidationSchema,
 } from './dtos';
 import { SavingGoalsController } from './saving-goals.controller';
+
+import { autoBindUtil, validateRequestMiddleware } from '@/common';
+import authMiddleware from '@/common/middlewares/auth.middleware';
+import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
 
 export const savingGoalsRegistry = new OpenAPIRegistry();
 
@@ -52,7 +52,11 @@ savingGoalsRegistry.registerPath({
 	tags: ['Saving Goals'],
 	security: [{ BearerAuth: [] }],
 	request: createSavingGoalRequestSchema,
-	responses: createApiResponse(savingGoalResponseSchema, 'Created', StatusCodes.CREATED),
+	responses: createApiResponse(
+		savingGoalResponseSchema,
+		'Created',
+		StatusCodes.CREATED,
+	),
 });
 router.post(
 	'/',

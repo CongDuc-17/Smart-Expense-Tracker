@@ -3,7 +3,7 @@ import { TransactionTypeEnum } from '@prisma/client';
 import { Prisma, PrismaService } from '../database';
 
 export class CategoriesRepository {
-	constructor(private readonly prismaService = new PrismaService()) { }
+	constructor(private readonly prismaService = new PrismaService()) {}
 
 	async getCategories(userId: string, type?: TransactionTypeEnum) {
 		return this.prismaService.category.findMany({
@@ -14,7 +14,6 @@ export class CategoriesRepository {
 			orderBy: { name: 'asc' },
 		});
 	}
-
 
 	async getCategoryById(categoryId: string) {
 		return this.prismaService.category.findUnique({
@@ -36,7 +35,6 @@ export class CategoriesRepository {
 			data: category,
 		});
 	}
-
 
 	async updateCategory({
 		categoryId,

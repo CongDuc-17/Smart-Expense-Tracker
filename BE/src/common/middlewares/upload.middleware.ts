@@ -3,7 +3,11 @@ import multer from 'multer';
 
 import { OptionalException } from '../exceptions';
 
-const fileFilter = (req: express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const fileFilter = (
+	req: express.Request,
+	file: Express.Multer.File,
+	cb: multer.FileFilterCallback,
+) => {
 	const allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
 	if (allowedMimes.includes(file.mimetype)) {
 		cb(null, true);

@@ -12,18 +12,34 @@ export class AnalyticsRepository {
 		const [expenseResult, incomeResult, expenseCount, incomeCount] =
 			await this.prismaService.$transaction([
 				this.prismaService.expense.aggregate({
-					where: { userId, deletedAt: null, date: { gte: startOfMonth, lt: endOfMonth } },
+					where: {
+						userId,
+						deletedAt: null,
+						date: { gte: startOfMonth, lt: endOfMonth },
+					},
 					_sum: { amount: true },
 				}),
 				this.prismaService.income.aggregate({
-					where: { userId, deletedAt: null, date: { gte: startOfMonth, lt: endOfMonth } },
+					where: {
+						userId,
+						deletedAt: null,
+						date: { gte: startOfMonth, lt: endOfMonth },
+					},
 					_sum: { amount: true },
 				}),
 				this.prismaService.expense.count({
-					where: { userId, deletedAt: null, date: { gte: startOfMonth, lt: endOfMonth } },
+					where: {
+						userId,
+						deletedAt: null,
+						date: { gte: startOfMonth, lt: endOfMonth },
+					},
 				}),
 				this.prismaService.income.count({
-					where: { userId, deletedAt: null, date: { gte: startOfMonth, lt: endOfMonth } },
+					where: {
+						userId,
+						deletedAt: null,
+						date: { gte: startOfMonth, lt: endOfMonth },
+					},
 				}),
 			]);
 
@@ -49,7 +65,11 @@ export class AnalyticsRepository {
 		if (type === TransactionTypeEnum.EXPENSE) {
 			const expenseGrouped = await this.prismaService.expense.groupBy({
 				by: ['categoryId'],
-				where: { userId, deletedAt: null, date: { gte: startOfMonth, lt: endOfMonth } },
+				where: {
+					userId,
+					deletedAt: null,
+					date: { gte: startOfMonth, lt: endOfMonth },
+				},
 				_sum: { amount: true },
 				_count: { id: true },
 			});
@@ -57,7 +77,11 @@ export class AnalyticsRepository {
 		} else if (type === TransactionTypeEnum.INCOME) {
 			const incomeGrouped = await this.prismaService.income.groupBy({
 				by: ['categoryId'],
-				where: { userId, deletedAt: null, date: { gte: startOfMonth, lt: endOfMonth } },
+				where: {
+					userId,
+					deletedAt: null,
+					date: { gte: startOfMonth, lt: endOfMonth },
+				},
 				_sum: { amount: true },
 				_count: { id: true },
 			});
@@ -79,18 +103,18 @@ export class AnalyticsRepository {
 			select: { id: true, name: true, icon: true, color: true },
 		});
 
-		return grouped.map((g) => ({
-			category: categories.find((c) => c.id === g.categoryId)!,
-			totalAmount: Number(g._sum.amount ?? 0),
-			transactionCount: g._count.id,
-		})).filter(g => g.category !== undefined); // Ensure category exists (handles edge cases like deleted category if not cascaded)
+		return grouped
+			.map((g) => ({
+				category: categories.find((c) => c.id === g.categoryId)!,
+				totalAmount: Number(g._sum.amount ?? 0),
+				transactionCount: g._count.id,
+			}))
+			.filter((g) => g.category !== undefined); // Ensure category exists (handles edge cases like deleted category if not cascaded)
 	}
 
 	async getMonthlyExpenseTrendRaw(userId: string, year: number) {
 		// Postgres EXTRACT(MONTH FROM date)
-		return this.prismaService.$queryRaw<
-			{ month: number; total: Prisma.Decimal }[]
-		>`
+		return this.prismaService.$queryRaw<{ month: number; total: Prisma.Decimal }[]>`
 			SELECT 
 				EXTRACT(MONTH FROM date)::integer as month,
 				SUM(amount) as total
@@ -104,9 +128,7 @@ export class AnalyticsRepository {
 	}
 
 	async getMonthlyIncomeTrendRaw(userId: string, year: number) {
-		return this.prismaService.$queryRaw<
-			{ month: number; total: Prisma.Decimal }[]
-		>`
+		return this.prismaService.$queryRaw<{ month: number; total: Prisma.Decimal }[]>`
 			SELECT 
 				EXTRACT(MONTH FROM date)::integer as month,
 				SUM(amount) as total

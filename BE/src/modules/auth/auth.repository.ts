@@ -2,13 +2,10 @@ import { RefreshToken, UserStatusEnum } from '@prisma/client';
 
 import { Prisma, PrismaService } from '../database';
 
-import {
-	AccountWithPartialRelations,
-	SocialAccountWithPartialRelations,
-} from '@/models';
+import { AccountWithPartialRelations, SocialAccountWithPartialRelations } from '@/models';
 
 export class AuthRepository {
-	constructor(private readonly prismaService = new PrismaService()) { }
+	constructor(private readonly prismaService = new PrismaService()) {}
 
 	async findAccount({
 		userId,
@@ -79,7 +76,11 @@ export class AuthRepository {
 		});
 	}
 
-	async createToken({ token }: { token: Prisma.RefreshTokenCreateInput }): Promise<RefreshToken> {
+	async createToken({
+		token,
+	}: {
+		token: Prisma.RefreshTokenCreateInput;
+	}): Promise<RefreshToken> {
 		const { id, ...tokenData } = token;
 		return this.prismaService.refreshToken.create({
 			data: tokenData,

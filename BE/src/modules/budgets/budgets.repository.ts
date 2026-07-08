@@ -3,7 +3,15 @@ import { Prisma, PrismaService } from '../database';
 export class BudgetsRepository {
 	constructor(private readonly prismaService = new PrismaService()) {}
 
-	async findMany({ userId, month, year }: { userId: string; month: number; year: number }) {
+	async findMany({
+		userId,
+		month,
+		year,
+	}: {
+		userId: string;
+		month: number;
+		year: number;
+	}) {
 		return this.prismaService.budget.findMany({
 			where: {
 				userId,

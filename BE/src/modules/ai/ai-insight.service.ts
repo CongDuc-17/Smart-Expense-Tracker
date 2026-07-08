@@ -1,9 +1,9 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { ServiceUnavailable } from '@tsed/exceptions';
 import Groq from 'groq-sdk'; // Import thêm Groq
+
 import { PrismaService } from '@/modules/database';
 import { ReportService } from '@/modules/reports/reports.service';
-import { InternalServerError, ServiceUnavailable } from "@tsed/exceptions";
-import { OptionalException } from '@/common';
 
 export class AiInsightService {
 	private prisma = new PrismaService();
@@ -37,7 +37,7 @@ export class AiInsightService {
 	async generateInsights(userId: string, month: number, year: number) {
 		const reportData = await this.gatherDataForAI(userId, month, year);
 		const rawContent = await this.generateInsight(reportData);
-		
+
 		// Attempt to extract JSON if wrapped in markdown
 		let content = rawContent;
 		try {
@@ -68,11 +68,19 @@ export class AiInsightService {
 
 		const [expenses, incomes] = await Promise.all([
 			this.prisma.expense.findMany({
-				where: { userId, deletedAt: null, date: { gte: startOfMonth, lt: endOfMonth } },
+				where: {
+					userId,
+					deletedAt: null,
+					date: { gte: startOfMonth, lt: endOfMonth },
+				},
 				include: { category: { select: { name: true } } },
 			}),
 			this.prisma.income.findMany({
-				where: { userId, deletedAt: null, date: { gte: startOfMonth, lt: endOfMonth } },
+				where: {
+					userId,
+					deletedAt: null,
+					date: { gte: startOfMonth, lt: endOfMonth },
+				},
 				include: { category: { select: { name: true } } },
 			}),
 		]);
@@ -134,14 +142,16 @@ Vui lòng trả về kết quả dưới dạng ĐÚNG MỘT OBJECT JSON duy nh�
 				// LUỒNG 2: NẾU GEMINI LỖI (503, 429), CHUYỂN SANG GROQ
 				const response = await this.groq.chat.completions.create({
 					model: this.groqModelName,
-					response_format: { type: "json_object" },
+					response_format: { type: 'json_object' },
 					messages: [{ role: 'user', content: prompt }],
 				});
 				return response.choices[0]?.message?.content || '{}';
 			} catch (groqError: any) {
 				// CẢ 2 ĐỀU LỖI -> ĐẦU HÀNG, BÁO VỀ FRONTEND
 				console.error('❌ [AI Error] Cả Gemini và Groq đều sập:', groqError);
-				throw new ServiceUnavailable('Hệ thống AI hiện đang quá tải. Vui lòng thử lại sau vài phút.');
+				throw new ServiceUnavailable(
+					'Hệ thống AI hiện đang quá tải. Vui lòng thử lại sau vài phút.',
+				);
 			}
 		}
 	}

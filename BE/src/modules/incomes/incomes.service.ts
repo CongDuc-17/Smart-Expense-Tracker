@@ -2,15 +2,16 @@ import { TransactionTypeEnum } from '@prisma/client';
 import { Exception } from '@tsed/exceptions';
 import { StatusCodes } from 'http-status-codes';
 
+import { CategoriesRepository } from '@/modules/categories/categories.repository';
+
+import { CreateIncomeDto, IncomeResponseDto, UpdateIncomeDto } from './dtos';
+import { IncomesRepository } from './incomes.repository';
+
 import {
 	HttpResponseBodySuccessDto,
 	NotFoundException,
 	OptionalException,
 } from '@/common';
-import { CategoriesRepository } from '@/modules/categories/categories.repository';
-
-import { CreateIncomeDto, IncomeResponseDto, UpdateIncomeDto } from './dtos';
-import { IncomesRepository } from './incomes.repository';
 
 export class IncomesService {
 	constructor(
@@ -147,7 +148,11 @@ export class IncomesService {
 		}
 
 		if (data.categoryId) {
-			await this.validateCategory(data.categoryId, userId, TransactionTypeEnum.INCOME);
+			await this.validateCategory(
+				data.categoryId,
+				userId,
+				TransactionTypeEnum.INCOME,
+			);
 		}
 
 		const updatedIncome = await this.incomesRepository.update({

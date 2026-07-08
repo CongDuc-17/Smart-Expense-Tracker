@@ -2,17 +2,17 @@ import { BudgetAlertStatusEnum, TransactionTypeEnum } from '@prisma/client';
 import { Exception } from '@tsed/exceptions';
 import { StatusCodes } from 'http-status-codes';
 
+import { CategoriesRepository } from '@/modules/categories/categories.repository';
+
+import { BudgetsRepository } from './budgets.repository';
+import { BudgetResponseDto, CreateBudgetDto, UpdateBudgetDto } from './dtos';
+
 import {
-	ForbiddenException,
 	HttpResponseBodySuccessDto,
 	NotFoundException,
 	OptionalException,
 } from '@/common';
 import { AppEvents, eventBus, ExpenseMutatedEventPayload } from '@/common/events';
-import { CategoriesRepository } from '@/modules/categories/categories.repository';
-
-import { BudgetsRepository } from './budgets.repository';
-import { BudgetResponseDto, CreateBudgetDto, UpdateBudgetDto } from './dtos';
 
 export class BudgetsService {
 	constructor(
@@ -100,7 +100,7 @@ export class BudgetsService {
 
 		// Trigger recalculation in case there are already expenses
 		await this.checkAndUpdateBudget(userId, data.categoryId, data.month, data.year);
-		
+
 		// Return updated budget after check
 		const updatedBudget = await this.budgetsRepository.findById(newBudget.id);
 
@@ -133,7 +133,12 @@ export class BudgetsService {
 		});
 
 		// Recalculate percentage and alertStatus with the new limitAmount
-		await this.checkAndUpdateBudget(userId, budget.categoryId, budget.month, budget.year);
+		await this.checkAndUpdateBudget(
+			userId,
+			budget.categoryId,
+			budget.month,
+			budget.year,
+		);
 
 		const updatedBudget = await this.budgetsRepository.findById(id);
 
@@ -217,24 +222,32 @@ export class BudgetsService {
 
 		if (shouldNotify) {
 			const category = await this.categoriesRepository.getCategoryById(categoryId);
-			const title = newStatus === BudgetAlertStatusEnum.EXCEEDED ? 'Vượt ngân sách!' : 'Cảnh báo ngân sách!';
+			const title =
+				newStatus === BudgetAlertStatusEnum.EXCEEDED
+					? 'Vượt ngân sách!'
+					: 'Cảnh báo ngân sách!';
 			const message = `Chi tiêu danh mục ${category?.name} đã đạt ${percentage.toFixed(1)}% hạn mức tháng ${month}/${year}.`;
-			
+
 			// Lazy load to avoid circular dependency if not careful, though direct import is fine here
-			const { NotificationsService } = require('@/modules/notifications/notifications.service');
+			const {
+				NotificationsService,
+			} = require('@/modules/notifications/notifications.service');
 			const notificationsService = new NotificationsService();
-			
+
 			await notificationsService.create({
 				userId,
 				title,
 				message,
-				type: newStatus === BudgetAlertStatusEnum.EXCEEDED ? 'BUDGET_EXCEEDED' : 'BUDGET_WARNING',
+				type:
+					newStatus === BudgetAlertStatusEnum.EXCEEDED
+						? 'BUDGET_EXCEEDED'
+						: 'BUDGET_WARNING',
 				metadata: {
 					budgetId: budget.id,
 					categoryId,
 					categoryName: category?.name,
 					percentage,
-				}
+				},
 			});
 		}
 	}

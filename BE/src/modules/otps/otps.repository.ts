@@ -3,7 +3,7 @@ import { Otp, Prisma } from '@prisma/client';
 import { PrismaService } from '../database';
 
 export class OtpsRepository {
-	constructor(private readonly prismaService = new PrismaService()) { }
+	constructor(private readonly prismaService = new PrismaService()) {}
 
 	async findOtp({
 		userId,

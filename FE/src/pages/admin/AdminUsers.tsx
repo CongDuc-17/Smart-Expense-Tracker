@@ -30,9 +30,9 @@ export function AdminUsers() {
       const response = await apiClient.get(`/admin/users`, {
         params: { page, limit: 10, search }
       });
-      if (response.data.success) {
-        setUsers(response.data.data);
-        setTotal(response.data.pagination.totalItems);
+      if (response.success) {
+        setUsers(response.data);
+        setTotal(response.pagination?.totalItems || 0);
       }
     } catch (error) {
       console.error("Failed to fetch users:", error);
@@ -56,7 +56,7 @@ export function AdminUsers() {
     const newStatus = currentStatus === "ACTIVE" ? "LOCKED" : "ACTIVE";
     try {
       const response = await apiClient.patch(`/admin/users/${userId}/status`, { status: newStatus });
-      if (response.data.success) {
+      if (response.success) {
         toast.success(`Đã ${newStatus === "LOCKED" ? "khóa" : "mở khóa"} người dùng`);
         setUsers(users.map(u => u.id === userId ? { ...u, status: newStatus as UserStatusEnum } : u));
       }

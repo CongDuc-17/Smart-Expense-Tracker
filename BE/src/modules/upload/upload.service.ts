@@ -1,7 +1,9 @@
 import { Readable } from 'stream';
+
 import { UploadApiResponse, UploadApiOptions } from 'cloudinary';
-import { cloudinary } from '@/configs';
+
 import { InternalServerException } from '@/common';
+import { cloudinary } from '@/configs';
 
 export type UploadContext = 'expense' | 'avatar' | 'ocr';
 
@@ -12,7 +14,10 @@ export class UploadService {
 	 * @param context Ngữ cảnh upload (dùng để chia folder và tự động resize)
 	 * @returns Kết quả từ Cloudinary
 	 */
-	public async uploadImage(buffer: Buffer, context: UploadContext): Promise<UploadApiResponse> {
+	public async uploadImage(
+		buffer: Buffer,
+		context: UploadContext,
+	): Promise<UploadApiResponse> {
 		return new Promise((resolve, reject) => {
 			let folder = 'smart_expense/misc';
 			let transformation: UploadApiOptions['transformation'] = [];
@@ -33,17 +38,14 @@ export class UploadService {
 				resource_type: 'image',
 			};
 
-			const stream = cloudinary.uploader.upload_stream(
-				options,
-				(error, result) => {
-					if (error) {
-						console.error('Cloudinary Upload Error:', error);
-						reject(new InternalServerException());
-					} else if (result) {
-						resolve(result);
-					}
+			const stream = cloudinary.uploader.upload_stream(options, (error, result) => {
+				if (error) {
+					console.error('Cloudinary Upload Error:', error);
+					reject(new InternalServerException());
+				} else if (result) {
+					resolve(result);
 				}
-			);
+			});
 
 			// Chuyển Buffer thành Readable stream rồi pipe vào Cloudinary
 			Readable.from(buffer).pipe(stream);

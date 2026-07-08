@@ -2,13 +2,9 @@ import z from 'zod';
 
 import { ZodValidationSchema } from '@/common';
 
-
-
 export const incomeIdParamsSchema = z.object({
 	id: z.string().cuid('ID không hợp lệ'),
 });
-
-
 
 export const getIncomesQueryObjectSchema = z.object({
 	month: z.coerce.number().int().min(1).max(12).optional(),
@@ -26,8 +22,6 @@ export const getIncomeByIdValidationSchema: ZodValidationSchema = {
 	params: incomeIdParamsSchema,
 };
 
-
-
 export class CreateIncomeDto {
 	categoryId: string;
 	amount: number;
@@ -38,9 +32,7 @@ export class CreateIncomeDto {
 
 export const createIncomeBodySchema = z.object({
 	categoryId: z.string().cuid('categoryId không hợp lệ'),
-	amount: z
-		.number({ message: 'amount phải là số' })
-		.positive('Số tiền phải lớn hơn 0'),
+	amount: z.number({ message: 'amount phải là số' }).positive('Số tiền phải lớn hơn 0'),
 	title: z
 		.string()
 		.min(2, 'Tiêu đề phải có ít nhất 2 ký tự')
@@ -64,8 +56,6 @@ export const createIncomeRequestSchema = {
 	},
 };
 
-
-
 export class UpdateIncomeDto {
 	categoryId?: string;
 	amount?: number;
@@ -79,7 +69,10 @@ export const updateIncomeBodyObjectSchema = z.object({
 	amount: z.number().positive('Số tiền phải lớn hơn 0').optional(),
 	title: z.string().min(2).max(255).optional(),
 	note: z.string().max(1000).optional(),
-	date: z.string().datetime({ message: 'Định dạng ngày không hợp lệ (ISO 8601)' }).optional(),
+	date: z
+		.string()
+		.datetime({ message: 'Định dạng ngày không hợp lệ (ISO 8601)' })
+		.optional(),
 });
 
 export const updateIncomeBodySchema = updateIncomeBodyObjectSchema.refine(
@@ -102,8 +95,6 @@ export const updateIncomeRequestSchema = {
 		},
 	},
 };
-
-
 
 export const deleteIncomeValidationSchema: ZodValidationSchema = {
 	params: incomeIdParamsSchema,

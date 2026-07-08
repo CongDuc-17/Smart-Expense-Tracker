@@ -2,28 +2,23 @@ import { TransactionTypeEnum } from '@prisma/client';
 import { Exception } from '@tsed/exceptions';
 import { StatusCodes } from 'http-status-codes';
 
+import { CategoriesRepository } from '@/modules/categories/categories.repository';
+
+import { CreateExpenseDto, ExpenseResponseDto, UpdateExpenseDto } from './dtos';
+import { ExpensesRepository } from './expenses.repository';
+
 import {
-	ForbiddenException,
 	HttpResponseBodySuccessDto,
 	NotFoundException,
 	OptionalException,
 } from '@/common';
 import { AppEvents, eventBus, ExpenseMutatedEventPayload } from '@/common/events';
-import { CategoriesRepository } from '@/modules/categories/categories.repository';
-
-import {
-	CreateExpenseDto,
-	ExpenseResponseDto,
-	UpdateExpenseDto,
-} from './dtos';
-import { ExpensesRepository } from './expenses.repository';
 
 export class ExpensesService {
 	constructor(
 		private readonly expensesRepository = new ExpensesRepository(),
 		private readonly categoriesRepository = new CategoriesRepository(),
-	) { }
-
+	) {}
 
 	private async validateCategory(
 		categoryId: string,
@@ -52,7 +47,6 @@ export class ExpensesService {
 
 		return category;
 	}
-
 
 	async findAll({
 		userId,
@@ -94,7 +88,6 @@ export class ExpensesService {
 		};
 	}
 
-
 	async findById({
 		userId,
 		id,
@@ -113,7 +106,6 @@ export class ExpensesService {
 			data: new ExpenseResponseDto(expense),
 		};
 	}
-
 
 	async create({
 		userId,
@@ -158,7 +150,6 @@ export class ExpensesService {
 		};
 	}
 
-
 	async update({
 		userId,
 		id,
@@ -175,11 +166,19 @@ export class ExpensesService {
 		}
 
 		if (data.categoryId) {
-			await this.validateCategory(data.categoryId, userId, TransactionTypeEnum.EXPENSE);
+			await this.validateCategory(
+				data.categoryId,
+				userId,
+				TransactionTypeEnum.EXPENSE,
+			);
 		}
 
 		// Xóa ảnh cũ nếu có ảnh mới
-		if (data.imagePublicId && expense.imagePublicId && data.imagePublicId !== expense.imagePublicId) {
+		if (
+			data.imagePublicId &&
+			expense.imagePublicId &&
+			data.imagePublicId !== expense.imagePublicId
+		) {
 			const { UploadService } = require('@/modules/upload/upload.service');
 			const uploadService = new UploadService();
 			uploadService.deleteImage(expense.imagePublicId);
@@ -194,7 +193,9 @@ export class ExpensesService {
 				...(data.note !== undefined && { note: data.note }),
 				...(data.date !== undefined && { date: new Date(data.date) }),
 				...(data.imageUrl !== undefined && { imageUrl: data.imageUrl }),
-				...(data.imagePublicId !== undefined && { imagePublicId: data.imagePublicId }),
+				...(data.imagePublicId !== undefined && {
+					imagePublicId: data.imagePublicId,
+				}),
 			},
 		});
 
@@ -218,7 +219,6 @@ export class ExpensesService {
 			data: new ExpenseResponseDto(updatedExpense),
 		};
 	}
-
 
 	async delete({
 		userId,

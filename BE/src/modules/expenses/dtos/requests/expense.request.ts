@@ -2,11 +2,9 @@ import z from 'zod';
 
 import { ZodValidationSchema } from '@/common';
 
-
 export const expenseIdParamsSchema = z.object({
 	id: z.string().cuid('ID không hợp lệ'),
 });
-
 
 export const getExpensesQueryObjectSchema = z.object({
 	month: z.coerce.number().int().min(1).max(12).optional(),
@@ -20,11 +18,9 @@ export const getExpensesQueryValidationSchema: ZodValidationSchema = {
 	query: getExpensesQueryObjectSchema,
 };
 
-
 export const getExpenseByIdValidationSchema: ZodValidationSchema = {
 	params: expenseIdParamsSchema,
 };
-
 
 export class CreateExpenseDto {
 	categoryId: string;
@@ -38,9 +34,7 @@ export class CreateExpenseDto {
 
 export const createExpenseBodySchema = z.object({
 	categoryId: z.string().cuid('categoryId không hợp lệ'),
-	amount: z
-		.number({ message: 'amount phải là số' })
-		.positive('Số tiền phải lớn hơn 0'),
+	amount: z.number({ message: 'amount phải là số' }).positive('Số tiền phải lớn hơn 0'),
 	title: z
 		.string()
 		.min(2, 'Tiêu đề phải có ít nhất 2 ký tự')
@@ -66,7 +60,6 @@ export const createExpenseRequestSchema = {
 	},
 };
 
-
 export class UpdateExpenseDto {
 	categoryId?: string;
 	amount?: number;
@@ -82,11 +75,13 @@ export const updateExpenseBodyObjectSchema = z.object({
 	amount: z.number().positive('Số tiền phải lớn hơn 0').optional(),
 	title: z.string().min(2).max(255).optional(),
 	note: z.string().max(1000).optional(),
-	date: z.string().datetime({ message: 'Định dạng ngày không hợp lệ (ISO 8601)' }).optional(),
+	date: z
+		.string()
+		.datetime({ message: 'Định dạng ngày không hợp lệ (ISO 8601)' })
+		.optional(),
 	imageUrl: z.string().url().optional(),
 	imagePublicId: z.string().optional(),
 });
-
 
 export const updateExpenseBodySchema = updateExpenseBodyObjectSchema.refine(
 	(data) => Object.values(data).some((v) => v !== undefined),
@@ -108,7 +103,6 @@ export const updateExpenseRequestSchema = {
 		},
 	},
 };
-
 
 export const deleteExpenseValidationSchema: ZodValidationSchema = {
 	params: expenseIdParamsSchema,

@@ -5,4 +5,3 @@ export * from './setCookie.middleware';
 export * from './validationRequest.middleware';
 export * from './upload.middleware';
 export * from './role.middleware';
-export * from './adminAuth.middleware';

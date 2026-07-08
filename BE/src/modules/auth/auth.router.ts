@@ -158,5 +158,4 @@ authRegistry.registerPath({
 });
 router.post('/logout', authMiddleware.verifyAccessToken, authController.logout);
 
-
 export const authRouter = router;

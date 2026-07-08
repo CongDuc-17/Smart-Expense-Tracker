@@ -1,9 +1,10 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import Groq from 'groq-sdk';
-import { PrismaService } from '@/modules/database';
 import { ImageProcessingStatusEnum } from '@prisma/client';
-import { OptionalException } from '@/common';
 import axios from 'axios';
+import Groq from 'groq-sdk';
+
+import { OptionalException } from '@/common';
+import { PrismaService } from '@/modules/database';
 
 interface GeminiClassifyResponse {
 	suggestedTitle?: string;
@@ -68,7 +69,8 @@ export class ImageClassificationService {
 	private async analyzeImageBase(imageUrl: string) {
 		const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
 		const imageBuffer = Buffer.from(imageResponse.data, 'binary');
-		const mimeType = (imageResponse.headers['content-type'] as string) || 'image/jpeg';
+		const mimeType =
+			(imageResponse.headers['content-type'] as string) || 'image/jpeg';
 
 		const rawResponse = await this.callAIClassify(imageBuffer, mimeType);
 		const parsed = this.parseResponse(rawResponse);
@@ -102,12 +104,15 @@ Return ONLY valid JSON.`;
 				model: this.geminiModel,
 				generationConfig: { responseMimeType: 'application/json' },
 			});
-			const imageParts = [{ inlineData: { data: imageBuffer.toString('base64'), mimeType } }];
+			const imageParts = [
+				{ inlineData: { data: imageBuffer.toString('base64'), mimeType } },
+			];
 			const result = await model.generateContent([prompt, ...imageParts]);
 			return (await result.response).text();
-
 		} catch (geminiError: any) {
-			console.warn('⚠️ [Vision Fallback] Gemini thất bại, chuyển sang Groq Vision...');
+			console.warn(
+				'⚠️ [Vision Fallback] Gemini thất bại, chuyển sang Groq Vision...',
+			);
 
 			// LUỒNG 2: GROQ VISION
 			const base64Image = imageBuffer.toString('base64');
@@ -115,23 +120,22 @@ Return ONLY valid JSON.`;
 
 			const response = await this.groq.chat.completions.create({
 				model: this.groqVisionModel,
-				response_format: { type: "json_object" }, // Ép trả về JSON
+				response_format: { type: 'json_object' }, // Ép trả về JSON
 				messages: [
 					{
 						role: 'user',
 						content: [
 							{ type: 'text', text: prompt },
-							{ type: 'image_url', image_url: { url: dataUrl } }
-						]
-					}
-				]
+							{ type: 'image_url', image_url: { url: dataUrl } },
+						],
+					},
+				],
 			});
 			return response.choices[0]?.message?.content || '{}';
 		}
 	}
 
 	private parseResponse(rawText: string): GeminiClassifyResponse {
-
 		try {
 			const json = JSON.parse(rawText);
 			return {
@@ -150,11 +154,18 @@ Return ONLY valid JSON.`;
 			where: { type: 'EXPENSE' },
 		});
 
-		const normalize = (str: string) => str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+		const normalize = (str: string) =>
+			str
+				.toLowerCase()
+				.normalize('NFD')
+				.replace(/[\u0300-\u036f]/g, '');
 		const suggested = normalize(suggestedName);
 
 		for (const category of categories) {
-			if (normalize(category.name).includes(suggested) || suggested.includes(normalize(category.name))) {
+			if (
+				normalize(category.name).includes(suggested) ||
+				suggested.includes(normalize(category.name))
+			) {
 				return category.id;
 			}
 		}

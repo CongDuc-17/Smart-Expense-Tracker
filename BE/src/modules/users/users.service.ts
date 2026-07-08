@@ -1,4 +1,4 @@
-import { Prisma, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { Exception } from '@tsed/exceptions';
 import { genSalt, hash } from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
@@ -31,7 +31,7 @@ export class UsersService {
 		private readonly authRepository: AuthRepository = new AuthRepository(),
 		private readonly usersRepository: UsersRepository = new UsersRepository(),
 		private readonly uploadService: UploadService = new UploadService(),
-	) { }
+	) {}
 
 	async getUsers(
 		getUsersRequest: GetUsersRequestDto,
@@ -111,10 +111,10 @@ export class UsersService {
 			) as Prisma.UserUpdateManyMutationInput;
 			if (Object.keys(updateUserData).length === 0) {
 				if (uploadedImage && uploadedImage.public_id) {
-					await this.uploadService.deleteImage(
-						uploadedImage.public_id,
+					await this.uploadService.deleteImage(uploadedImage.public_id);
+					console.log(
+						'Đã xóa ảnh đã upload do không có trường nào được cập nhật',
 					);
-					console.log('Đã xóa ảnh đã upload do không có trường nào được cập nhật');
 				}
 				console.log('Không có trường nào được cập nhật');
 				return new OptionalException(
@@ -129,7 +129,9 @@ export class UsersService {
 			});
 			if (file && myInformationDto.avatarPublicId) {
 				await this.uploadService.deleteImage(myInformationDto.avatarPublicId);
-				console.log(`Đã xóa thành công ảnh cũ có public_id: ${myInformationDto.avatarPublicId}`);
+				console.log(
+					`Đã xóa thành công ảnh cũ có public_id: ${myInformationDto.avatarPublicId}`,
+				);
 			}
 			return {
 				success: true,

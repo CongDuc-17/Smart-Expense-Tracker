@@ -5,7 +5,7 @@ import { PrismaService } from '../database';
 import { User } from '@/models';
 
 export class UsersRepository {
-	constructor(private readonly prismaService = new PrismaService()) { }
+	constructor(private readonly prismaService = new PrismaService()) {}
 
 	async findUsers({
 		name,

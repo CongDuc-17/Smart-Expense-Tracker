@@ -12,7 +12,7 @@ export const errorHandlerMiddleware = (
 	if (err instanceof Exception) {
 		return new HttpResponseDto().exception(err);
 	}
-	
+
 	// Handle unexpected errors (not TSed Exceptions)
 	console.error('Unhandled Exception:', err);
 	res.status(500).json({

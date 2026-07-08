@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import { UserStatusEnum, RoleEnum } from '@prisma/client';
+import { z } from 'zod';
 
 export const adminGetUsersSchema = {
 	query: z.object({

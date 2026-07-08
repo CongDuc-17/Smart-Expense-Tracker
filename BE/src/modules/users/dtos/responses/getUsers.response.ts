@@ -1,7 +1,7 @@
 import { UserStatusEnum } from '@prisma/client';
 import z from 'zod';
 
-import { users } from '@/models';
+import { User } from '@/models';
 
 export class GetUsersResponseDto {
 	id: string;
@@ -12,7 +12,7 @@ export class GetUsersResponseDto {
 	deletedAt: Date | null | undefined;
 	status: UserStatusEnum;
 
-	constructor(userInformation: users) {
+	constructor(userInformation: User) {
 		this.id = userInformation.id;
 		this.email = userInformation.email;
 		this.name = userInformation.name;

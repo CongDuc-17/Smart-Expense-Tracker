@@ -2,12 +2,11 @@ import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 
+import { exportReportValidationSchema } from './dtos';
+import { ReportController } from './reports.controller';
+
 import { autoBindUtil, validateRequestMiddleware } from '@/common';
 import authMiddleware from '@/common/middlewares/auth.middleware';
-import { createApiResponse } from '@/swagger/openAPIResponseBuilders';
-
-import { ReportController } from './reports.controller';
-import { exportReportValidationSchema } from './dtos';
 
 export const reportsRegistry = new OpenAPIRegistry();
 
@@ -52,7 +51,7 @@ router.get(
 	authMiddleware.verifyAccessToken,
 	exportRateLimiter,
 	validateRequestMiddleware(exportReportValidationSchema),
-	reportController.exportReport
+	reportController.exportReport,
 );
 
 export const reportsRouter = router;

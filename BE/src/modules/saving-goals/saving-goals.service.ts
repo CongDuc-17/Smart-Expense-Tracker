@@ -1,8 +1,5 @@
 import { Exception } from '@tsed/exceptions';
 
-import { HttpResponseBodySuccessDto, NotFoundException } from '@/common';
-import { AppEvents, eventBus, GoalReachedEventPayload } from '@/common/events';
-
 import {
 	CreateSavingGoalDto,
 	DepositSavingGoalDto,
@@ -11,6 +8,9 @@ import {
 	UpdateSavingGoalDto,
 } from './dtos';
 import { SavingGoalsRepository } from './saving-goals.repository';
+
+import { HttpResponseBodySuccessDto, NotFoundException } from '@/common';
+import { AppEvents, eventBus, GoalReachedEventPayload } from '@/common/events';
 
 export class SavingGoalsService {
 	constructor(private readonly savingGoalsRepository = new SavingGoalsRepository()) {}
@@ -99,7 +99,9 @@ export class SavingGoalsService {
 			id,
 			data: {
 				...(data.title !== undefined && { title: data.title }),
-				...(data.targetAmount !== undefined && { targetAmount: data.targetAmount }),
+				...(data.targetAmount !== undefined && {
+					targetAmount: data.targetAmount,
+				}),
 				...(data.deadline !== undefined && { deadline: data.deadline }),
 				...(data.note !== undefined && { note: data.note }),
 				isCompleted,

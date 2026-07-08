@@ -13,10 +13,9 @@ import NotFoundPage from "./pages/not-found/NotFoundPage";
 import { AdminLayout } from "./components/admin/AdminLayout";
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import { AdminUsers } from "./pages/admin/AdminUsers";
-import { AdminLogin } from "./pages/admin/AdminLogin";
-import { AppLayout } from "./components/AppLayout";
 import { VerifyEmail } from "./pages/auth/VerifyEmail";
 import { ForgotPassword } from "./pages/auth/ForgotPassword";
+import { AppLayout } from "./components/AppLayout";
 import { ThemeProvider } from "@/components/theme-provider"
 function App() {
   return (
@@ -28,7 +27,6 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/verify" element={<VerifyEmail />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
 
         {/* ── Authenticated routes (with AppLayout sidebar) ─ */}
         <Route element={<AppLayout />}>

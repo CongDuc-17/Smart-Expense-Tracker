@@ -1,14 +1,18 @@
-import { z } from 'zod';
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import multer from 'multer';
+import { z } from 'zod';
+
+import { AiController } from './ai.controller';
+import {
+	verifyOcrSchema,
+	aiInsightsQuerySchema,
+	previewClassificationSchema,
+} from './dtos';
 
 import { autoBindUtil, validateRequestMiddleware } from '@/common';
 import authMiddleware from '@/common/middlewares/auth.middleware';
-
-import { AiController } from './ai.controller';
-import { verifyOcrSchema, aiInsightsQuerySchema, previewClassificationSchema } from './dtos';
 
 export const aiRegistry = new OpenAPIRegistry();
 
@@ -42,8 +46,16 @@ aiRegistry.registerPath({
 					schema: {
 						type: 'object',
 						properties: {
-							file: { type: 'string', format: 'binary', description: 'Ảnh hóa đơn' },
-							expenseId: { type: 'string', description: 'ID của Giao dịch cần gắn hóa đơn (tùy chọn)' },
+							file: {
+								type: 'string',
+								format: 'binary',
+								description: 'Ảnh hóa đơn',
+							},
+							expenseId: {
+								type: 'string',
+								description:
+									'ID của Giao dịch cần gắn hóa đơn (tùy chọn)',
+							},
 						},
 						required: ['file'],
 					},
@@ -61,7 +73,7 @@ router.post(
 	authMiddleware.verifyAccessToken,
 	aiRateLimiter,
 	upload.single('file'),
-	aiController.scanReceipt
+	aiController.scanReceipt,
 );
 
 // ─── GET /ai/ocr-result/:ocrResultId ──────────────────────────────────────────
@@ -84,7 +96,7 @@ aiRegistry.registerPath({
 router.get(
 	'/ocr-result/:ocrResultId',
 	authMiddleware.verifyAccessToken,
-	aiController.getOcrResult
+	aiController.getOcrResult,
 );
 
 // ─── PATCH /ai/ocr-result/:id/verify ──────────────────────────────────────
@@ -115,7 +127,7 @@ router.patch(
 	'/ocr-result/:id/verify',
 	authMiddleware.verifyAccessToken,
 	validateRequestMiddleware(verifyOcrSchema),
-	aiController.verifyOcr
+	aiController.verifyOcr,
 );
 
 // ─── GET /ai/image-analysis/:expenseId ──────────────────────────────────────
@@ -138,7 +150,7 @@ aiRegistry.registerPath({
 router.get(
 	'/image-analysis/:expenseId',
 	authMiddleware.verifyAccessToken,
-	aiController.getImageAnalysis
+	aiController.getImageAnalysis,
 );
 
 // ─── POST /ai/preview-classification ────────────────────────────────────────────
@@ -167,7 +179,7 @@ router.post(
 	authMiddleware.verifyAccessToken,
 	aiRateLimiter,
 	validateRequestMiddleware(previewClassificationSchema),
-	aiController.previewClassification
+	aiController.previewClassification,
 );
 
 // ─── GET /ai/insights ──────────────────────────────────────────────────────
@@ -189,7 +201,7 @@ router.get(
 	'/insights',
 	authMiddleware.verifyAccessToken,
 	validateRequestMiddleware(aiInsightsQuerySchema),
-	aiController.getInsights
+	aiController.getInsights,
 );
 
 // ─── POST /ai/insights/generate ────────────────────────────────────────────
@@ -212,7 +224,7 @@ router.post(
 	authMiddleware.verifyAccessToken,
 	aiRateLimiter,
 	validateRequestMiddleware(aiInsightsQuerySchema),
-	aiController.generateInsights
+	aiController.generateInsights,
 );
 
 export const aiRouter = router;

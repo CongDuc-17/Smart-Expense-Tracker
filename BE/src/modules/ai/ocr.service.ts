@@ -1,8 +1,9 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import Groq from 'groq-sdk';
-import { PrismaService } from '@/modules/database';
 import { ImageProcessingStatusEnum } from '@prisma/client';
+import Groq from 'groq-sdk';
+
 import { OptionalException } from '@/common';
+import { PrismaService } from '@/modules/database';
 
 interface ParsedOcrData {
 	merchantName: string | null;
@@ -26,7 +27,12 @@ export class OcrService {
 		this.groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '' });
 	}
 
-	async scanReceipt(userId: string, imageBuffer: Buffer, mimeType: string, expenseId?: string): Promise<string> {
+	async scanReceipt(
+		userId: string,
+		imageBuffer: Buffer,
+		mimeType: string,
+		expenseId?: string,
+	): Promise<string> {
 		// ... (Giữ nguyên code cũ của bạn)
 		let ocrResultId: string;
 
@@ -38,13 +44,20 @@ export class OcrService {
 
 			const ocrResult = await this.prisma.ocrResult.upsert({
 				where: { expenseId },
-				create: { expenseId, extractedText: '', status: ImageProcessingStatusEnum.PENDING },
+				create: {
+					expenseId,
+					extractedText: '',
+					status: ImageProcessingStatusEnum.PENDING,
+				},
 				update: { status: ImageProcessingStatusEnum.PENDING, extractedText: '' },
 			});
 			ocrResultId = ocrResult.id;
 		} else {
 			const ocrResult = await this.prisma.ocrResult.create({
-				data: { extractedText: '', status: ImageProcessingStatusEnum.PENDING } as any,
+				data: {
+					extractedText: '',
+					status: ImageProcessingStatusEnum.PENDING,
+				} as any,
 			});
 			ocrResultId = ocrResult.id;
 		}
@@ -56,7 +69,11 @@ export class OcrService {
 		return ocrResultId;
 	}
 
-	private async processOcrBackground(ocrResultId: string, imageBuffer: Buffer, mimeType: string) {
+	private async processOcrBackground(
+		ocrResultId: string,
+		imageBuffer: Buffer,
+		mimeType: string,
+	) {
 		try {
 			await this.prisma.ocrResult.update({
 				where: { id: ocrResultId },
@@ -65,7 +82,9 @@ export class OcrService {
 
 			const rawResponse = await this.callAIOcr(imageBuffer, mimeType);
 			const parsed = this.parseResponse(rawResponse);
-			const categoryId = await this.mapCategoryFromAI(parsed.suggestedCategoryName || '');
+			const categoryId = await this.mapCategoryFromAI(
+				parsed.suggestedCategoryName || '',
+			);
 
 			await this.prisma.ocrResult.update({
 				where: { id: ocrResultId },
@@ -74,7 +93,9 @@ export class OcrService {
 					merchantName: parsed.merchantName,
 					categoryId: categoryId,
 					totalAmount: parsed.totalAmount,
-					transactionDate: parsed.transactionDate ? new Date(parsed.transactionDate) : null,
+					transactionDate: parsed.transactionDate
+						? new Date(parsed.transactionDate)
+						: null,
 					extractedText: parsed.extractedText,
 					confidenceScore: parsed.confidence,
 					rawResponse: JSON.parse(rawResponse),
@@ -112,10 +133,11 @@ Return ONLY valid JSON. If data cannot be extracted, set field to null.`;
 				model: this.geminiModel,
 				generationConfig: { responseMimeType: 'application/json' },
 			});
-			const imageParts = [{ inlineData: { data: imageBuffer.toString('base64'), mimeType } }];
+			const imageParts = [
+				{ inlineData: { data: imageBuffer.toString('base64'), mimeType } },
+			];
 			const result = await model.generateContent([prompt, ...imageParts]);
 			return (await result.response).text();
-
 		} catch (geminiError: any) {
 			console.warn('⚠️ [OCR Fallback] Gemini thất bại, chuyển sang Groq Vision...');
 
@@ -125,16 +147,16 @@ Return ONLY valid JSON. If data cannot be extracted, set field to null.`;
 
 			const response = await this.groq.chat.completions.create({
 				model: this.groqVisionModel,
-				response_format: { type: "json_object" },
+				response_format: { type: 'json_object' },
 				messages: [
 					{
 						role: 'user',
 						content: [
 							{ type: 'text', text: prompt },
-							{ type: 'image_url', image_url: { url: dataUrl } }
-						]
-					}
-				]
+							{ type: 'image_url', image_url: { url: dataUrl } },
+						],
+					},
+				],
 			});
 			return response.choices[0]?.message?.content || '{}';
 		}
@@ -167,8 +189,12 @@ Return ONLY valid JSON. If data cannot be extracted, set field to null.`;
 			};
 		} catch (error) {
 			return {
-				merchantName: null, suggestedCategoryName: null, totalAmount: null, transactionDate: null,
-				extractedText: rawText, confidence: 0,
+				merchantName: null,
+				suggestedCategoryName: null,
+				totalAmount: null,
+				transactionDate: null,
+				extractedText: rawText,
+				confidence: 0,
 			};
 		}
 	}
@@ -178,11 +204,18 @@ Return ONLY valid JSON. If data cannot be extracted, set field to null.`;
 		const categories = await this.prisma.category.findMany({
 			where: { type: 'EXPENSE' },
 		});
-		const normalize = (str: string) => str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+		const normalize = (str: string) =>
+			str
+				.toLowerCase()
+				.normalize('NFD')
+				.replace(/[\u0300-\u036f]/g, '');
 		const suggested = normalize(suggestedName);
 
 		for (const category of categories) {
-			if (normalize(category.name).includes(suggested) || suggested.includes(normalize(category.name))) {
+			if (
+				normalize(category.name).includes(suggested) ||
+				suggested.includes(normalize(category.name))
+			) {
 				return category.id;
 			}
 		}
@@ -197,7 +230,11 @@ Return ONLY valid JSON. If data cannot be extracted, set field to null.`;
 		if (!ocrResult) throw new OptionalException(404, 'OcrResult không tồn tại');
 
 		// Kiểm tra quyền nếu OcrResult đã được gán cho một Expense
-		if (ocrResult.expenseId && ocrResult.expense && ocrResult.expense.userId !== userId) {
+		if (
+			ocrResult.expenseId &&
+			ocrResult.expense &&
+			ocrResult.expense.userId !== userId
+		) {
 			throw new OptionalException(403, 'Bạn không có quyền truy cập OcrResult này');
 		}
 
@@ -205,8 +242,14 @@ Return ONLY valid JSON. If data cannot be extracted, set field to null.`;
 	}
 
 	async verifyOcr(
-		userId: string, ocrResultId: string,
-		data: { merchantName?: string; totalAmount?: number; transactionDate?: string; applyToExpenseId?: string; }
+		userId: string,
+		ocrResultId: string,
+		data: {
+			merchantName?: string;
+			totalAmount?: number;
+			transactionDate?: string;
+			applyToExpenseId?: string;
+		},
 	) {
 		const ocrResult = await this.prisma.ocrResult.findUnique({
 			where: { id: ocrResultId },
@@ -228,7 +271,9 @@ Return ONLY valid JSON. If data cannot be extracted, set field to null.`;
 			data: {
 				...(data.merchantName !== undefined && { title: data.merchantName }),
 				...(data.totalAmount !== undefined && { amount: data.totalAmount }),
-				...(data.transactionDate !== undefined && { date: new Date(data.transactionDate) }),
+				...(data.transactionDate !== undefined && {
+					date: new Date(data.transactionDate),
+				}),
 			},
 		});
 
@@ -236,9 +281,13 @@ Return ONLY valid JSON. If data cannot be extracted, set field to null.`;
 			where: { id: ocrResultId },
 			data: {
 				isVerified: true,
-				...(data.merchantName !== undefined && { merchantName: data.merchantName }),
+				...(data.merchantName !== undefined && {
+					merchantName: data.merchantName,
+				}),
 				...(data.totalAmount !== undefined && { totalAmount: data.totalAmount }),
-				...(data.transactionDate !== undefined && { transactionDate: new Date(data.transactionDate) }),
+				...(data.transactionDate !== undefined && {
+					transactionDate: new Date(data.transactionDate),
+				}),
 			},
 		});
 

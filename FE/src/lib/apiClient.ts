@@ -21,7 +21,8 @@ axiosClient.interceptors.request.use((config) => {
       config.headers["Authorization"] = `Bearer ${adminToken}`;
     }
   } else {
-    const accessToken = cookieStore.get("accessToken");
+    const match = document.cookie.match(new RegExp('(^| )accessToken=([^;]+)'));
+    const accessToken = match ? match[2] : null;
     if (accessToken) {
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
@@ -99,8 +100,6 @@ axiosClient.interceptors.response.use(
         );
 
         const { accessToken } = res.data;
-
-        cookieStore.set("accessToken", accessToken);
 
         processQueue(null, accessToken);
 

@@ -1,5 +1,6 @@
 import { Exception } from '@tsed/exceptions';
 import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 import {
 	GetUserByUserIdRequestDto,
@@ -13,7 +14,6 @@ import {
 import { UsersService } from './users.service';
 
 import { HttpResponseDto, PaginationDto } from '@/common';
-import { StatusCodes } from 'http-status-codes';
 
 export class UsersController {
 	constructor(private readonly usersService: UsersService = new UsersService()) {}

@@ -2,15 +2,14 @@ import { TransactionTypeEnum } from '@prisma/client';
 import { Exception } from '@tsed/exceptions';
 import { Request } from 'express';
 
-import { HttpResponseDto } from '@/common';
-import { UserInformationDto } from '@/modules/users/dtos';
-
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dtos';
 
-export class CategoriesController {
-	constructor(private readonly categoriesService = new CategoriesService()) { }
+import { HttpResponseDto } from '@/common';
+import { UserInformationDto } from '@/modules/users/dtos';
 
+export class CategoriesController {
+	constructor(private readonly categoriesService = new CategoriesService()) {}
 
 	async getCategories(req: Request) {
 		const { id: userId } = req.user as UserInformationDto;
@@ -23,7 +22,6 @@ export class CategoriesController {
 		return new HttpResponseDto().success(result);
 	}
 
-
 	async getCategoryById(req: Request) {
 		const { id: userId } = req.user as UserInformationDto;
 		const categoryId = req.params.id as string;
@@ -34,7 +32,6 @@ export class CategoriesController {
 		}
 		return new HttpResponseDto().success(result);
 	}
-
 
 	async createCategory(req: Request) {
 		const { id: userId } = req.user as UserInformationDto;
@@ -47,7 +44,6 @@ export class CategoriesController {
 		return new HttpResponseDto().created(result);
 	}
 
-
 	async updateCategory(req: Request) {
 		const { id: userId } = req.user as UserInformationDto;
 		const categoryId = req.params.id as string;
@@ -59,7 +55,6 @@ export class CategoriesController {
 		}
 		return new HttpResponseDto().success(result);
 	}
-
 
 	async deleteCategory(req: Request) {
 		const { id: userId } = req.user as UserInformationDto;

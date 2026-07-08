@@ -10,11 +10,17 @@ import {
 } from "@/components/ui/tooltip";
 
 export function AdminLayout() {
+  const searchParams = new URLSearchParams(window.location.search);
+  if (searchParams.get('oauth_admin') === 'true') {
+    localStorage.setItem("adminToken", "true");
+  }
+
   const adminToken = localStorage.getItem("adminToken");
 
   if (!adminToken) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/login" replace />;
   }
+
 
   return (
     <TooltipProvider delayDuration={300}>

@@ -1,7 +1,8 @@
-import { SocketService } from '@/common';
-import { AppEvents, eventBus, GoalReachedEventPayload } from '@/common/events';
 import { CreateNotificationInternalDTO } from './dtos';
 import { NotificationsRepository } from './notifications.repository';
+
+import { SocketService } from '@/common';
+import { AppEvents, eventBus, GoalReachedEventPayload } from '@/common/events';
 
 export class NotificationsService {
 	constructor(private readonly notificationsRepo = new NotificationsRepository()) {
@@ -18,7 +19,10 @@ export class NotificationsService {
 				metadata: { goalId: payload.goalId },
 			});
 		} catch (error) {
-			console.error('Error handling GOAL_REACHED event in NotificationsService:', error);
+			console.error(
+				'Error handling GOAL_REACHED event in NotificationsService:',
+				error,
+			);
 		}
 	}
 
@@ -37,7 +41,11 @@ export class NotificationsService {
 
 		// Emit realtime event to the user's private room
 		try {
-			SocketService.getInstance().emitToUser(dto.userId, 'NEW_NOTIFICATION', notification);
+			SocketService.getInstance().emitToUser(
+				dto.userId,
+				'NEW_NOTIFICATION',
+				notification,
+			);
 		} catch (error) {
 			console.error(`Failed to emit socket event for NEW_NOTIFICATION:`, error);
 		}
@@ -45,14 +53,15 @@ export class NotificationsService {
 		return notification;
 	}
 
-	async findAll(userId: string, isRead?: boolean, page: number = 1, limit: number = 20) {
+	async findAll(
+		userId: string,
+		isRead?: boolean,
+		page: number = 1,
+		limit: number = 20,
+	) {
 		const skip = (page - 1) * limit;
-		const { notifications, total, unreadCount } = await this.notificationsRepo.findAll(
-			userId,
-			isRead,
-			skip,
-			limit,
-		);
+		const { notifications, total, unreadCount } =
+			await this.notificationsRepo.findAll(userId, isRead, skip, limit);
 
 		return {
 			data: notifications,
