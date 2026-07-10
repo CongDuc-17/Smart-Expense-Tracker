@@ -1,3 +1,4 @@
+import { Exception } from '@tsed/exceptions';
 import { UserStatusEnum } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import passport from 'passport';
@@ -42,7 +43,7 @@ export class GoogleOauthStrategy {
 			const user = {
 				googleId: profile.id,
 				email: profile.emails?.[0]?.value || '',
-				name: profile.displayName,
+				name: profile.displayName || (profile.name ? `${profile.name.givenName || ''} ${profile.name.familyName || ''}`.trim() : '') || profile.emails?.[0]?.value?.split('@')[0] || 'Google User',
 				avatar: profile.photos?.[0]?.value,
 				verified: profile.emails?.[0]?.verified || false,
 			};
@@ -100,7 +101,11 @@ export class GoogleOauthStrategy {
 			done(null, {
 				socialAccountInformation: socialAccount,
 			});
-		} catch {
+		} catch (error) {
+			console.error("Google OAuth validate error:", error);
+			if (error instanceof Exception) {
+				throw error;
+			}
 			throw new InternalServerException();
 		}
 	}

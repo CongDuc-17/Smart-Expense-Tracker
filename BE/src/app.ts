@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import 'dotenv/config';
 
 import cors from 'cors';
 import express, { Express } from 'express';
@@ -8,8 +9,8 @@ import passport from 'passport';
 import http from 'http';
 
 import { openAPIRouter } from './swagger';
-import { Modules } from './modules';
 import { appEnv } from './configs';
+import { Modules } from './modules';
 import {
 	errorHandlerMiddleware,
 	requestContextMiddleware,

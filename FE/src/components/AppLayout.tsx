@@ -21,8 +21,11 @@ import {
 import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
+import { useCurrentUser } from "@/features/users/hooks/useUser";
 
 export function AppLayout() {
+  useCurrentUser();
+
   return (
     <TooltipProvider delayDuration={300}>
       <SidebarProvider

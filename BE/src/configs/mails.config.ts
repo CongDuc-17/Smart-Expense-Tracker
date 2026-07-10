@@ -1,8 +1,8 @@
 import * as nodemailer from 'nodemailer';
 
 export const MailConfig = {
-	smtpLogin: String(process.env.BREVO_SMTP_LOGIN),
-	smtpKey: String(process.env.BREVO_SMTP_KEY),
+	smtpLogin: String(process.env.EMAIL_USER),
+	smtpKey: String(process.env.EMAIL_PASS),
 
 	senderAddress: String(process.env.MAIL_SENDER_ADDRESS) || 'no-reply@localhost.com',
 
@@ -10,8 +10,8 @@ export const MailConfig = {
 };
 
 export const TransporterConfig = nodemailer.createTransport({
-	host: 'smtp-relay.brevo.com',
-	port: 587,
+	host: String(process.env.MAIL_HOST),
+	port: Number(process.env.MAIL_PORT),
 	secure: false,
 	auth: {
 		user: MailConfig.smtpLogin,

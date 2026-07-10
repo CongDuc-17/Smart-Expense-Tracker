@@ -21,17 +21,32 @@ export const validateRequestMiddleware = (schema: ZodValidationSchema) => {
 				const zodSchema: ZodSchema | ZodSchema[] | undefined =
 					schema[key as keyof ZodValidationSchema];
 				if (zodSchema && !Array.isArray(zodSchema)) {
-					zodSchema.parse(req[key as keyof Request]);
+					const parsed = zodSchema.parse(req[key as keyof Request]);
+					Object.defineProperty(req, key, {
+						value: parsed,
+						configurable: true,
+						writable: true,
+						enumerable: true
+					});
 				} else {
-					(zodSchema as ZodSchema[]).forEach((zodSchema) => {
-						zodSchema.parse(req[key as keyof Request]);
+					(zodSchema as ZodSchema[]).forEach((schema) => {
+						const parsed = schema.parse(req[key as keyof Request]);
+						Object.defineProperty(req, key, {
+							value: parsed,
+							configurable: true,
+							writable: true,
+							enumerable: true
+						});
 					});
 				}
 			}
 
 			next();
 		} catch (err) {
-			const errorMessage = `${(err as ZodError).issues.map((e) => `${e.path.join(', ')} ${e.message}`).join('; ')}`;
+			console.error("VALIDATION ERROR CAUGHT:", err);
+			const errorMessage = err instanceof ZodError 
+				? `${err.issues.map((e) => `${e.path.join(', ')} ${e.message}`).join('; ')}`
+				: (err as any).message || 'Validation error';
 			throw new OptionalException(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage);
 		}
 	};

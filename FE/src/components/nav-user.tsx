@@ -31,6 +31,7 @@ import {
 import { apiClient } from "@/lib/apiClient";
 import { toast } from "sonner";
 import { ModeToggle } from "./mode-toggle";
+import { useUserStore } from "@/features/users/stores/user.store";
 
 // ---------------------------------------------------------------
 // Helpers
@@ -67,6 +68,8 @@ export function NavUser({
     } catch {
       // Vẫn logout phía FE dù API lỗi
     } finally {
+      localStorage.removeItem("adminToken");
+      useUserStore.getState().clearUser();
       toast.success("Đã đăng xuất");
       navigate("/login", { replace: true });
     }

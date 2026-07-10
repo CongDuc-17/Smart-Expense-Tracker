@@ -24,6 +24,7 @@ export class MailsService {
 			await TransporterConfig.sendMail(payload);
 			return { success: true };
 		} catch (error) {
+			console.error("sendEmail error:", error);
 			return null;
 		}
 	}
