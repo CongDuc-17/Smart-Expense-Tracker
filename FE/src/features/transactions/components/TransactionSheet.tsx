@@ -6,7 +6,7 @@
 // Edit mode:   type disabled, các field còn lại editable
 // ============================================================
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -35,6 +35,7 @@ import {
   type EditTransactionFormValues,
 } from "@/features/transactions/schemas/transaction.schema";
 import type { TransactionType } from "@/features/transactions/types/transaction.types";
+import { useDraftStore } from "@/stores/draft.store";
 
 // ---------------------------------------------------------------
 // Helpers
@@ -140,6 +141,21 @@ function CreateTransactionSheet({
 }) {
   const { creatingType, createPrefillData } = useTransactionStore();
   const { mutate: createTransaction, isPending } = useCreateTransaction();
+  const saveDraft = useDraftStore((s) => s.saveDraft);
+  // const getDraft = useDraftStore((s) => s.getDraft);
+  const clearDraft = useDraftStore((s) => s.clearDraft);
+
+  // useMemo to keep defaultFormValues reference stable
+  const defaultFormValues = useMemo<CreateTransactionFormValues>(() => ({
+    type: "EXPENSE",
+    categoryId: "",
+    amount: 0,
+    title: "",
+    date: todayInputValue(),
+    note: "",
+    imageUrl: "",
+    imagePublicId: "",
+  }), []);
 
   const {
     register,
@@ -151,53 +167,59 @@ function CreateTransactionSheet({
     formState: { errors },
   } = useForm<CreateTransactionFormValues>({
     resolver: zodResolver(createTransactionSchema),
-    defaultValues: {
-      type: "EXPENSE",
-      categoryId: "",
-      amount: 0,
-      title: "",
-      date: todayInputValue(),
-      note: "",
-      imageUrl: "",
-      imagePublicId: "",
-    },
+    defaultValues: defaultFormValues,
   });
 
-  // Sync type khi creatingType thay đổi
+  // Load draft or prefill data when sheet opens
   useEffect(() => {
-    setValue("type", creatingType);
-    setValue("categoryId", ""); // reset category khi đổi type
-    setValue("imageUrl", "");
-    setValue("imagePublicId", "");
-  }, [creatingType, setValue]);
-
-  // Reset khi đóng
-  useEffect(() => {
-    if (!isOpen) {
-      reset({
-        type: "EXPENSE",
-        categoryId: "",
-        amount: 0,
-        title: "",
-        date: todayInputValue(),
-        note: "",
-        imageUrl: "",
-        imagePublicId: "",
-      });
-    } else if (createPrefillData) {
-      setValue("type", "EXPENSE");
-      setValue("categoryId", createPrefillData.categoryId || "");
-      setValue("imageUrl", createPrefillData.imageUrl || "");
-      setValue("imagePublicId", createPrefillData.imagePublicId || "");
-      
-      if (createPrefillData.amount !== undefined) setValue("amount", createPrefillData.amount);
-      if (createPrefillData.title) setValue("title", createPrefillData.title);
-      if (createPrefillData.date) setValue("date", createPrefillData.date);
-      if (createPrefillData.note) setValue("note", createPrefillData.note);
+    if (isOpen) {
+      if (createPrefillData) {
+        reset({
+          ...defaultFormValues,
+          type: "EXPENSE",
+          categoryId: createPrefillData.categoryId || "",
+          imageUrl: createPrefillData.imageUrl || "",
+          imagePublicId: createPrefillData.imagePublicId || "",
+          amount: createPrefillData.amount || 0,
+          title: createPrefillData.title || "",
+          date: createPrefillData.date || todayInputValue(),
+          note: createPrefillData.note || "",
+        });
+      } else {
+        // Do not use the reactive getDraft hook return, just get current state
+        const draft = useDraftStore.getState().getDraft<CreateTransactionFormValues>("transaction");
+        if (draft) {
+          reset(draft.formData);
+        } else {
+          reset(defaultFormValues);
+        }
+      }
     }
-  }, [isOpen, reset, createPrefillData, setValue]);
+  }, [isOpen, createPrefillData, reset, defaultFormValues]);
+
+  // Sync type khi creatingType thay đổi (chỉ khi không có draft)
+  useEffect(() => {
+    const draft = useDraftStore.getState().getDraft("transaction");
+    if (isOpen && !createPrefillData && !draft && creatingType) {
+      setValue("type", creatingType);
+      setValue("categoryId", ""); // reset category khi đổi type
+      setValue("imageUrl", "");
+      setValue("imagePublicId", "");
+    }
+  }, [creatingType, setValue, isOpen, createPrefillData]);
 
   const watchedValues = watch();
+  const watchedValuesString = JSON.stringify(watchedValues);
+  const defaultValuesString = JSON.stringify(defaultFormValues);
+
+  // Save draft on change
+  useEffect(() => {
+    if (!isOpen || createPrefillData) return; // Không lưu nháp nếu đang điền từ prefill
+
+    // Kiểm tra xem form có bị thay đổi so với default không
+    const isDirty = watchedValuesString !== defaultValuesString;
+    saveDraft("transaction", JSON.parse(watchedValuesString), isDirty);
+  }, [watchedValuesString, defaultValuesString, isOpen, createPrefillData, saveDraft]);
 
   const onSubmit = (data: CreateTransactionFormValues) => {
     createTransaction({
@@ -211,6 +233,11 @@ function CreateTransactionSheet({
         imageUrl: data.imageUrl || undefined,
         imagePublicId: data.imagePublicId || undefined,
       },
+    }, {
+      onSuccess: () => {
+        clearDraft("transaction");
+        reset(defaultFormValues);
+      }
     });
   };
 
@@ -602,7 +629,8 @@ export function TransactionSheet() {
   useEffect(() => {
     if (isCreateSheetOpen) {
       const { createPrefillData } = useTransactionStore.getState();
-      if (createPrefillData) {
+      const draft = useDraftStore.getState().getDraft("transaction");
+      if (createPrefillData || draft) {
         setManualSheetOpen(true);
         setMethodDialogOpen(false);
       } else {

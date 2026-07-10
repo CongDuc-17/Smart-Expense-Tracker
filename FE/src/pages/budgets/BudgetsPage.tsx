@@ -6,6 +6,7 @@
 // Ghép nối các component lại với nhau.
 // ============================================================
 
+import { useState } from "react";
 import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BudgetSummary } from "@/features/budgets/components/BudgetSummary";
@@ -16,6 +17,9 @@ import { DeleteBudgetDialog } from "@/features/budgets/components/DeleteBudgetDi
 import { useBudgets } from "@/features/budgets/hooks/useBudgets";
 import { useBudgetStore, selectBudgetFilters } from "@/features/budgets/stores/budget.store";
 import { useShallow } from "zustand/react/shallow";
+import { DraftBar } from "@/components/ui/draft/DraftBar";
+import { DraftPromptDialog } from "@/components/ui/draft/DraftPromptDialog";
+import { useDraftStore } from "@/stores/draft.store";
 
 // ---------------------------------------------------------------
 // MonthYearPicker riêng cho Budget
@@ -65,7 +69,18 @@ export default function BudgetsPage() {
   const { month, year } = useBudgetStore(useShallow(selectBudgetFilters));
   const openCreateSheet = useBudgetStore((s) => s.openCreateSheet);
 
+  const { hasDraft, clearDraft } = useDraftStore();
+  const [isDraftPromptOpen, setIsDraftPromptOpen] = useState(false);
+
   const { budgets, isLoading } = useBudgets({ month, year });
+
+  const handleCreateClick = () => {
+    if (hasDraft("budget")) {
+      setIsDraftPromptOpen(true);
+    } else {
+      openCreateSheet();
+    }
+  };
 
   return (
     <div className="flex-1 w-full max-w-5xl mx-auto px-6 py-8">
@@ -78,7 +93,7 @@ export default function BudgetsPage() {
         <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
           <BudgetMonthPicker />
           <Button
-            onClick={openCreateSheet}
+            onClick={handleCreateClick}
             className="bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 text-sm font-medium shadow-sm transition-all duration-200"
           >
             <Plus className="w-4 h-4 mr-2" />
@@ -86,6 +101,12 @@ export default function BudgetsPage() {
           </Button>
         </div>
       </div>
+
+      <DraftBar 
+        feature="budget" 
+        title="Ngân sách" 
+        onResume={() => openCreateSheet()} 
+      />
 
       {/* ── Summary ────────────────────────────────────── */}
       <BudgetSummary budgets={budgets} />
@@ -97,6 +118,20 @@ export default function BudgetsPage() {
       <CreateBudgetSheet />
       <EditBudgetSheet />
       <DeleteBudgetDialog />
+      <DraftPromptDialog
+        isOpen={isDraftPromptOpen}
+        onOpenChange={setIsDraftPromptOpen}
+        title="ngân sách"
+        onResume={() => {
+          setIsDraftPromptOpen(false);
+          openCreateSheet();
+        }}
+        onDiscard={() => {
+          setIsDraftPromptOpen(false);
+          clearDraft("budget");
+          openCreateSheet();
+        }}
+      />
     </div>
   );
 }
