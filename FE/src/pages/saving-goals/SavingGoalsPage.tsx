@@ -4,6 +4,7 @@
 // Route: /savings
 // ============================================================
 
+import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SavingGoalList } from "@/features/saving-goals/components/SavingGoalList";
@@ -17,6 +18,9 @@ import { DeleteSavingGoalDialog } from "@/features/saving-goals/components/Delet
 import { useSavingGoals } from "@/features/saving-goals/hooks/useSavingGoals";
 import { useSavingGoalStore } from "@/features/saving-goals/stores/saving-goal.store";
 import type { SavingGoal } from "@/features/saving-goals/types/saving-goal.types";
+import { DraftBar } from "@/components/ui/draft/DraftBar";
+import { DraftPromptDialog } from "@/components/ui/draft/DraftPromptDialog";
+import { useDraftStore } from "@/stores/draft.store";
 
 function ErrorBanner({ onRetry }: { onRetry: () => void }) {
   return (
@@ -42,12 +46,23 @@ export function SavingGoalsPage() {
     activeTab,
   });
 
+  const { hasDraft, clearDraft } = useDraftStore();
+  const [isDraftPromptOpen, setIsDraftPromptOpen] = useState(false);
+
   const isFiltered = activeTab !== "ALL";
   const isEmpty = !isLoading && savingGoals.length === 0;
 
   const handleEdit = (g: SavingGoal) => openEditSheet(g);
   const handleDeposit = (g: SavingGoal) => openDepositSheet(g);
   const handleDelete = (g: SavingGoal) => openDeleteDialog(g);
+
+  const handleCreateClick = () => {
+    if (hasDraft("savingGoal")) {
+      setIsDraftPromptOpen(true);
+    } else {
+      openCreateSheet();
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-full bg-background">
@@ -64,7 +79,7 @@ export function SavingGoalsPage() {
             </p>
           </div>
           <Button
-            onClick={() => openCreateSheet()}
+            onClick={handleCreateClick}
             size="sm"
             className="bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 active:scale-95 transition-colors duration-150 flex items-center gap-1.5 h-9"
           >
@@ -72,6 +87,12 @@ export function SavingGoalsPage() {
             Thêm mục tiêu
           </Button>
         </div>
+
+        <DraftBar 
+          feature="savingGoal" 
+          title="Mục tiêu tiết kiệm" 
+          onResume={() => openCreateSheet()} 
+        />
 
         {/* Summary */}
         {!isLoading && !isError && <SavingGoalSummary goals={savingGoals} />}
@@ -85,7 +106,7 @@ export function SavingGoalsPage() {
         ) : isEmpty ? (
           <SavingGoalEmptyState
             variant={isFiltered ? "filtered" : "empty"}
-            onCreateClick={!isFiltered ? () => openCreateSheet() : undefined}
+            onCreateClick={!isFiltered ? handleCreateClick : undefined}
           />
         ) : (
           <SavingGoalList
@@ -101,6 +122,20 @@ export function SavingGoalsPage() {
       <SavingGoalSheet />
       <DepositSheet />
       <DeleteSavingGoalDialog />
+      <DraftPromptDialog
+        isOpen={isDraftPromptOpen}
+        onOpenChange={setIsDraftPromptOpen}
+        title="mục tiêu tiết kiệm"
+        onResume={() => {
+          setIsDraftPromptOpen(false);
+          openCreateSheet();
+        }}
+        onDiscard={() => {
+          setIsDraftPromptOpen(false);
+          clearDraft("savingGoal");
+          openCreateSheet();
+        }}
+      />
     </div>
   );
 }

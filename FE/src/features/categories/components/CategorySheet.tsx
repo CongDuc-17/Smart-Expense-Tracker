@@ -11,7 +11,7 @@
 // Form: React Hook Form + Zod
 // ============================================================
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -44,6 +44,7 @@ import {
   DEFAULT_CATEGORY_ICON,
 } from "@/features/categories/constants/category-icons";
 import type { TransactionType } from "@/features/categories/types/category.types";
+import { useDraftStore } from "@/stores/draft.store";
 
 // ---------------------------------------------------------------
 // Sub-component: Form Field Row
@@ -82,6 +83,16 @@ function FieldRow({ label, htmlFor, error, children }: FieldRowProps) {
 function CreateCategorySheet({ isOpen }: { isOpen: boolean }) {
   const closeCreateSheet = useCategoryStore((s) => s.closeCreateSheet);
   const { mutate: createCategory, isPending } = useCreateCategory();
+  
+  const saveDraft = useDraftStore((s) => s.saveDraft);
+  const clearDraft = useDraftStore((s) => s.clearDraft);
+
+  const defaultFormValues = useMemo<CreateCategoryFormValues>(() => ({
+    name: "",
+    type: "EXPENSE",
+    icon: DEFAULT_CATEGORY_ICON,
+    color: DEFAULT_CATEGORY_COLOR,
+  }), []);
 
   const {
     register,
@@ -92,25 +103,39 @@ function CreateCategorySheet({ isOpen }: { isOpen: boolean }) {
     formState: { errors },
   } = useForm<CreateCategoryFormValues>({
     resolver: zodResolver(createCategorySchema),
-    defaultValues: {
-      name: "",
-      type: "EXPENSE",
-      icon: DEFAULT_CATEGORY_ICON,
-      color: DEFAULT_CATEGORY_COLOR,
-    },
+    defaultValues: defaultFormValues,
   });
 
-  // Reset form khi sheet đóng lại
+  // Load draft when sheet opens
   useEffect(() => {
-    if (!isOpen) {
-      reset();
+    if (isOpen) {
+      const draft = useDraftStore.getState().getDraft<CreateCategoryFormValues>("category");
+      if (draft) {
+        reset(draft.formData);
+      } else {
+        reset(defaultFormValues);
+      }
     }
-  }, [isOpen, reset]);
+  }, [isOpen, reset, defaultFormValues]);
 
   const watchedValues = watch();
+  const watchedValuesString = JSON.stringify(watchedValues);
+  const defaultValuesString = JSON.stringify(defaultFormValues);
+
+  // Save draft on change
+  useEffect(() => {
+    if (!isOpen) return;
+    const isDirty = watchedValuesString !== defaultValuesString;
+    saveDraft("category", JSON.parse(watchedValuesString), isDirty);
+  }, [watchedValuesString, defaultValuesString, isOpen, saveDraft]);
 
   const onSubmit = (data: CreateCategoryFormValues) => {
-    createCategory(data);
+    createCategory(data, {
+      onSuccess: () => {
+        clearDraft("category");
+        reset(defaultFormValues);
+      }
+    });
   };
 
   return (

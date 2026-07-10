@@ -22,6 +22,10 @@ import { TransactionSheet } from "@/features/transactions/components/Transaction
 import { DeleteTransactionDialog } from "@/features/transactions/components/DeleteTransactionDialog";
 import { AiResumeBanner } from "@/features/ai/components/AiResumeBanner";
 import { formatVND } from "@/features/transactions/components/AmountDisplay";
+import { DraftBar } from "@/components/ui/draft/DraftBar";
+import { DraftPromptDialog } from "@/components/ui/draft/DraftPromptDialog";
+import { useDraftStore } from "@/stores/draft.store";
+import { useState } from "react";
 import { useTransactions } from "@/features/transactions/hooks/useTransactions";
 import { useShallow } from "zustand/react/shallow";
 import {
@@ -126,6 +130,9 @@ export function TransactionsPage() {
   } = useTransactionStore();
 
   const filters = useTransactionStore(useShallow(selectTransactionFilters));
+  
+  const { hasDraft, clearDraft } = useDraftStore();
+  const [isDraftPromptOpen, setIsDraftPromptOpen] = useState(false);
 
   // ─── Server Data ─────────────────────────────────────────────
   const { transactions, isLoading, isError, refetch } = useTransactions({
@@ -150,6 +157,14 @@ export function TransactionsPage() {
   const handleEdit = (t: Transaction) => openEditSheet(t);
   const handleDelete = (t: Transaction) => openDeleteDialog(t);
 
+  const handleCreateClick = () => {
+    if (hasDraft("transaction")) {
+      setIsDraftPromptOpen(true);
+    } else {
+      openCreateSheet();
+    }
+  };
+
   // ─── Render ──────────────────────────────────────────────────
   return (
     <div className="flex flex-col min-h-full bg-background">
@@ -170,7 +185,7 @@ export function TransactionsPage() {
             </p>
           </div>
           <Button
-            onClick={() => openCreateSheet()}
+            onClick={handleCreateClick}
             size="sm"
             className="bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 active:scale-95 transition-colors duration-150 flex items-center gap-1.5 h-9"
           >
@@ -180,6 +195,11 @@ export function TransactionsPage() {
         </div>
 
         <AiResumeBanner />
+        <DraftBar 
+          feature="transaction" 
+          title="Giao dịch" 
+          onResume={() => openCreateSheet()} 
+        />
 
         {/* Summary */}
         {!isLoading && !isError && (
@@ -200,7 +220,7 @@ export function TransactionsPage() {
         ) : isEmpty ? (
           <TransactionEmptyState
             variant={isFiltered ? "filtered" : "empty"}
-            onCreateClick={!isFiltered ? () => openCreateSheet() : undefined}
+            onCreateClick={!isFiltered ? handleCreateClick : undefined}
           />
         ) : (
           <TransactionList
@@ -214,6 +234,20 @@ export function TransactionsPage() {
       {/* Overlays */}
       <TransactionSheet />
       <DeleteTransactionDialog />
+      <DraftPromptDialog
+        isOpen={isDraftPromptOpen}
+        onOpenChange={setIsDraftPromptOpen}
+        title="giao dịch"
+        onResume={() => {
+          setIsDraftPromptOpen(false);
+          openCreateSheet();
+        }}
+        onDiscard={() => {
+          setIsDraftPromptOpen(false);
+          clearDraft("transaction");
+          openCreateSheet();
+        }}
+      />
     </div>
   );
 }

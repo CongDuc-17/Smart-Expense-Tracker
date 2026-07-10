@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -20,6 +20,7 @@ import { useSavingGoalStore } from "@/features/saving-goals/stores/saving-goal.s
 import { useCreateSavingGoal } from "@/features/saving-goals/hooks/useCreateSavingGoal";
 import { useUpdateSavingGoal } from "@/features/saving-goals/hooks/useUpdateSavingGoal";
 import { createSavingGoalSchema, updateSavingGoalSchema, type CreateSavingGoalFormValues } from "@/features/saving-goals/schemas/saving-goal.schema";
+import { useDraftStore } from "@/stores/draft.store";
 
 function FieldRow({
   label,
@@ -63,15 +64,20 @@ export function SavingGoalSheet() {
 
   const isPending = isCreating || isUpdating;
 
+  const saveDraft = useDraftStore((s) => s.saveDraft);
+  const clearDraft = useDraftStore((s) => s.clearDraft);
+
+  const defaultFormValues = useMemo<CreateSavingGoalFormValues>(() => ({
+    title: "",
+    targetAmount: undefined as unknown as number,
+    deadline: undefined,
+    note: "",
+  }), []);
+
   const form = useForm<CreateSavingGoalFormValues>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(isEditing ? updateSavingGoalSchema : createSavingGoalSchema) as any,
-    defaultValues: {
-      title: "",
-      targetAmount: undefined,
-      deadline: undefined,
-      note: "",
-    },
+    defaultValues: defaultFormValues,
   });
 
   // Reset form when opening/closing or changing editingGoal
@@ -85,20 +91,30 @@ export function SavingGoalSheet() {
           note: editingGoal.note || "",
         });
       } else {
-        form.reset({
-          title: "",
-          targetAmount: undefined as unknown as number,
-          deadline: undefined,
-          note: "",
-        });
+        const draft = useDraftStore.getState().getDraft<CreateSavingGoalFormValues>("savingGoal");
+        if (draft) {
+          form.reset(draft.formData);
+        } else {
+          form.reset(defaultFormValues);
+        }
       }
     }
-  }, [isOpen, isEditing, editingGoal, form]);
+  }, [isOpen, isEditing, editingGoal, form, defaultFormValues]);
+
+  const watchedValues = form.watch();
+  const watchedValuesString = JSON.stringify(watchedValues);
+  const defaultValuesString = JSON.stringify(defaultFormValues);
+
+  // Save draft on change (only for Create mode)
+  useEffect(() => {
+    if (!isOpen || isEditing) return;
+    const isDirty = watchedValuesString !== defaultValuesString;
+    saveDraft("savingGoal", JSON.parse(watchedValuesString), isDirty);
+  }, [watchedValuesString, defaultValuesString, isOpen, isEditing, saveDraft]);
 
   const handleClose = () => {
     if (isCreateSheetOpen) closeCreateSheet();
     if (isEditSheetOpen) closeEditSheet();
-    form.reset();
   };
 
   const onSubmit = (values: CreateSavingGoalFormValues) => {
@@ -113,12 +129,19 @@ export function SavingGoalSheet() {
       updateGoal(
         { id: editingGoal.id, payload },
         {
-          onSuccess: () => handleClose(),
+          onSuccess: () => {
+            handleClose();
+            form.reset(defaultFormValues);
+          },
         }
       );
     } else {
       createGoal(payload, {
-        onSuccess: () => handleClose(),
+        onSuccess: () => {
+          clearDraft("savingGoal");
+          form.reset(defaultFormValues);
+          handleClose();
+        },
       });
     }
   };

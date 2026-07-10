@@ -6,7 +6,7 @@
 // Chỉ hiển thị các danh mục thuộc loại EXPENSE.
 // ============================================================
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -29,6 +29,7 @@ import {
   createBudgetSchema,
   type CreateBudgetFormValues,
 } from "@/features/budgets/schemas/budget.schema";
+import { useDraftStore } from "@/stores/draft.store";
 
 // ---------------------------------------------------------------
 // Helper FieldRow
@@ -68,6 +69,15 @@ export function CreateBudgetSheet() {
   const { month, year } = useBudgetStore(useShallow(selectBudgetFilters));
 
   const { mutate: createBudget, isPending } = useCreateBudget();
+  const saveDraft = useDraftStore((s) => s.saveDraft);
+  const clearDraft = useDraftStore((s) => s.clearDraft);
+
+  const defaultFormValues = useMemo<CreateBudgetFormValues>(() => ({
+    categoryId: "",
+    limitAmount: 0,
+    month,
+    year,
+  }), [month, year]);
 
   const {
     handleSubmit,
@@ -77,30 +87,40 @@ export function CreateBudgetSheet() {
     formState: { errors },
   } = useForm<CreateBudgetFormValues>({
     resolver: zodResolver(createBudgetSchema),
-    defaultValues: {
-      categoryId: "",
-      limitAmount: 0,
-      month: month,
-      year: year,
-    },
+    defaultValues: defaultFormValues,
   });
 
-  // Sync default values khi month/year đổi hoặc form mở
+  // Sync default values khi form mở (load draft hoặc reset)
   useEffect(() => {
     if (isCreateSheetOpen) {
-      reset({
-        categoryId: "",
-        limitAmount: 0,
-        month,
-        year,
-      });
+      const draft = useDraftStore.getState().getDraft<CreateBudgetFormValues>("budget");
+      if (draft) {
+        reset(draft.formData);
+      } else {
+        reset(defaultFormValues);
+      }
     }
-  }, [isCreateSheetOpen, month, year, reset]);
+  }, [isCreateSheetOpen, reset, defaultFormValues]);
 
-  const watchedAmount = watch("limitAmount");
+  const watchedValues = watch();
+  const watchedAmount = watchedValues.limitAmount;
+  const watchedValuesString = JSON.stringify(watchedValues);
+  const defaultValuesString = JSON.stringify(defaultFormValues);
+
+  // Save draft on change
+  useEffect(() => {
+    if (!isCreateSheetOpen) return;
+    const isDirty = watchedValuesString !== defaultValuesString;
+    saveDraft("budget", JSON.parse(watchedValuesString), isDirty);
+  }, [watchedValuesString, defaultValuesString, isCreateSheetOpen, saveDraft]);
 
   const onSubmit = (data: CreateBudgetFormValues) => {
-    createBudget(data);
+    createBudget(data, {
+      onSuccess: () => {
+        clearDraft("budget");
+        reset(defaultFormValues);
+      }
+    });
   };
 
   return (

@@ -7,7 +7,7 @@
 // Không chứa business logic — chỉ compose và coordinate.
 // ============================================================
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CategoryFilters } from "@/features/categories/components/CategoryFilters";
@@ -22,6 +22,9 @@ import {
   selectFilteredCategories,
 } from "@/features/categories/stores/category.store";
 import type { Category } from "@/features/categories/types/category.types";
+import { DraftBar } from "@/components/ui/draft/DraftBar";
+import { DraftPromptDialog } from "@/components/ui/draft/DraftPromptDialog";
+import { useDraftStore } from "@/stores/draft.store";
 
 // ---------------------------------------------------------------
 // Error Banner component (inline)
@@ -65,6 +68,9 @@ export function CategoriesPage() {
     openDeleteDialog,
   } = useCategoryStore();
 
+  const { hasDraft, clearDraft } = useDraftStore();
+  const [isDraftPromptOpen, setIsDraftPromptOpen] = useState(false);
+
   // ─── Server Data ─────────────────────────────────────────────
   // Luôn fetch ALL categories — filter client-side để tránh
   // multiple requests khi user đổi tab.
@@ -92,6 +98,14 @@ export function CategoriesPage() {
     openDeleteDialog(category);
   };
 
+  const handleCreateClick = () => {
+    if (hasDraft("category")) {
+      setIsDraftPromptOpen(true);
+    } else {
+      openCreateSheet();
+    }
+  };
+
   // ─── Render ──────────────────────────────────────────────────
   return (
     <div className="flex flex-col min-h-full bg-background">
@@ -111,7 +125,7 @@ export function CategoriesPage() {
 
           {/* Create button */}
           <Button
-            onClick={openCreateSheet}
+            onClick={handleCreateClick}
             size="sm"
             className="
               bg-primary text-primary-foreground text-sm font-medium
@@ -124,6 +138,12 @@ export function CategoriesPage() {
             Tạo danh mục
           </Button>
         </div>
+
+        <DraftBar 
+          feature="category" 
+          title="Danh mục" 
+          onResume={() => openCreateSheet()} 
+        />
 
         {/* ── Filter Bar ────────────────────────────────────── */}
         <div className="mb-6">
@@ -142,7 +162,7 @@ export function CategoriesPage() {
             isFiltered={isFiltered}
             onEdit={handleEdit}
             onDelete={handleDelete}
-            onCreateClick={openCreateSheet}
+            onCreateClick={handleCreateClick}
           />
         )}
       </div>
@@ -152,6 +172,20 @@ export function CategoriesPage() {
       <CategorySheet />
       <DeleteCategoryDialog />
       <ConflictErrorDialog />
+      <DraftPromptDialog
+        isOpen={isDraftPromptOpen}
+        onOpenChange={setIsDraftPromptOpen}
+        title="danh mục"
+        onResume={() => {
+          setIsDraftPromptOpen(false);
+          openCreateSheet();
+        }}
+        onDiscard={() => {
+          setIsDraftPromptOpen(false);
+          clearDraft("category");
+          openCreateSheet();
+        }}
+      />
     </div>
   );
 }
