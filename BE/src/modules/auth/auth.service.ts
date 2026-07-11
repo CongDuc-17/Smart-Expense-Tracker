@@ -361,14 +361,18 @@ export class AuthService {
 	): Promise<HttpResponseBodySuccessDto<null> | Exception> {
 		await this.authRepository.deleteToken(myInformation.id);
 
+		const cookiesToClear: any = {};
+		if (myInformation.role === RoleEnum.ADMIN) {
+			cookiesToClear.admin_access_token = '';
+		} else {
+			cookiesToClear.accessToken = '';
+			cookiesToClear.refreshToken = '';
+		}
+
 		return {
 			success: true,
 			data: null,
-			cookies: {
-				accessToken: '',
-				refreshToken: '',
-				admin_access_token: '',
-			},
+			cookies: cookiesToClear,
 		};
 	}
 }

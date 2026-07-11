@@ -68,10 +68,17 @@ export function NavUser({
     } catch {
       // Vẫn logout phía FE dù API lỗi
     } finally {
-      localStorage.removeItem("adminToken");
-      useUserStore.getState().clearUser();
-      toast.success("Đã đăng xuất");
-      navigate("/login", { replace: true });
+      const isAdminContext = window.location.pathname.startsWith("/admin");
+      
+      if (isAdminContext) {
+        localStorage.removeItem("adminToken");
+        toast.success("Đã đăng xuất khỏi Admin");
+        navigate("/admin/login", { replace: true });
+      } else {
+        useUserStore.getState().clearUser();
+        toast.success("Đã đăng xuất");
+        navigate("/login", { replace: true });
+      }
     }
   }
 

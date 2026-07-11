@@ -25,7 +25,7 @@ import {
 import { appEnv } from '@/configs';
 
 export class AuthController {
-	constructor(private readonly authService = new AuthService()) {}
+	constructor(private readonly authService = new AuthService()) { }
 
 	async register(req: Request): Promise<Response> {
 		const registerDto = req.body as RegisterRequestDto;
@@ -172,6 +172,7 @@ export class AuthController {
 		};
 		res.cookie('accessToken', '', cookieOptions);
 		res.cookie('refreshToken', '', cookieOptions);
+		res.cookie('admin_access_token', '', { ...cookieOptions, path: '/admin' });
 		return new HttpResponseDto().success<null>({
 			success: true,
 			data: null,

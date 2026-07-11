@@ -31,7 +31,9 @@ export const setCookieMiddleware: RequestHandler = (req, res, next): void => {
 					sameSite: 'lax',
 					path: name === 'admin_access_token' ? '/admin' : '/',
 				};
-				if (name === 'admin_access_token') {
+				if (cookieValue === '') {
+					defaultOptions.maxAge = 0;
+				} else if (name === 'admin_access_token') {
 					defaultOptions.maxAge = 6 * 60 * 60 * 1000;
 				}
 
