@@ -157,7 +157,7 @@ class AuthMiddleware extends BaseAutoBindMiddleware {
 				adminToken,
 				process.env.ACCESS_KEY_ADMIN,
 			);
-			
+
 			if (payload.role !== 'ADMIN') {
 				throw new UnauthorizedException();
 			}

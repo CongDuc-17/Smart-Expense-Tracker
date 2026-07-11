@@ -1,7 +1,7 @@
 const axios = require('axios');
 (async () => {
     try {
-        const loginRes = await axios.post('http://127.0.0.1:3000/auth/login', {
+        const loginRes = await axios.post('http://localhost:3000/auth/login', {
             email: 'admin@gmail.com',
             password: 'ankara2214'
         });
@@ -9,7 +9,7 @@ const axios = require('axios');
         console.log('Login OK');
         
         try {
-            const usersRes = await axios.get('http://127.0.0.1:3000/admin/test-auth', {
+            const usersRes = await axios.get('http://localhost:3000/admin/test-auth', {
                 headers: { Cookie: cookies }
             });
             console.log('Test auth:', usersRes.data);
@@ -18,7 +18,7 @@ const axios = require('axios');
         }
 
         try {
-            const usersRes = await axios.get('http://127.0.0.1:3000/admin/users', {
+            const usersRes = await axios.get('http://localhost:3000/admin/users', {
                 headers: { Cookie: cookies }
             });
             console.log('Users OK');

@@ -95,7 +95,7 @@ export class AuthController {
 						httpOnly: true,
 						secure: isProduction,
 						sameSite: isProduction ? 'none' : 'lax',
-						path: name === 'admin_access_token' ? '/api/admin' : '/',
+						path: name === 'admin_access_token' ? '/admin' : '/',
 					};
 					if (name === 'admin_access_token') {
 						cookieOptions.maxAge = 6 * 60 * 60 * 1000;
