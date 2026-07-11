@@ -62,6 +62,9 @@ class AuthMiddleware extends BaseAutoBindMiddleware {
 			if (error instanceof JsonWebTokenError) {
 				throw new UnauthorizedException(error.message);
 			}
+			if (error instanceof Exception) {
+				throw error;
+			}
 			throw new InternalServerException();
 		}
 
@@ -125,9 +128,60 @@ class AuthMiddleware extends BaseAutoBindMiddleware {
 			if (error instanceof JsonWebTokenError) {
 				throw new UnauthorizedException(error.message);
 			}
-			if (error instanceof ClientException) {
+			if (error instanceof Exception) {
 				throw error;
 			}
+			throw new InternalServerException();
+		}
+
+		next();
+	}
+
+	async verifyAdminToken(
+		req: Request,
+		res: Response,
+		next: NextFunction,
+	): Promise<void | Exception> {
+		const cookies = req.headers.cookie;
+		const adminToken = cookies
+			?.split('; ')
+			.find((row) => row.startsWith('admin_access_token='))
+			?.split('=')[1];
+
+		if (!adminToken || !process.env.ACCESS_KEY_ADMIN) {
+			throw new UnauthorizedException();
+		}
+
+		try {
+			const payload: any = verify(
+				adminToken,
+				process.env.ACCESS_KEY_ADMIN,
+			);
+			
+			if (payload.role !== 'ADMIN') {
+				throw new UnauthorizedException();
+			}
+
+			const userData = await this.userRepository.findUser({
+				userId: payload.userId,
+				userStatus: UserStatusEnum.ACTIVE,
+			});
+			if (!userData) {
+				throw new UnauthorizedException();
+			}
+
+			req.user = new UserInformationDto(userData);
+		} catch (error) {
+			if (error instanceof TokenExpiredError) {
+				throw new OptionalException(StatusCodes.UNAUTHORIZED, error.message);
+			}
+			if (error instanceof JsonWebTokenError) {
+				throw new UnauthorizedException(error.message);
+			}
+			if (error instanceof Exception) {
+				throw error;
+			}
+			throw new InternalServerException();
 		}
 
 		next();

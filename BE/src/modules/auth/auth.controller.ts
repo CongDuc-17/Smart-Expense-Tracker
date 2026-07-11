@@ -76,6 +76,9 @@ export class AuthController {
 				}
 
 				if (!user) {
+					if (_info && (_info as any).message === 'Account is locked') {
+						return res.redirect(`${process.env.FRONTEND_URL}/login?error=Account+is+locked`);
+					}
 					throw new NotFoundException('user for google login');
 				}
 
@@ -88,12 +91,16 @@ export class AuthController {
 				const cookies = result.cookies ?? {};
 				const isProduction = appEnv.NODE_ENV === 'production';
 				Object.entries(cookies).forEach(([name, value]) => {
-					res.cookie(name, String(value), {
+					const cookieOptions: any = {
 						httpOnly: true,
 						secure: isProduction,
 						sameSite: isProduction ? 'none' : 'lax',
-						path: '/',
-					});
+						path: name === 'admin_access_token' ? '/api/admin' : '/',
+					};
+					if (name === 'admin_access_token') {
+						cookieOptions.maxAge = 6 * 60 * 60 * 1000;
+					}
+					res.cookie(name, String(value), cookieOptions);
 				});
 
 				const redirectPath =
@@ -152,5 +159,22 @@ export class AuthController {
 			return new HttpResponseDto().exception(result);
 		}
 		return new HttpResponseDto().success<null>(result);
+	}
+
+	async clearCookies(req: Request, res: Response): Promise<Response> {
+		const isProduction = process.env.NODE_ENV === 'production';
+		const cookieOptions: any = {
+			httpOnly: true,
+			secure: isProduction,
+			sameSite: isProduction ? 'none' : 'lax',
+			path: '/',
+			maxAge: 0,
+		};
+		res.cookie('accessToken', '', cookieOptions);
+		res.cookie('refreshToken', '', cookieOptions);
+		return new HttpResponseDto().success<null>({
+			success: true,
+			data: null,
+		});
 	}
 }

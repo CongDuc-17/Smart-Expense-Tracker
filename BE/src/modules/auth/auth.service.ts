@@ -95,7 +95,7 @@ export class AuthService {
 		if (account.user?.status === UserStatusEnum.LOCKED) {
 			throw new OptionalException(
 				StatusCodes.FORBIDDEN,
-				'Your account has been locked',
+				'Account is locked',
 			);
 		}
 
@@ -111,6 +111,24 @@ export class AuthService {
 			throw new OptionalException(StatusCodes.UNAUTHORIZED, 'Invalid password');
 		}
 
+		if (account.user?.role === RoleEnum.ADMIN) {
+			const adminToken = sign(
+				{ role: RoleEnum.ADMIN, userId: account.userId },
+				process.env.ACCESS_KEY_ADMIN || 'supersecretadmin',
+				{ expiresIn: '6h' },
+			);
+
+			return {
+				success: true,
+				data: {
+					role: account.user?.role,
+				},
+				cookies: {
+					admin_access_token: adminToken,
+				},
+			};
+		}
+
 		const { accessToken, refreshToken } = await signJWT({
 			userId: account.userId,
 		});
@@ -120,18 +138,9 @@ export class AuthService {
 			refreshToken: refreshToken,
 		};
 
-		if (account.user?.role === RoleEnum.ADMIN) {
-			const adminToken = sign(
-				{ role: RoleEnum.ADMIN },
-				process.env.ACCESS_KEY_ADMIN || 'supersecretadmin',
-				{ expiresIn: '6h' },
-			);
-			cookies.admin_access_token = adminToken;
-		}
-
 		await this.authRepository.createToken({
 			token: {
-				refreshToken: refreshToken,
+				refreshToken: refreshToken as string,
 				expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
 				user: {
 					connect: {
@@ -165,23 +174,27 @@ export class AuthService {
 			userId: socialAccountInformation.userId,
 		});
 
-		const cookies: any = {
-			accessToken: accessToken,
-			refreshToken: refreshToken,
-		};
-
 		if (user?.role === RoleEnum.ADMIN) {
 			const adminToken = sign(
-				{ role: RoleEnum.ADMIN },
+				{ role: RoleEnum.ADMIN, userId: socialAccountInformation.userId },
 				process.env.ACCESS_KEY_ADMIN || 'supersecretadmin',
 				{ expiresIn: '6h' },
 			);
-			cookies.admin_access_token = adminToken;
+			
+			return {
+				success: true,
+				data: {
+					role: user?.role,
+				},
+				cookies: {
+					admin_access_token: adminToken,
+				},
+			};
 		}
 
 		await this.authRepository.createToken({
 			token: {
-				refreshToken: refreshToken,
+				refreshToken: refreshToken as string,
 				expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
 				user: {
 					connect: {
@@ -198,7 +211,10 @@ export class AuthService {
 				refreshToken: refreshToken,
 				role: user?.role,
 			},
-			cookies: cookies,
+			cookies: {
+				accessToken: accessToken as string,
+				refreshToken: refreshToken as string,
+			},
 		};
 	}
 
@@ -211,7 +227,7 @@ export class AuthService {
 
 		await this.authRepository.createToken({
 			token: {
-				refreshToken: refreshToken,
+				refreshToken: refreshToken as string,
 				expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
 				user: {
 					connect: {
@@ -228,9 +244,9 @@ export class AuthService {
 				refreshToken: refreshToken,
 			},
 			cookies: {
-				accessToken: accessToken,
-				refreshToken: refreshToken,
-			},
+				accessToken: accessToken as string,
+				refreshToken: refreshToken as string,
+			} as any,
 		};
 	}
 
@@ -351,6 +367,7 @@ export class AuthService {
 			cookies: {
 				accessToken: '',
 				refreshToken: '',
+				admin_access_token: '',
 			},
 		};
 	}

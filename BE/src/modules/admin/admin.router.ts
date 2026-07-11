@@ -10,8 +10,7 @@ import AuthMiddleware from '@/common/middlewares/auth.middleware';
 
 export const adminRouter = Router();
 
-adminRouter.use(AuthMiddleware.verifyAccessToken);
-adminRouter.use(roleGuard(RoleEnum.ADMIN));
+adminRouter.use(AuthMiddleware.verifyAdminToken);
 
 adminRouter.get(
 	'/users',

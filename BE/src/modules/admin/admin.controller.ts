@@ -7,22 +7,11 @@ class AdminController {
 	constructor(
 		private readonly adminUserService: AdminUserService = new AdminUserService(),
 	) {
-		this.login = this.login.bind(this);
 		this.getUsers = this.getUsers.bind(this);
 		this.getUserById = this.getUserById.bind(this);
 		this.updateUserStatus = this.updateUserStatus.bind(this);
 		this.getSystemStats = this.getSystemStats.bind(this);
 		this.seedCategories = this.seedCategories.bind(this);
-	}
-
-	async login(req: Request, res: Response, next: NextFunction): Promise<void> {
-		try {
-			const { email, password } = req.body;
-			const result = await this.adminUserService.login(email, password);
-			res.status(StatusCodes.OK).json(result);
-		} catch (error) {
-			next(error);
-		}
 	}
 
 	async getUsers(req: Request, res: Response, next: NextFunction): Promise<void> {

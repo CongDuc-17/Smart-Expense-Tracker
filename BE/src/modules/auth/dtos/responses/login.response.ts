@@ -2,8 +2,8 @@ import { RoleEnum } from '@prisma/client';
 import z from 'zod';
 
 export class LoginResponseDto {
-	accessToken: string;
-	refreshToken: string;
+	accessToken?: string;
+	refreshToken?: string;
 	role?: RoleEnum;
 }
 

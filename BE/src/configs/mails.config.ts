@@ -4,7 +4,7 @@ export const MailConfig = {
 	smtpLogin: String(process.env.EMAIL_USER),
 	smtpKey: String(process.env.EMAIL_PASS),
 
-	senderAddress: String(process.env.MAIL_SENDER_ADDRESS) || 'no-reply@localhost.com',
+	senderAddress: String(process.env.MAIL_SENDER_ADDRESS) || 'no-reply@127.0.0.1.com',
 
 	senderName: String(process.env.MAIL_SENDER_NAME) || 'No Reply',
 };

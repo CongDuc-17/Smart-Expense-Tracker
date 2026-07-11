@@ -158,4 +158,12 @@ authRegistry.registerPath({
 });
 router.post('/logout', authMiddleware.verifyAccessToken, authController.logout);
 
+authRegistry.registerPath({
+	method: 'post',
+	path: '/auth/clear-cookies',
+	tags: ['Auth'],
+	responses: createApiResponse(z.null(), 'Success'),
+});
+router.post('/clear-cookies', authController.clearCookies);
+
 export const authRouter = router;

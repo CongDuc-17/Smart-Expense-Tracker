@@ -62,7 +62,8 @@ app.use(errorHandlerMiddleware);
 
 app.use(openAPIRouter);
 
-server.listen(appEnv.PORT, () => {
+server.listen(appEnv.PORT, '0.0.0.0', () => {
 	const { NODE_ENV, HOST, PORT } = appEnv;
 	console.log(`Server (${NODE_ENV}) running on port http://${HOST}:${PORT}/api`);
+	console.log(`Actual server address:`, server.address());
 });

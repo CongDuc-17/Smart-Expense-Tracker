@@ -72,10 +72,7 @@ export class GoogleOauthStrategy {
 				});
 			} else {
 				if (existingUser.status === UserStatusEnum.LOCKED) {
-					throw new OptionalException(
-						StatusCodes.FORBIDDEN,
-						'Your account has been locked',
-					);
+					return done(null, false as any, { message: 'Account is locked' });
 				}
 
 				socialAccount = await this.authRepository.findSocialAccount({
@@ -103,10 +100,7 @@ export class GoogleOauthStrategy {
 			});
 		} catch (error) {
 			console.error("Google OAuth validate error:", error);
-			if (error instanceof Exception) {
-				throw error;
-			}
-			throw new InternalServerException();
+			return done(error as Error, false as any);
 		}
 	}
 }

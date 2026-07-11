@@ -4,6 +4,7 @@ import axios, {
 
   type InternalAxiosRequestConfig,
 } from "axios";
+import { useUserStore } from "@/features/users/stores/user.store";
 
 export const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -108,7 +109,12 @@ axiosClient.interceptors.response.use(
         return axiosClient(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);
+        // Xóa cookie qua API
+        try {
+          await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/clear-cookies`, {}, { withCredentials: true });
+        } catch (e) {}
         // Nếu refresh cũng lỗi (hết hạn cả refreshToken), cho đăng xuất
+        useUserStore.getState().clearUser();
         window.location.href = "/login";
         return Promise.reject(refreshError);
       } finally {

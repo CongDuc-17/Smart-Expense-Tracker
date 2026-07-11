@@ -29,8 +29,11 @@ export const setCookieMiddleware: RequestHandler = (req, res, next): void => {
 					httpOnly: true,
 					secure: appEnv.NODE_ENV === 'production',
 					sameSite: 'lax',
-					path: '/',
+					path: name === 'admin_access_token' ? '/api/admin' : '/',
 				};
+				if (name === 'admin_access_token') {
+					defaultOptions.maxAge = 6 * 60 * 60 * 1000;
+				}
 
 				this.cookie(name, String(cookieValue), defaultOptions);
 			});

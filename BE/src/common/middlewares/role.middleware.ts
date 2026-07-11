@@ -21,10 +21,15 @@ export const roleGuard = (...roles: RoleEnum[]) => {
 						process.env.ACCESS_KEY_ADMIN,
 					) as any;
 					if (decoded.role === RoleEnum.ADMIN) {
-						if (!req.user) {
-							(req as any).user = {};
+						if (req.user && (req.user as any).id && (req.user as any).id !== decoded.userId) {
+							// Mismatch, do not grant admin role, let it fall through
+						} else {
+							if (!req.user) {
+								(req as any).user = {};
+							}
+							(req as any).user.role = RoleEnum.ADMIN;
+							(req as any).user.id = decoded.userId;
 						}
-						(req as any).user.role = RoleEnum.ADMIN;
 					}
 				} catch (err) {
 					// fallback to default check

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -44,11 +44,21 @@ function getErrorMessage(error: unknown, fallback: string): string {
 
 export function Login() {
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const errorParam = searchParams.get("error");
+        if (errorParam) {
+            setError(errorParam);
+            toast.error(errorParam);
+            setSearchParams(new URLSearchParams());
+        }
+    }, [searchParams, setSearchParams]);
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
