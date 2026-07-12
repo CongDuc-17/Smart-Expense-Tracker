@@ -112,7 +112,7 @@ axiosClient.interceptors.response.use(
         // Xóa cookie qua API
         try {
           await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/clear-cookies`, {}, { withCredentials: true });
-        } catch (e) {}
+        } catch (e) { }
         // Nếu refresh cũng lỗi (hết hạn cả refreshToken), cho đăng xuất
         useUserStore.getState().clearUser();
         window.location.href = "/login";
