@@ -6,8 +6,13 @@ const prisma = new PrismaClient();
 async function main() {
 	console.log('Start seeding Admin...');
 
-	const email = 'admin@example.com';
-	const password = 'AdminPassword123!';
+	const email = process.env.EMAIL_ADMIN;
+	const password = process.env.PASSWORD_ADMIN;
+
+	if (!email || !password) {
+		throw new Error('Please provide email and password for admin');
+	}
+
 	const salt = await bcrypt.genSalt(10);
 	const hashedPassword = await bcrypt.hash(password, salt);
 
