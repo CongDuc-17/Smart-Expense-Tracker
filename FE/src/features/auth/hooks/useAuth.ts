@@ -36,7 +36,12 @@ export function useAuth() {
         if (userData.data) {
           setAuth(userData.data);
           toast.success("Đăng nhập thành công");
-          navigate("/dashboard");
+          
+          if (userData.data.role === "ADMIN") {
+            navigate("/admin/stats");
+          } else {
+            navigate("/dashboard");
+          }
         }
       } catch (error) {
         toast.error("Lỗi khi tải thông tin người dùng");

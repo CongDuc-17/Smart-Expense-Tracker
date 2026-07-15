@@ -11,6 +11,7 @@ import { notificationsRegistry, notificationsRouter } from './notifications/noti
 import { uploadRegistry, uploadRouter } from './upload/upload.router';
 import { reportsRegistry, reportsRouter } from './reports/reports.router';
 import { aiRegistry, aiRouter } from './ai/ai.router';
+import { adminRegistry, adminRouter } from './admin/admin.router';
 
 export const Registries = [
 	healthCheckRegistry,
@@ -26,6 +27,7 @@ export const Registries = [
 	uploadRegistry,
 	reportsRegistry,
 	aiRegistry,
+	adminRegistry,
 ];
 
 export const Modules = {
@@ -42,4 +44,5 @@ export const Modules = {
 	uploadRouter,
 	reportsRouter,
 	aiRouter,
+	adminRouter,
 };

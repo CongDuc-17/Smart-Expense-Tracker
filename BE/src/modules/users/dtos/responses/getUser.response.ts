@@ -1,4 +1,4 @@
-import { UserStatusEnum } from '@prisma/client';
+import { RoleEnum, UserStatusEnum } from '@prisma/client';
 import z from 'zod';
 
 import { User } from '@/models';
@@ -13,6 +13,7 @@ export class GetUserResponseDto {
 	updatedAt: Date | null | undefined;
 	deletedAt: Date | null | undefined;
 	status: UserStatusEnum;
+	role: RoleEnum
 
 	constructor(userInformation: User | UserInformationDto) {
 		this.id = userInformation.id;
@@ -23,6 +24,7 @@ export class GetUserResponseDto {
 		this.updatedAt = userInformation.updatedAt;
 		this.deletedAt = userInformation.deletedAt;
 		this.status = userInformation.status;
+		this.role = userInformation.role;
 	}
 }
 
@@ -35,4 +37,5 @@ export const getUserResponseDtoSchema = z.object({
 	updatedAt: z.date(),
 	deletedAt: z.date().nullable(),
 	status: z.nativeEnum(UserStatusEnum),
+	role: z.nativeEnum(RoleEnum),
 });

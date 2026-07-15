@@ -1,4 +1,4 @@
-import { UserStatusEnum } from '@prisma/client';
+import { RoleEnum, UserStatusEnum } from '@prisma/client';
 
 import { User } from '@/models';
 
@@ -9,6 +9,7 @@ export class UserInformationDto {
 	avatar: string | null;
 	avatarPublicId: string | null;
 	verify: boolean;
+	role: RoleEnum
 	status: UserStatusEnum;
 	createdAt: Date;
 	updatedAt: Date;
@@ -21,6 +22,7 @@ export class UserInformationDto {
 		this.avatar = user.avatar ?? null;
 		this.avatarPublicId = user.avatarPublicId ?? null;
 		this.verify = user.verify;
+		this.role = user.role;
 		this.status = user.status;
 		this.createdAt = user.createdAt;
 		this.updatedAt = user.updatedAt;
