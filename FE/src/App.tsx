@@ -16,7 +16,20 @@ import { ForgotPassword } from "./pages/auth/ForgotPassword";
 import { ThemeProvider } from "@/components/theme-provider";
 import { PublicRoute } from "./components/public-route";
 import { ProtectedRoute } from "./components/protected-route";
+import { AdminRoute } from "./components/admin-route";
 import { useInitializeAuth } from "@/features/auth/hooks/useAuth";
+import { useAuthStore } from "@/features/auth/stores/auth.store";
+
+import { AdminUsersPage } from "./pages/admin/AdminUsersPage";
+import { AdminStatsPage } from "./pages/admin/AdminStatsPage";
+
+function IndexRedirect() {
+  const { currentUser } = useAuthStore();
+  if (currentUser?.role === "ADMIN") {
+    return <Navigate to="/admin/stats" replace />;
+  }
+  return <Navigate to="/dashboard" replace />;
+}
 
 function App() {
   useInitializeAuth();
@@ -46,9 +59,16 @@ function App() {
           </Route>
         </Route>
 
+        {/* ── Admin routes ─────────────────────────────────── */}
+        <Route element={<AdminRoute />}>
+          <Route element={<AppLayout />}>
+            <Route path="/admin/users" element={<AdminUsersPage />} />
+            <Route path="/admin/stats" element={<AdminStatsPage />} />
+          </Route>
+        </Route>
+
         {/* ── Fallback ────────────────────────────────────── */}
-        {/* If user hits root, redirect to dashboard. ProtectedRoute will catch it if they are not logged in and push to login */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<IndexRedirect />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </ThemeProvider>

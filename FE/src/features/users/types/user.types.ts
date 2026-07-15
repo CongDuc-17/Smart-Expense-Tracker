@@ -1,10 +1,12 @@
-export type UserStatusEnum = "ACTIVE" | "INACTIVE" | "BANNED";
+export type UserStatusEnum = "ACTIVE" | "LOCKED";
+export type UserRoleEnum = "USER" | "ADMIN";
 
 export interface User {
   id: string;
   email: string;
   name: string;
   avatar: string | null;
+  role: UserRoleEnum;
   status: UserStatusEnum;
   createdAt: string;
   updatedAt: string;

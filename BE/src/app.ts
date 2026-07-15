@@ -55,6 +55,7 @@ app.use('/notifications', Modules.notificationsRouter);
 app.use('/upload', Modules.uploadRouter);
 app.use('/reports', Modules.reportsRouter);
 app.use('/ai', Modules.aiRouter);
+app.use('/admin', Modules.adminRouter);
 
 app.use(errorHandlerMiddleware);
 

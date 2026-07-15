@@ -24,6 +24,8 @@ import {
   Settings2Icon,
   CircleHelpIcon,
   DollarSignIcon,
+  UsersIcon,
+  BarChartIcon,
 } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -98,8 +100,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       {/* ── Content: Navigation ─────────────────────────── */}
       <SidebarContent className="px-2">
-        {/* Main nav */}
-        <NavMain items={NAV_MAIN} />
+        {/* Main nav (Only for normal users) */}
+        {user?.role !== "ADMIN" && <NavMain items={NAV_MAIN} />}
+
+        {/* Admin nav */}
+        {user?.role === "ADMIN" && (
+          <NavMain items={[
+            { title: "Thống kê Hệ thống", url: "/admin/stats", icon: <BarChartIcon className="w-4 h-4" /> },
+            { title: "Quản trị Người dùng", url: "/admin/users", icon: <UsersIcon className="w-4 h-4" /> },
+          ]} />
+        )}
 
         {/* Separator */}
         <SidebarSeparator className="bg-muted my-1" />
