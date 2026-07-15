@@ -73,7 +73,7 @@ export function useUpdateUserStatus() {
 
   return useMutation({
     mutationFn: ({ id, status }: { id: string; status: string }) => adminService.updateUserStatus(id, status),
-    onSuccess: (res, variables) => {
+    onSuccess: (_res, variables) => {
       toast.success(variables.status === "LOCKED" ? "Đã khóa tài khoản" : "Đã mở khóa tài khoản");
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
     },
